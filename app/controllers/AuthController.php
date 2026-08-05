@@ -4,11 +4,15 @@ class AuthController extends Controller {
 
     // Ipapakita ang login form
     public function login() {
-        // Kung naka-login na, diretso na sa dashboard
-        if (isset($_SESSION['user_id'])) {
+    // Kung naka-login na, diretso na sa tamang pahina
+    if (isset($_SESSION['user_id'])) {
+        if ($_SESSION['role'] === 'admin') {
             header('Location: /sitrass/public/admin/dashboard');
-            exit;
+        } else {
+            header('Location: /sitrass/public/auth/loggedin');
         }
+        exit;
+    }
 
         $error = $_SESSION['login_error'] ?? null;
         unset($_SESSION['login_error']);
@@ -31,6 +35,7 @@ class AuthController extends Controller {
         <input type="password" name="password" required><br><br>
         <button type="submit">Login</button>
     </form>
+    <p><a href="/sitrass/public/auth/forgotPassword">Nakalimutan ang password?</a></p>
 </body>
 </html>';
     }
@@ -42,38 +47,60 @@ class AuthController extends Controller {
         header('Location: /sitrass/public/auth/login');
         exit;
     }
-        $email = trim($_POST['email'] ?? '');
-        $password = $_POST['password'] ?? '';
 
-        if (!$email || !$password) {
-            $_SESSION['login_error'] = 'Kailangan ang email at password.';
-            header('Location: /sitrass/public/auth/login');
-            exit;
-        }
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-        $userModel = new User();
-        $user = $userModel->getByEmail($email);
-
-        if (!$user || !password_verify($password, $user['password_hash'])) {
-            $_SESSION['login_error'] = 'Maling email o password.';
-            header('Location: /sitrass/public/auth/login');
-            exit;
-        }
-
-        if ($user['status'] !== 'active') {
-            $_SESSION['login_error'] = 'Hindi active ang account na ito.';
-            header('Location: /sitrass/public/auth/login');
-            exit;
-        }
-
-        // Successful login - itago sa session
-        $_SESSION['user_id'] = $user['user_id'];
-        $_SESSION['role'] = $user['role'];
-        $_SESSION['full_name'] = $user['first_name'] . ' ' . $user['last_name'];
-
-        header('Location: /sitrass/public/admin/dashboard');
+    if (!$email || !$password) {
+        $_SESSION['login_error'] = 'Kailangan ang email at password.';
+        header('Location: /sitrass/public/auth/login');
         exit;
     }
+
+    $userModel = new User();
+    $user = $userModel->getByEmail($email);
+
+    // Hindi natin sasabihin kung "walang account" o "maling password" - pareho lang
+    // ang mensahe para hindi malaman ng attacker kung aling email meron ngang account.
+    if (!$user) {
+        $_SESSION['login_error'] = 'Maling email o password.';
+        header('Location: /sitrass/public/auth/login');
+        exit;
+    }
+
+    if ($userModel->isLocked($user)) {
+        $_SESSION['login_error'] = 'Na-lock muna ang account na ito dahil sa maraming maling attempt. Subukan ulit pagkalipas ng ilang minuto.';
+        header('Location: /sitrass/public/auth/login');
+        exit;
+    }
+
+    if (!password_verify($password, $user['password_hash'])) {
+        $userModel->recordFailedAttempt($user['user_id']);
+        $_SESSION['login_error'] = 'Maling email o password.';
+        header('Location: /sitrass/public/auth/login');
+        exit;
+    }
+
+    if ($user['status'] !== 'active') {
+        $_SESSION['login_error'] = 'Hindi active ang account na ito.';
+        header('Location: /sitrass/public/auth/login');
+        exit;
+    }
+
+    // Successful login
+    $userModel->resetFailedAttempts($user['user_id']);
+
+    $_SESSION['user_id'] = $user['user_id'];
+    $_SESSION['role'] = $user['role'];
+    $_SESSION['full_name'] = $user['first_name'] . ' ' . $user['last_name'];
+
+    if ($user['role'] === 'admin') {
+        header('Location: /sitrass/public/admin/dashboard');
+    } else {
+        header('Location: /sitrass/public/auth/loggedin');
+    }
+    exit;
+}
 
     // Logout
     public function logout() {
@@ -161,11 +188,17 @@ public function store() {
     }
 
     if ($userModel->emailExists($_POST['email'])) {
-        $_SESSION['register_errors'] = ['May account na gumagamit ng email na ito.'];
-        $_SESSION['register_old'] = $_POST;
-        header('Location: /sitrass/public/auth/register');
-        exit;
-    }
+    $_SESSION['register_errors'] = ['May account na gumagamit ng email na ito.'];
+    $_SESSION['register_old'] = $_POST;
+    header('Location: /sitrass/public/auth/register');
+    exit;
+}
+if ($userModel->phoneExists($_POST['phone'])) {
+    $_SESSION['register_errors'] = ['May account na gumagamit ng phone number na ito.'];
+    $_SESSION['register_old'] = $_POST;
+    header('Location: /sitrass/public/auth/register');
+    exit;
+}
 
     $userId = $userModel->create([
         'role' => 'customer',
@@ -180,6 +213,156 @@ public function store() {
     $customerModel->create($userId);
 
     $_SESSION['login_error'] = 'Account na-create! Puwede ka nang mag-login (matapos ma-verify ng admin).';
+    header('Location: /sitrass/public/auth/login');
+    exit;
+}
+public function loggedin() {
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: /sitrass/public/auth/login');
+        exit;
+    }
+
+    echo '<!DOCTYPE html>
+    <html>
+    <head><title>SITRASS</title></head>
+    <body>
+        <h2>Maligayang pagdating, ' . htmlspecialchars($_SESSION['full_name']) . '!</h2>
+        <p>Role: ' . htmlspecialchars($_SESSION['role']) . '</p>
+        <p>(Ito ay pansamantalang pahina lang - gagawa pa tayo ng tunay na customer dashboard.)</p>
+        <a href="/sitrass/public/auth/logout">Logout</a>
+    </body>
+    </html>';
+}
+public function forgotPassword() {
+    $message = $_SESSION['forgot_message'] ?? null;
+    $resetLink = $_SESSION['dev_reset_link'] ?? null;
+    unset($_SESSION['forgot_message'], $_SESSION['dev_reset_link']);
+
+    echo '<!DOCTYPE html>
+    <html>
+    <head><title>SITRASS - Forgot Password</title></head>
+    <body>
+        <h2>Nakalimutan ang Password</h2>';
+
+    if ($message) {
+        echo '<p>' . htmlspecialchars($message) . '</p>';
+    }
+
+    if ($resetLink) {
+        echo '<p style="background:#eee;padding:10px;">
+                <strong>[DEV MODE lang - papalitan ng email sa totoong deployment]</strong><br>
+                Reset link: <a href="' . htmlspecialchars($resetLink) . '">' . htmlspecialchars($resetLink) . '</a>
+              </p>';
+    }
+
+    echo '<form method="POST" action="/sitrass/public/auth/sendReset">
+            ' . Csrf::field() . '
+            <label>Email:</label><br>
+            <input type="email" name="email" required><br><br>
+            <button type="submit">Ipadala ang Reset Link</button>
+        </form>
+        <p><a href="/sitrass/public/auth/login">Bumalik sa Login</a></p>
+    </body>
+    </html>';
+}
+
+public function sendReset() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        $_SESSION['forgot_message'] = 'Invalid o expired na session. Subukan ulit.';
+        header('Location: /sitrass/public/auth/forgotPassword');
+        exit;
+    }
+
+    $email = trim($_POST['email'] ?? '');
+    $userModel = new User();
+    $user = $userModel->getByEmail($email);
+
+    // Parehong mensahe kahit walang account - para hindi malaman ng attacker
+    // kung aling email ang meron ngang account (account enumeration).
+    $_SESSION['forgot_message'] = 'Kung may account na gumagamit ng email na iyan, may reset link na ipinadala (o ipinakita sa ibaba).';
+
+    if ($user && $user['status'] === 'active') {
+        $token = $userModel->createResetToken($user['user_id']);
+        $resetLink = '/sitrass/public/auth/resetPassword?token=' . $token;
+
+        // DEV MODE: ipinapakita natin ang link dito sa halip na i-email.
+        // Sa Step 13, papalitan ito ng: Mailer::send($user['email'], $resetLink);
+        $_SESSION['dev_reset_link'] = $resetLink;
+    }
+
+    header('Location: /sitrass/public/auth/forgotPassword');
+    exit;
+}
+
+public function resetPassword() {
+    $token = $_GET['token'] ?? '';
+
+    $userModel = new User();
+    $reset = $userModel->verifyResetToken($token);
+
+    if (!$reset) {
+        echo '<!DOCTYPE html><html><body>
+                <h2>Invalid o Expired na Link</h2>
+                <p>Hiling ka ng bagong reset link.</p>
+                <a href="/sitrass/public/auth/forgotPassword">Bumalik</a>
+              </body></html>';
+        return;
+    }
+
+    $error = $_SESSION['reset_error'] ?? null;
+    unset($_SESSION['reset_error']);
+
+    echo '<!DOCTYPE html>
+    <html>
+    <head><title>SITRASS - Bagong Password</title></head>
+    <body>
+        <h2>Gumawa ng Bagong Password</h2>';
+
+    if ($error) {
+        echo '<p style="color:red;">' . htmlspecialchars($error) . '</p>';
+    }
+
+    echo '<form method="POST" action="/sitrass/public/auth/updatePassword">
+            ' . Csrf::field() . '
+            <input type="hidden" name="token" value="' . htmlspecialchars($token) . '">
+            <label>Bagong Password:</label><br>
+            <input type="password" name="password" required><br><br>
+            <label>Kumpirmahin ang Password:</label><br>
+            <input type="password" name="password_confirm" required><br><br>
+            <button type="submit">I-update ang Password</button>
+        </form>
+    </body>
+    </html>';
+}
+
+public function updatePassword() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session. <a href="/sitrass/public/auth/forgotPassword">Simulan ulit</a>');
+    }
+
+    $token = $_POST['token'] ?? '';
+    $userModel = new User();
+    $reset = $userModel->verifyResetToken($token);
+
+    if (!$reset) {
+        die('Invalid o expired na link. <a href="/sitrass/public/auth/forgotPassword">Hiling ng bago</a>');
+    }
+
+    $validator = new Validator($_POST);
+    $validator->required('password', 'Password')
+        ->minLength('password', 'Password', 8)
+        ->matches('password_confirm', 'password', 'Kumpirmasyon ng password');
+
+    if (!$validator->passes()) {
+        $_SESSION['reset_error'] = $validator->firstError();
+        header('Location: /sitrass/public/auth/resetPassword?token=' . urlencode($token));
+        exit;
+    }
+
+    $tokenHash = hash('sha256', $token);
+    $userModel->resetPassword($reset['user_id'], $_POST['password'], $tokenHash);
+
+    $_SESSION['login_error'] = 'Na-update na ang password mo. Puwede ka nang mag-login.';
     header('Location: /sitrass/public/auth/login');
     exit;
 }

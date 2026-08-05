@@ -30,6 +30,7 @@ $segments = explode('/', trim($path, '/'));
 
 $controller = isset($segments[0]) && $segments[0] ? $segments[0] : 'home';
 $action = isset($segments[1]) && $segments[1] ? $segments[1] : 'index';
+$action = lcfirst(str_replace('-', '', ucwords($action, '-')));
 $params = array_slice($segments, 2);
 
 $controllerName = ucfirst($controller) . 'Controller';
