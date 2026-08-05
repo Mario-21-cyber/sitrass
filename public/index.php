@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -10,6 +12,7 @@ spl_autoload_register(function ($class) {
         __DIR__ . '/../app/controllers/',
         __DIR__ . '/../app/models/',
         __DIR__ . '/../app/views/',
+        __DIR__ . '/../app/helpers/',
     ];
     foreach ($dirs as $dir) {
         $file = $dir . $class . '.php';
