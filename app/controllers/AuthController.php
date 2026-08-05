@@ -4,7 +4,6 @@ class AuthController extends Controller {
 
     // Ipapakita ang login form
     public function login() {
-    // Kung naka-login na, diretso na sa tamang pahina
     if (isset($_SESSION['user_id'])) {
         if ($_SESSION['role'] === 'admin') {
             header('Location: /sitrass/public/admin/dashboard');
@@ -14,31 +13,14 @@ class AuthController extends Controller {
         exit;
     }
 
-        $error = $_SESSION['login_error'] ?? null;
-        unset($_SESSION['login_error']);
+    $error = $_SESSION['login_error'] ?? null;
+    unset($_SESSION['login_error']);
 
-        echo '<!DOCTYPE html>
-        <html>
-        <head><title>SITRASS - Login</title></head>
-        <body>
-            <h2>SITRASS Admin Login</h2>';
-
-        if ($error) {
-            echo '<p style="color:red;">' . htmlspecialchars($error) . '</p>';
-        }
-
-        echo '<form method="POST" action="/sitrass/public/auth/authenticate">
-        ' . Csrf::field() . '
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
-        <button type="submit">Login</button>
-    </form>
-    <p><a href="/sitrass/public/auth/forgotPassword">Nakalimutan ang password?</a></p>
-</body>
-</html>';
-    }
+    View::render('login', [
+        'pageTitle' => 'Login - SITRASS',
+        'error' => $error,
+    ]);
+}
 
     // Pinoproseso ang submitted na login form
     public function authenticate() {
@@ -119,45 +101,11 @@ class AuthController extends Controller {
     $old = $_SESSION['register_old'] ?? [];
     unset($_SESSION['register_errors'], $_SESSION['register_old']);
 
-    echo '<!DOCTYPE html>
-    <html>
-    <head><title>SITRASS - Register</title></head>
-    <body>
-        <h2>Gumawa ng Account (Customer)</h2>';
-
-    if (!empty($errors)) {
-        echo '<ul style="color:red;">';
-        foreach ($errors as $error) {
-            echo '<li>' . htmlspecialchars($error) . '</li>';
-        }
-        echo '</ul>';
-    }
-
-    echo '<form method="POST" action="/sitrass/public/auth/store">
-            ' . Csrf::field() . '
-            <label>First Name:</label><br>
-            <input type="text" name="first_name" value="' . htmlspecialchars($old['first_name'] ?? '') . '" required><br><br>
-
-            <label>Last Name:</label><br>
-            <input type="text" name="last_name" value="' . htmlspecialchars($old['last_name'] ?? '') . '" required><br><br>
-
-            <label>Email:</label><br>
-            <input type="email" name="email" value="' . htmlspecialchars($old['email'] ?? '') . '" required><br><br>
-
-            <label>Phone (+639XXXXXXXXX):</label><br>
-            <input type="text" name="phone" value="' . htmlspecialchars($old['phone'] ?? '') . '" required><br><br>
-
-            <label>Password:</label><br>
-            <input type="password" name="password" required><br><br>
-
-            <label>Confirm Password:</label><br>
-            <input type="password" name="password_confirm" required><br><br>
-
-            <button type="submit">Register</button>
-        </form>
-        <p>May account na? <a href="/sitrass/public/auth/login">Login dito</a></p>
-    </body>
-    </html>';
+    View::render('register', [
+        'pageTitle' => 'Register - SITRASS',
+        'errors' => $errors,
+        'old' => $old,
+    ]);
 }
 
 public function store() {
@@ -238,32 +186,11 @@ public function forgotPassword() {
     $resetLink = $_SESSION['dev_reset_link'] ?? null;
     unset($_SESSION['forgot_message'], $_SESSION['dev_reset_link']);
 
-    echo '<!DOCTYPE html>
-    <html>
-    <head><title>SITRASS - Forgot Password</title></head>
-    <body>
-        <h2>Nakalimutan ang Password</h2>';
-
-    if ($message) {
-        echo '<p>' . htmlspecialchars($message) . '</p>';
-    }
-
-    if ($resetLink) {
-        echo '<p style="background:#eee;padding:10px;">
-                <strong>[DEV MODE lang - papalitan ng email sa totoong deployment]</strong><br>
-                Reset link: <a href="' . htmlspecialchars($resetLink) . '">' . htmlspecialchars($resetLink) . '</a>
-              </p>';
-    }
-
-    echo '<form method="POST" action="/sitrass/public/auth/sendReset">
-            ' . Csrf::field() . '
-            <label>Email:</label><br>
-            <input type="email" name="email" required><br><br>
-            <button type="submit">Ipadala ang Reset Link</button>
-        </form>
-        <p><a href="/sitrass/public/auth/login">Bumalik sa Login</a></p>
-    </body>
-    </html>';
+    View::render('forgot-password', [
+        'pageTitle' => 'Forgot Password - SITRASS',
+        'message' => $message,
+        'resetLink' => $resetLink,
+    ]);
 }
 
 public function sendReset() {
@@ -301,38 +228,20 @@ public function resetPassword() {
     $reset = $userModel->verifyResetToken($token);
 
     if (!$reset) {
-        echo '<!DOCTYPE html><html><body>
-                <h2>Invalid o Expired na Link</h2>
-                <p>Hiling ka ng bagong reset link.</p>
-                <a href="/sitrass/public/auth/forgotPassword">Bumalik</a>
-              </body></html>';
+        View::render('reset-invalid', [
+            'pageTitle' => 'Invalid Link - SITRASS',
+        ]);
         return;
     }
 
     $error = $_SESSION['reset_error'] ?? null;
     unset($_SESSION['reset_error']);
 
-    echo '<!DOCTYPE html>
-    <html>
-    <head><title>SITRASS - Bagong Password</title></head>
-    <body>
-        <h2>Gumawa ng Bagong Password</h2>';
-
-    if ($error) {
-        echo '<p style="color:red;">' . htmlspecialchars($error) . '</p>';
-    }
-
-    echo '<form method="POST" action="/sitrass/public/auth/updatePassword">
-            ' . Csrf::field() . '
-            <input type="hidden" name="token" value="' . htmlspecialchars($token) . '">
-            <label>Bagong Password:</label><br>
-            <input type="password" name="password" required><br><br>
-            <label>Kumpirmahin ang Password:</label><br>
-            <input type="password" name="password_confirm" required><br><br>
-            <button type="submit">I-update ang Password</button>
-        </form>
-    </body>
-    </html>';
+    View::render('reset-password', [
+        'pageTitle' => 'Bagong Password - SITRASS',
+        'error' => $error,
+        'token' => $token,
+    ]);
 }
 
 public function updatePassword() {
