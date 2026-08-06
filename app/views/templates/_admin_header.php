@@ -13,8 +13,9 @@
             <div class="brand" style="color:#fff; font-size:1.1rem;">SITRASS Admin</div>
             <br>
             <a href="/sitrass/public/admin/dashboard">Dashboard</a>
-            <a href="/sitrass/public/admin/pending-customers">Mga Naghihintay na Account</a>
-            <a href="/sitrass/public/auth/logout">Logout</a>
+<a href="/sitrass/public/admin/pending-customers">Mga Naghihintay na Account</a>
+<a href="/sitrass/public/vans">Mga Van</a>
+<a href="/sitrass/public/auth/logout">Logout</a>
         </div>
         <div class="main-content">
             <div class="topbar">

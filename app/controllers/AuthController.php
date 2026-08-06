@@ -170,16 +170,9 @@ public function loggedin() {
         exit;
     }
 
-    echo '<!DOCTYPE html>
-    <html>
-    <head><title>SITRASS</title></head>
-    <body>
-        <h2>Maligayang pagdating, ' . htmlspecialchars($_SESSION['full_name']) . '!</h2>
-        <p>Role: ' . htmlspecialchars($_SESSION['role']) . '</p>
-        <p>(Ito ay pansamantalang pahina lang - gagawa pa tayo ng tunay na customer dashboard.)</p>
-        <a href="/sitrass/public/auth/logout">Logout</a>
-    </body>
-    </html>';
+    View::render('customer-landing', [
+        'pageTitle' => 'SITRASS - Dashboard',
+    ]);
 }
 public function forgotPassword() {
     $message = $_SESSION['forgot_message'] ?? null;

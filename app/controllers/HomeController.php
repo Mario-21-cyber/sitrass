@@ -2,6 +2,8 @@
 
 class HomeController extends Controller {
     public function index() {
-        echo "Welcome to SITRASS!";
+        View::render('home', [
+            'pageTitle' => 'SITRASS - Sibuyan Island Transportation',
+        ]);
     }
 }
