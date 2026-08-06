@@ -118,4 +118,19 @@ public function resetPassword($userId, $newPassword, $resetTokenHash) {
         return false;
     }
 }
+
+public function getPending() {
+    $stmt = $this->db->query(
+        "SELECT * FROM users WHERE status = 'pending' AND deleted_at IS NULL ORDER BY created_at ASC"
+    );
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function approve($userId) {
+    $stmt = $this->db->prepare(
+        "UPDATE users SET status = 'active', email_verified_at = NOW() WHERE user_id = ? AND status = 'pending'"
+    );
+    $stmt->execute([$userId]);
+    return $stmt->rowCount() > 0;
+}
 }

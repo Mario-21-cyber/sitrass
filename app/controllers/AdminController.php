@@ -36,7 +36,17 @@ public function approve() {
 
     if ($userId > 0) {
         $userModel = new User();
+        $user = $userModel->getById($userId);
         $userModel->approve($userId);
+
+        // Kung driver ang inaprubahan, i-update din ang drivers.is_approved
+        if ($user && $user['role'] === 'driver') {
+            $driverModel = new Driver();
+            $driver = $driverModel->getByUserId($userId);
+            if ($driver) {
+                $driverModel->approve($driver['driver_id'], $_SESSION['user_id']);
+            }
+        }
     }
 
     header('Location: /sitrass/public/admin/pending-customers');

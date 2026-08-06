@@ -268,4 +268,91 @@ public function updatePassword() {
     header('Location: /sitrass/public/auth/login');
     exit;
 }
+public function registerDriver() {
+    if (isset($_SESSION['user_id'])) {
+        header('Location: /sitrass/public/admin/dashboard');
+        exit;
+    }
+
+    $errors = $_SESSION['driver_register_errors'] ?? [];
+    $old = $_SESSION['driver_register_old'] ?? [];
+    unset($_SESSION['driver_register_errors'], $_SESSION['driver_register_old']);
+
+    View::render('register-driver', [
+        'pageTitle' => 'Driver Registration - SITRASS',
+        'errors' => $errors,
+        'old' => $old,
+    ]);
+}
+
+public function storeDriver() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        $_SESSION['driver_register_errors'] = ['Invalid o expired na session. Subukan ulit.'];
+        header('Location: /sitrass/public/auth/registerDriver');
+        exit;
+    }
+
+    $userModel = new User();
+
+    $validator = new Validator($_POST);
+    $validator->required('first_name', 'First name')
+        ->required('last_name', 'Last name')
+        ->required('email', 'Email')
+        ->email('email', 'Email')
+        ->required('phone', 'Phone')
+        ->phone('phone', 'Phone')
+        ->required('license_number', 'License number')
+        ->required('license_expiry', 'License expiry')
+        ->required('password', 'Password')
+        ->minLength('password', 'Password', 8)
+        ->matches('password_confirm', 'password', 'Kumpirmasyon ng password');
+
+    if (!$validator->passes()) {
+        $_SESSION['driver_register_errors'] = $validator->getErrors();
+        $_SESSION['driver_register_old'] = $_POST;
+        header('Location: /sitrass/public/auth/registerDriver');
+        exit;
+    }
+
+    if ($userModel->emailExists($_POST['email'])) {
+        $_SESSION['driver_register_errors'] = ['May account na gumagamit ng email na ito.'];
+        $_SESSION['driver_register_old'] = $_POST;
+        header('Location: /sitrass/public/auth/registerDriver');
+        exit;
+    }
+
+    if ($userModel->phoneExists($_POST['phone'])) {
+        $_SESSION['driver_register_errors'] = ['May account na gumagamit ng phone number na ito.'];
+        $_SESSION['driver_register_old'] = $_POST;
+        header('Location: /sitrass/public/auth/registerDriver');
+        exit;
+    }
+
+    $driverModel = new Driver();
+    if ($driverModel->licenseExists($_POST['license_number'])) {
+        $_SESSION['driver_register_errors'] = ['May driver na gumagamit ng license number na ito.'];
+        $_SESSION['driver_register_old'] = $_POST;
+        header('Location: /sitrass/public/auth/registerDriver');
+        exit;
+    }
+
+    $userId = $userModel->create([
+        'role' => 'driver',
+        'first_name' => $_POST['first_name'],
+        'last_name' => $_POST['last_name'],
+        'email' => $_POST['email'],
+        'phone' => $_POST['phone'],
+        'password' => $_POST['password'],
+    ]);
+
+    $driverModel->create($userId, [
+        'license_number' => $_POST['license_number'],
+        'license_expiry' => $_POST['license_expiry'],
+        'years_experience' => $_POST['years_experience'] ?? 0,
+    ]);
+
+    $_SESSION['login_error'] = 'Nasumite ang application mo. Hihintayin ang pag-apruba ng admin bago makapag-login.';
+    header('Location: /sitrass/public/auth/login');
+    exit;
+}
 }

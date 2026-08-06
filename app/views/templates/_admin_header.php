@@ -15,6 +15,9 @@
             <a href="/sitrass/public/admin/dashboard">Dashboard</a>
 <a href="/sitrass/public/admin/pending-customers">Mga Naghihintay na Account</a>
 <a href="/sitrass/public/vans">Mga Van</a>
+<a href="/sitrass/public/locations">Mga Lokasyon</a>
+<a href="/sitrass/public/routes">Mga Ruta</a>
+<a href="/sitrass/public/schedules">Mga Schedule</a>
 <a href="/sitrass/public/auth/logout">Logout</a>
         </div>
         <div class="main-content">
