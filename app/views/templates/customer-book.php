@@ -27,6 +27,15 @@
         <input type="number" name="passenger_count" value="1" min="1" max="<?= (int)$schedule['available_seats'] ?>" required>
     </div>
 
+    <div class="field">
+        <label>Paraan ng Pagbabayad</label>
+        <select name="method_id" required>
+            <?php foreach ($methods as $m): ?>
+                <option value="<?= (int)$m['method_id'] ?>"><?= htmlspecialchars($m['method_name']) ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
     <p style="font-size:0.85rem; color:var(--ocean);">
         Kailangan ng 30% deposit sa loob ng 2 oras para makumpirma ang reservation.
     </p>

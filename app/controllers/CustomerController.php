@@ -54,6 +54,8 @@ class CustomerController extends Controller {
         }
     }
 
+    $methodModel = new PaymentMethod();
+
     $errors = $_SESSION['book_errors'] ?? [];
     unset($_SESSION['book_errors']);
 
@@ -61,6 +63,7 @@ class CustomerController extends Controller {
         'pageTitle' => 'Mag-book ng Biyahe - SITRASS',
         'schedule' => $schedule,
         'route' => $route,
+        'methods' => $methodModel->getActive(),
         'errors' => $errors,
     ]);
 }
@@ -74,6 +77,7 @@ public function confirmBooking() {
 
     $scheduleId = (int)($_POST['schedule_id'] ?? 0);
     $passengerCount = (int)($_POST['passenger_count'] ?? 1);
+    $chosenMethodId = (int)($_POST['method_id'] ?? 0);
 
     $scheduleModel = new TripSchedule();
     $schedule = $scheduleModel->getById($scheduleId);
@@ -145,6 +149,9 @@ public function confirmBooking() {
         die('May naganap na error sa pag-book. Subukan ulit.');
     }
 
+    // Itago ang napiling paraan ng bayad, para ma-preselect sa Magbayad page mamaya
+    $_SESSION['preferred_method_' . $reservation['reference_code']] = $chosenMethodId;
+
     header('Location: /sitrass/public/customer/booking-confirmed/' . $reservation['reference_code']);
     exit;
 }
@@ -169,9 +176,15 @@ public function myBookings() {
     $reservationModel = new Reservation();
     $reservations = $reservationModel->getByCustomerId($customerId);
 
+    $message = $_SESSION['booking_message'] ?? null;
+    $error = $_SESSION['booking_error'] ?? null;
+    unset($_SESSION['booking_message'], $_SESSION['booking_error']);
+
     View::render('customer-my-bookings', [
         'pageTitle' => 'Aking Mga Booking - SITRASS',
         'reservations' => $reservations,
+        'message' => $message,
+        'error' => $error,
     ]);
 }
 
@@ -194,5 +207,299 @@ protected function getRouteDestinationId($routeId) {
     $stmt = $db->prepare("SELECT destination_location_id FROM routes WHERE route_id = ?");
     $stmt->execute([$routeId]);
     return $stmt->fetchColumn();
+}
+public function payReservation($referenceCode) {
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+    $reservationModel = new Reservation();
+    $reservation = $reservationModel->getByReferenceCode($referenceCode, $customerId);
+
+    if (!$reservation) {
+        die('Reservation not found.');
+    }
+
+    $methodModel = new PaymentMethod();
+    $error = $_SESSION['payment_error'] ?? null;
+    unset($_SESSION['payment_error']);
+
+    $preferredMethodId = $_SESSION['preferred_method_' . $referenceCode] ?? null;
+
+    View::render('customer-pay', [
+        'pageTitle' => 'Magbayad - SITRASS',
+        'reservation' => $reservation,
+        'methods' => $methodModel->getActive(),
+        'preferredMethodId' => $preferredMethodId,
+        'error' => $error,
+    ]);
+}
+
+public function submitPayment() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        $_SESSION['payment_error'] = 'Invalid o expired na session. Subukan ulit.';
+        header('Location: /sitrass/public/customer/payReservation/' . urlencode($_POST['reference_code'] ?? ''));
+        exit;
+    }
+
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+    $referenceCode = $_POST['reference_code'] ?? '';
+
+    $reservationModel = new Reservation();
+    $reservation = $reservationModel->getByReferenceCode($referenceCode, $customerId);
+
+    if (!$reservation) {
+        die('Reservation not found.');
+    }
+
+    $methodId = (int)($_POST['method_id'] ?? 0);
+    $methodModel = new PaymentMethod();
+    $method = $methodModel->getById($methodId);
+
+    if (!$method) {
+        $_SESSION['payment_error'] = 'Piliin ang paraan ng pagbabayad.';
+        header('Location: /sitrass/public/customer/payReservation/' . urlencode($referenceCode));
+        exit;
+    }
+
+    $paymentModel = new Payment();
+    if ($paymentModel->referenceExists($methodId, $_POST['reference_number'] ?? '')) {
+        $_SESSION['payment_error'] = 'Nagamit na ang reference number na ito sa nakaraang pagbabayad. I-check kung tama ang inilagay mo, o kung nasumite mo na dati.';
+        header('Location: /sitrass/public/customer/payReservation/' . urlencode($referenceCode));
+        exit;
+    }
+
+    $proofImagePath = null;
+
+    if ($method['requires_proof']) {
+        if (empty($_FILES['proof']) || $_FILES['proof']['error'] !== UPLOAD_ERR_OK) {
+            $_SESSION['payment_error'] = 'Kailangan ng proof ng pagbabayad (screenshot) para sa paraang ito.';
+            header('Location: /sitrass/public/customer/payReservation/' . urlencode($referenceCode));
+            exit;
+        }
+
+        $upload = ImageUpload::handle($_FILES['proof'], 'uploads/payments', 'pay' . $reservation['reservation_id']);
+        if (!$upload['success']) {
+            $_SESSION['payment_error'] = $upload['error'];
+            header('Location: /sitrass/public/customer/payReservation/' . urlencode($referenceCode));
+            exit;
+        }
+        $proofImagePath = $upload['path'];
+    }
+
+    $paymentModel->create([
+        'reservation_id' => $reservation['reservation_id'],
+        'method_id' => $methodId,
+        'payment_type' => $reservation['payment_status'] === 'pending' ? 'deposit' : 'balance',
+        'amount' => $_POST['amount'],
+        'reference_number' => $_POST['reference_number'] ?? null,
+        'proof_image' => $proofImagePath,
+    ]);
+
+    header('Location: /sitrass/public/customer/myBookings');
+    exit;
+}
+public function cancelBooking() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $referenceCode = $_POST['reference_code'] ?? '';
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+
+    $reservationModel = new Reservation();
+    $reservation = $reservationModel->getByReferenceCode($referenceCode, $customerId);
+
+    if (!$reservation) {
+        die('Reservation not found.');
+    }
+
+    if (!in_array($reservation['status'], ['pending', 'confirmed'])) {
+        $_SESSION['booking_error'] = 'Hindi na puwedeng kanselahin ang reservation na ito.';
+        header('Location: /sitrass/public/customer/myBookings');
+        exit;
+    }
+
+    $bookingModel = new Booking();
+    $bookings = $bookingModel->getByReservationId($reservation['reservation_id']);
+
+    // Cutoff: 12 oras bago ang unang biyahe (system_settings: cancellation_cutoff_hours)
+    foreach ($bookings as $b) {
+        $departureTimestamp = strtotime($b['travel_date'] . ' ' . $b['pickup_time']);
+        $hoursUntilDeparture = ($departureTimestamp - time()) / 3600;
+
+        if ($hoursUntilDeparture < 12) {
+            $_SESSION['booking_error'] = 'Hindi na puwedeng kanselahin - kailangan ng hindi bababa sa 12 oras bago ang biyahe.';
+            header('Location: /sitrass/public/customer/myBookings');
+            exit;
+        }
+    }
+
+    $db = (new Model())->getConnection();
+    $db->beginTransaction();
+
+    try {
+        $scheduleModel = new TripSchedule();
+
+        // Ibalik ang upuan sa bawat schedule na naka-link sa reservation na ito
+        foreach ($bookings as $b) {
+            if ($b['schedule_id']) {
+                $scheduleModel->incrementSeats($b['schedule_id'], $b['seats_booked']);
+            }
+        }
+
+        $bookingModel->cancelAllForReservation($reservation['reservation_id']);
+
+        $reservationModel->cancel($reservation['reservation_id'], $_SESSION['user_id'], 'Kinansela ng customer');
+
+        $db->commit();
+    } catch (Exception $e) {
+        $db->rollBack();
+        die('May naganap na error sa pagkansela. Subukan ulit.');
+    }
+
+    $_SESSION['booking_message'] = 'Nakansela na ang reservation.';
+    header('Location: /sitrass/public/customer/myBookings');
+    exit;
+}
+
+public function rescheduleBooking($referenceCode) {
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+    $reservationModel = new Reservation();
+    $reservation = $reservationModel->getByReferenceCode($referenceCode, $customerId);
+
+    if (!$reservation) {
+        die('Reservation not found.');
+    }
+
+    $bookingModel = new Booking();
+    $bookings = $bookingModel->getByReservationId($reservation['reservation_id']);
+    $booking = $bookings[0] ?? null;
+
+    if (!$booking || !$booking['schedule_id']) {
+        die('Hindi na-reschedule ang uri ng booking na ito.');
+    }
+
+    $scheduleModel = new TripSchedule();
+    $alternatives = $scheduleModel->getByRoute($booking['route_id'], $booking['schedule_id']);
+
+    $error = $_SESSION['reschedule_error'] ?? null;
+    unset($_SESSION['reschedule_error']);
+
+    View::render('customer-reschedule', [
+        'pageTitle' => 'I-reschedule ang Biyahe - SITRASS',
+        'reservation' => $reservation,
+        'booking' => $booking,
+        'alternatives' => $alternatives,
+        'error' => $error,
+    ]);
+}
+
+public function confirmReschedule() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $referenceCode = $_POST['reference_code'] ?? '';
+    $newScheduleId = (int)($_POST['new_schedule_id'] ?? 0);
+
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+    $reservationModel = new Reservation();
+    $reservation = $reservationModel->getByReferenceCode($referenceCode, $customerId);
+
+    if (!$reservation) {
+        die('Reservation not found.');
+    }
+
+    $bookingModel = new Booking();
+    $bookings = $bookingModel->getByReservationId($reservation['reservation_id']);
+    $booking = $bookings[0] ?? null;
+
+    if (!$booking) {
+        die('Booking not found.');
+    }
+
+    // Cutoff: 24 oras bago ang biyahe (system_settings: reschedule_cutoff_hours)
+    $departureTimestamp = strtotime($booking['travel_date'] . ' ' . $booking['pickup_time']);
+    $hoursUntilDeparture = ($departureTimestamp - time()) / 3600;
+
+    if ($hoursUntilDeparture < 24) {
+        $_SESSION['reschedule_error'] = 'Hindi na puwedeng mag-reschedule - kailangan ng hindi bababa sa 24 oras bago ang biyahe.';
+        header('Location: /sitrass/public/customer/rescheduleBooking/' . urlencode($referenceCode));
+        exit;
+    }
+
+    $scheduleModel = new TripSchedule();
+    $newSchedule = $scheduleModel->getById($newScheduleId);
+
+    if (!$newSchedule || $newSchedule['status'] !== 'scheduled' || $newSchedule['available_seats'] < $booking['seats_booked']) {
+        $_SESSION['reschedule_error'] = 'Hindi na available ang napiling biyahe.';
+        header('Location: /sitrass/public/customer/rescheduleBooking/' . urlencode($referenceCode));
+        exit;
+    }
+
+    $db = (new Model())->getConnection();
+    $db->beginTransaction();
+
+    try {
+        // Ibalik ang upuan sa lumang schedule, bawasan ang upuan sa bago
+        $scheduleModel->incrementSeats($booking['schedule_id'], $booking['seats_booked']);
+        $decremented = $scheduleModel->decrementSeats($newScheduleId, $booking['seats_booked']);
+
+        if (!$decremented) {
+            $db->rollBack();
+            $_SESSION['reschedule_error'] = 'Naubusan na ng upuan ang napiling biyahe. Subukan ulit.';
+            header('Location: /sitrass/public/customer/rescheduleBooking/' . urlencode($referenceCode));
+            exit;
+        }
+
+        $bookingModel->moveToNewSchedule($booking['booking_id'], $newSchedule);
+
+        $db->commit();
+    } catch (Exception $e) {
+        $db->rollBack();
+        die('May naganap na error sa pag-reschedule. Subukan ulit.');
+    }
+
+    $_SESSION['booking_message'] = 'Matagumpay na na-reschedule ang biyahe.';
+    header('Location: /sitrass/public/customer/myBookings');
+    exit;
+}
+public function viewQr($referenceCode) {
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+    $reservationModel = new Reservation();
+    $reservation = $reservationModel->getByReferenceCode($referenceCode, $customerId);
+
+    if (!$reservation) {
+        die('Reservation not found.');
+    }
+
+    if ($reservation['payment_status'] === 'pending') {
+        die('Kailangan munang magbayad ng deposit bago makuha ang QR code. <a href="/sitrass/public/customer/myBookings">Bumalik</a>');
+    }
+
+    $bookingModel = new Booking();
+    $bookings = $bookingModel->getByReservationId($reservation['reservation_id']);
+    $booking = $bookings[0] ?? null;
+
+    if (!$booking) {
+        die('Booking not found.');
+    }
+
+    $qrModel = new QrBooking();
+    $qr = $qrModel->getOrCreate($booking['booking_id']);
+
+    // Kung bago lang nagawa, meron tayong raw_token. Kung dati na itong ginawa,
+    // kailangan nating gumawa ng bagong token dahil hindi na natin ito na-retrieve.
+    if (!isset($qr['raw_token'])) {
+        // Ang QR code na dati na nating na-display ay gumagamit pa rin ng lumang token.
+        // Dahil hash lang ang naka-store, hindi na natin ito ma-verify pabalik.
+        // Kaya sa halip, gagamitin natin ang qr_id + booking_id bilang display fallback.
+        $qr['raw_token'] = null;
+    }
+
+    View::render('customer-qr', [
+        'pageTitle' => 'QR Code - SITRASS',
+        'reservation' => $reservation,
+        'booking' => $booking,
+        'qr' => $qr,
+    ]);
 }
 }

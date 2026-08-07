@@ -7,6 +7,8 @@ class AuthController extends Controller {
     if (isset($_SESSION['user_id'])) {
         if ($_SESSION['role'] === 'admin') {
             header('Location: /sitrass/public/admin/dashboard');
+        } elseif ($_SESSION['role'] === 'driver') {
+            header('Location: /sitrass/public/driver/dashboard');
         } else {
             header('Location: /sitrass/public/auth/loggedin');
         }
@@ -78,6 +80,8 @@ class AuthController extends Controller {
 
     if ($user['role'] === 'admin') {
         header('Location: /sitrass/public/admin/dashboard');
+    } elseif ($user['role'] === 'driver') {
+        header('Location: /sitrass/public/driver/dashboard');
     } else {
         header('Location: /sitrass/public/auth/loggedin');
     }

@@ -18,6 +18,8 @@
 <a href="/sitrass/public/locations">Mga Lokasyon</a>
 <a href="/sitrass/public/routes">Mga Ruta</a>
 <a href="/sitrass/public/schedules">Mga Schedule</a>
+<a href="/sitrass/public/payments">Mga Payment</a>
+<a href="/sitrass/public/payments/methods">Mga Paraan ng Bayad</a>
 <a href="/sitrass/public/auth/logout">Logout</a>
         </div>
         <div class="main-content">

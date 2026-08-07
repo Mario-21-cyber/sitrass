@@ -95,4 +95,29 @@ public function decrementSeats($scheduleId, $seatsToBook) {
     $stmt->execute([$seatsToBook, $scheduleId, $seatsToBook]);
     return $stmt->rowCount() > 0;
 }
+// Kabaligtaran ng decrementSeats() - ginagamit kapag nagkansela o nag-reschedule
+public function incrementSeats($scheduleId, $seatsToRestore) {
+    $stmt = $this->db->prepare(
+        "UPDATE trip_schedules
+         SET available_seats = LEAST(available_seats + ?, total_seats)
+         WHERE schedule_id = ?"
+    );
+    $stmt->execute([$seatsToRestore, $scheduleId]);
+}
+
+public function getByRoute($routeId, $excludeScheduleId = null) {
+    $sql = "SELECT * FROM vw_available_schedules WHERE route_id = ?";
+    $params = [$routeId];
+
+    if ($excludeScheduleId) {
+        $sql .= " AND schedule_id != ?";
+        $params[] = $excludeScheduleId;
+    }
+
+    $sql .= " ORDER BY departure_date ASC, departure_time ASC";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

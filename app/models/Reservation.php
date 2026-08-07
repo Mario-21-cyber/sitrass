@@ -57,4 +57,18 @@ class Reservation extends Model {
         $stmt->execute([$code, $customerId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    public function getById($id) {
+    $stmt = $this->db->prepare("SELECT * FROM reservations WHERE reservation_id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function cancel($reservationId, $cancelledByUserId, $reason) {
+    $stmt = $this->db->prepare(
+        "UPDATE reservations
+         SET status = 'cancelled', cancelled_at = NOW(), cancelled_by = ?, cancellation_reason = ?
+         WHERE reservation_id = ?"
+    );
+    $stmt->execute([$cancelledByUserId, $reason, $reservationId]);
+}
 }

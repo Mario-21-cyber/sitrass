@@ -30,4 +30,92 @@ class Booking extends Model {
         ]);
         return $this->db->lastInsertId();
     }
+    public function getByReservationId($reservationId) {
+    $stmt = $this->db->prepare("SELECT * FROM bookings WHERE reservation_id = ?");
+    $stmt->execute([$reservationId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function cancelAllForReservation($reservationId) {
+    $stmt = $this->db->prepare(
+        "UPDATE bookings SET status = 'cancelled' WHERE reservation_id = ?"
+    );
+    $stmt->execute([$reservationId]);
+}
+
+public function moveToNewSchedule($bookingId, $newSchedule) {
+    $stmt = $this->db->prepare(
+        "UPDATE bookings
+         SET schedule_id = ?, van_id = ?, driver_id = ?, travel_date = ?, pickup_time = ?
+         WHERE booking_id = ?"
+    );
+    $stmt->execute([
+        $newSchedule['schedule_id'],
+        $newSchedule['van_id'],
+        $newSchedule['driver_id'],
+        $newSchedule['departure_date'],
+        $newSchedule['departure_time'],
+        $bookingId,
+    ]);
+}
+public function getForDriver($driverId) {
+    $stmt = $this->db->prepare(
+        "SELECT b.*, rs.reference_code,
+                o.name AS pickup_name, d.name AS dropoff_name,
+                CONCAT(cu.first_name, ' ', cu.last_name) AS customer_name,
+                cu.phone AS customer_phone
+         FROM bookings b
+         JOIN reservations rs ON rs.reservation_id = b.reservation_id
+         JOIN customers c ON c.customer_id = rs.customer_id
+         JOIN users cu ON cu.user_id = c.user_id
+         JOIN locations o ON o.location_id = b.pickup_location_id
+         JOIN locations d ON d.location_id = b.dropoff_location_id
+         WHERE b.driver_id = ?
+         ORDER BY b.travel_date ASC, b.pickup_time ASC"
+    );
+    $stmt->execute([$driverId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function getById($id) {
+    $stmt = $this->db->prepare("SELECT * FROM bookings WHERE booking_id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function accept($bookingId, $driverId) {
+    $stmt = $this->db->prepare(
+        "UPDATE bookings SET status = 'accepted', accepted_at = NOW()
+         WHERE booking_id = ? AND driver_id = ? AND status = 'pending'"
+    );
+    $stmt->execute([$bookingId, $driverId]);
+    return $stmt->rowCount() > 0;
+}
+
+public function reject($bookingId, $driverId, $reason) {
+    $stmt = $this->db->prepare(
+        "UPDATE bookings SET status = 'rejected', rejected_at = NOW(), rejection_reason = ?
+         WHERE booking_id = ? AND driver_id = ? AND status = 'pending'"
+    );
+    $stmt->execute([$reason, $bookingId, $driverId]);
+    return $stmt->rowCount() > 0;
+}
+
+public function startTrip($bookingId, $driverId) {
+    $stmt = $this->db->prepare(
+        "UPDATE bookings SET status = 'en_route', trip_started_at = NOW()
+         WHERE booking_id = ? AND driver_id = ? AND status = 'accepted'"
+    );
+    $stmt->execute([$bookingId, $driverId]);
+    return $stmt->rowCount() > 0;
+}
+
+public function endTrip($bookingId, $driverId) {
+    $stmt = $this->db->prepare(
+        "UPDATE bookings SET status = 'completed', trip_ended_at = NOW()
+         WHERE booking_id = ? AND driver_id = ? AND status = 'en_route'"
+    );
+    $stmt->execute([$bookingId, $driverId]);
+    return $stmt->rowCount() > 0;
+}
 }
