@@ -10,7 +10,7 @@
 <div style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:1.5rem;">
     <p><strong>Bilang ng Pasahero:</strong> <?= (int)$reservation['passenger_count'] ?></p>
     <p><strong>Kabuuang Halaga:</strong> ₱<?= htmlspecialchars($reservation['total_amount']) ?></p>
-    <p><strong>Kailangang Deposit (30%):</strong> ₱<?= htmlspecialchars($reservation['deposit_required']) ?></p>
+    <p><strong>Kailangang Deposit (<?= htmlspecialchars(rtrim(rtrim(number_format($reservation['deposit_percentage'], 2), '0'), '.')) ?>%):</strong> ₱<?= htmlspecialchars($reservation['deposit_required']) ?></p>
     <p><strong>Status:</strong> <span class="badge badge-pending"><?= htmlspecialchars($reservation['status']) ?></span></p>
 </div>
 

@@ -143,4 +143,31 @@ public function getStats() {
     );
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+public function updateProfile($userId, $data) {
+    $stmt = $this->db->prepare(
+        "UPDATE users SET first_name = ?, last_name = ?, phone = ? WHERE user_id = ?"
+    );
+    $stmt->execute([$data['first_name'], $data['last_name'], $data['phone'], $userId]);
+}
+
+public function updateProfilePicture($userId, $path) {
+    $stmt = $this->db->prepare(
+        "UPDATE users SET profile_picture = ? WHERE user_id = ?"
+    );
+    $stmt->execute([$path, $userId]);
+}
+
+public function changePassword($userId, $newPassword) {
+    $stmt = $this->db->prepare(
+        "UPDATE users SET password_hash = ? WHERE user_id = ?"
+    );
+    $stmt->execute([password_hash($newPassword, PASSWORD_DEFAULT), $userId]);
+}
+
+public function verifyCurrentPassword($userId, $currentPassword) {
+    $stmt = $this->db->prepare("SELECT password_hash FROM users WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    $hash = $stmt->fetchColumn();
+    return $hash && password_verify($currentPassword, $hash);
+}
 }

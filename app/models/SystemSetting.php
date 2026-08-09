@@ -22,4 +22,12 @@ class SystemSetting extends Model {
         );
         $stmt->execute([$value, $updatedByUserId, $settingId]);
     }
+    public function getValue($key, $default = null) {
+    $stmt = $this->db->prepare(
+        "SELECT setting_value FROM system_settings WHERE setting_key = ?"
+    );
+    $stmt->execute([$key]);
+    $value = $stmt->fetchColumn();
+    return $value !== false ? $value : $default;
+}
 }

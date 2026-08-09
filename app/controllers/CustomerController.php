@@ -55,6 +55,9 @@ class CustomerController extends Controller {
     }
 
     $methodModel = new PaymentMethod();
+    $settingModel = new SystemSetting();
+    $depositPercentage = $settingModel->getValue('deposit_percentage', 30);
+    $depositDisplay = rtrim(rtrim(number_format($depositPercentage, 2), '0'), '.');
 
     $errors = $_SESSION['book_errors'] ?? [];
     unset($_SESSION['book_errors']);
@@ -64,6 +67,7 @@ class CustomerController extends Controller {
         'schedule' => $schedule,
         'route' => $route,
         'methods' => $methodModel->getActive(),
+        'depositPercentage' => $depositDisplay,
         'errors' => $errors,
     ]);
 }
@@ -226,7 +230,7 @@ public function payReservation($referenceCode) {
     View::render('customer-pay', [
         'pageTitle' => 'Magbayad - SITRASS',
         'reservation' => $reservation,
-        'methods' => $methodModel->getActive(),
+        'methods' => $methodModel->getActiveWithDynamicText(),
         'preferredMethodId' => $preferredMethodId,
         'error' => $error,
     ]);
@@ -570,6 +574,45 @@ public function submitRating() {
 
     $_SESSION['booking_message'] = 'Salamat sa pag-rate!';
     header('Location: /sitrass/public/customer/myBookings');
+    exit;
+}
+public function feedback() {
+    $message = $_SESSION['feedback_message'] ?? null;
+    unset($_SESSION['feedback_message']);
+
+    View::render('customer-feedback', [
+        'pageTitle' => 'Feedback - SITRASS',
+        'message' => $message,
+    ]);
+}
+
+public function submitFeedback() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $validator = new Validator($_POST);
+    $validator->required('category', 'Kategorya')
+        ->required('subject', 'Paksa')
+        ->required('message', 'Mensahe');
+
+    if (!$validator->passes()) {
+        $_SESSION['feedback_message'] = 'Punuin ang lahat ng kinakailangang field.';
+        header('Location: /sitrass/public/customer/feedback');
+        exit;
+    }
+
+    $feedbackModel = new Feedback();
+    $feedbackModel->create([
+        'user_id' => $_SESSION['user_id'] ?? null,
+        'category' => $_POST['category'],
+        'subject' => $_POST['subject'],
+        'message' => $_POST['message'],
+        'contact_email' => $_POST['contact_email'] ?? null,
+    ]);
+
+    $_SESSION['feedback_message'] = 'Salamat sa iyong feedback! Titignan namin ito sa lalong madaling panahon.';
+    header('Location: /sitrass/public/customer/feedback');
     exit;
 }
 }

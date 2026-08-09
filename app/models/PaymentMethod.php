@@ -28,4 +28,25 @@ class PaymentMethod extends Model {
         $id,
     ]);
 }
+public function getActiveWithDynamicText() {
+    $settingModel = new SystemSetting();
+    $depositPercentage = $settingModel->getValue('deposit_percentage', 30);
+
+    // Malinis na display: "30" sa halip na "30.00" kung walang desimal
+    $displayPercentage = rtrim(rtrim(number_format($depositPercentage, 2), '0'), '.');
+
+    $methods = $this->getActive();
+
+    foreach ($methods as &$method) {
+        if ($method['instructions']) {
+            $method['instructions'] = str_replace(
+                '{deposit_percentage}',
+                $displayPercentage,
+                $method['instructions']
+            );
+        }
+    }
+
+    return $methods;
+}
 }

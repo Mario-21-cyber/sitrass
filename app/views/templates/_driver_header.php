@@ -10,7 +10,7 @@
     <div style="background:var(--teal-dark); padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center;">
         <img src="/sitrass/public/img/logo.png" alt="SITRASS" style="height:40px;">
         <div style="color:var(--sand); font-size:0.9rem;">
-            <?= htmlspecialchars($_SESSION['full_name'] ?? '') ?> (Driver)
+            <a href="/sitrass/public/profile/edit" style="color:var(--sand);"><?= htmlspecialchars($_SESSION['full_name'] ?? '') ?></a> (Driver)
             &nbsp;|&nbsp;
             <a href="/sitrass/public/auth/logout" style="color:var(--amber);">Logout</a>
         </div>

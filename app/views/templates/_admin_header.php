@@ -23,6 +23,8 @@
 <a href="/sitrass/public/ratings">Mga Rating</a>
 <a href="/sitrass/public/audit">Audit Logs</a>
 <a href="/sitrass/public/settings">Mga Setting</a>
+<a href="/sitrass/public/feedback">Mga Feedback</a>
+<a href="/sitrass/public/profile/edit">Aking Profile</a>
 <a href="/sitrass/public/auth/logout">Logout</a>
         </div>
         <div class="main-content">

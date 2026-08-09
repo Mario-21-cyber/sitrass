@@ -46,4 +46,10 @@ class Driver extends Model {
         );
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function updateLicenseImage($driverId, $path) {
+    $stmt = $this->db->prepare(
+        "UPDATE drivers SET license_image = ? WHERE driver_id = ?"
+    );
+    $stmt->execute([$path, $driverId]);
+}
 }

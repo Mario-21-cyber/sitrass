@@ -37,7 +37,7 @@
     </div>
 
     <p style="font-size:0.85rem; color:var(--ocean);">
-        Kailangan ng 30% deposit sa loob ng 2 oras para makumpirma ang reservation.
+        Kailangan ng <?= htmlspecialchars($depositPercentage) ?>% deposit sa loob ng 2 oras para makumpirma ang reservation.
     </p>
 
     <button type="submit" class="btn">Kumpirmahin ang Booking</button>

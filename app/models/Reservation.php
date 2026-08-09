@@ -6,6 +6,9 @@ class Reservation extends Model {
     public function create($data) {
         $referenceCode = $this->generateReferenceCode();
 
+        $settingModel = new SystemSetting();
+        $depositPercentage = (float)$settingModel->getValue('deposit_percentage', 30);
+
         $stmt = $this->db->prepare(
             "INSERT INTO reservations
                 (reference_code, customer_id, booking_type, passenger_count, total_amount,
@@ -20,8 +23,8 @@ class Reservation extends Model {
             'booking_type' => $data['booking_type'],
             'passenger_count' => $data['passenger_count'],
             'total_amount' => $data['total_amount'],
-            'deposit_percentage' => 30.00,
-            'deposit_required' => round($data['total_amount'] * 0.30, 2),
+            'deposit_percentage' => $depositPercentage,
+            'deposit_required' => round($data['total_amount'] * ($depositPercentage / 100), 2),
         ]);
 
         return [
@@ -83,4 +86,5 @@ public function getStats() {
     );
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
 }
