@@ -21,19 +21,22 @@ class PaymentsController extends Controller {
     }
 
     public function verify() {
-        if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
-            die('Invalid na session.');
-        }
-
-        $paymentId = (int)($_POST['payment_id'] ?? 0);
-        if ($paymentId > 0) {
-            $paymentModel = new Payment();
-            $paymentModel->verify($paymentId, $_SESSION['user_id']);
-        }
-
-        header('Location: /sitrass/public/payments');
-        exit;
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
     }
+
+    $paymentId = (int)($_POST['payment_id'] ?? 0);
+    if ($paymentId > 0) {
+        $paymentModel = new Payment();
+        $paymentModel->verify($paymentId, $_SESSION['user_id']);
+
+        $auditModel = new AuditLog();
+        $auditModel->log($_SESSION['user_id'], 'payment.verified', 'payment', $paymentId);
+    }
+
+    header('Location: /sitrass/public/payments');
+    exit;
+}
 
     public function reject() {
         if (!Csrf::verify($_POST['csrf_token'] ?? '')) {

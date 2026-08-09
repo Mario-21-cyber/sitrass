@@ -71,4 +71,16 @@ public function cancel($reservationId, $cancelledByUserId, $reason) {
     );
     $stmt->execute([$cancelledByUserId, $reason, $reservationId]);
 }
+public function getStats() {
+    $stmt = $this->db->query(
+        "SELECT
+            COUNT(*) AS total_reservations,
+            SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending_count,
+            SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END) AS confirmed_count,
+            SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS completed_count,
+            SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) AS cancelled_count
+         FROM reservations"
+    );
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 }

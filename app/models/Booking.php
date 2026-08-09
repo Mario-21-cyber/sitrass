@@ -118,4 +118,23 @@ public function endTrip($bookingId, $driverId) {
     $stmt->execute([$bookingId, $driverId]);
     return $stmt->rowCount() > 0;
 }
+public function getCompletedUnratedForCustomer($customerId) {
+    $stmt = $this->db->prepare(
+        "SELECT b.*, rs.reference_code, v.plate_number,
+                CONCAT(du.first_name, ' ', du.last_name) AS driver_name,
+                o.name AS pickup_name, dl.name AS dropoff_name
+         FROM bookings b
+         JOIN reservations rs ON rs.reservation_id = b.reservation_id
+         JOIN vans v ON v.van_id = b.van_id
+         LEFT JOIN drivers d ON d.driver_id = b.driver_id
+         LEFT JOIN users du ON du.user_id = d.user_id
+         JOIN locations o ON o.location_id = b.pickup_location_id
+         JOIN locations dl ON dl.location_id = b.dropoff_location_id
+         LEFT JOIN ratings r ON r.booking_id = b.booking_id
+         WHERE rs.customer_id = ? AND b.status = 'completed' AND r.rating_id IS NULL
+         ORDER BY b.trip_ended_at DESC"
+    );
+    $stmt->execute([$customerId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

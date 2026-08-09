@@ -20,6 +20,9 @@
 <a href="/sitrass/public/schedules">Mga Schedule</a>
 <a href="/sitrass/public/payments">Mga Payment</a>
 <a href="/sitrass/public/payments/methods">Mga Paraan ng Bayad</a>
+<a href="/sitrass/public/ratings">Mga Rating</a>
+<a href="/sitrass/public/audit">Audit Logs</a>
+<a href="/sitrass/public/settings">Mga Setting</a>
 <a href="/sitrass/public/auth/logout">Logout</a>
         </div>
         <div class="main-content">

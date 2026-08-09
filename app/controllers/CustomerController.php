@@ -502,4 +502,74 @@ public function viewQr($referenceCode) {
         'qr' => $qr,
     ]);
 }
+public function toRate() {
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+    $bookingModel = new Booking();
+    $unrated = $bookingModel->getCompletedUnratedForCustomer($customerId);
+
+    View::render('customer-to-rate', [
+        'pageTitle' => 'Mag-rate ng Biyahe - SITRASS',
+        'trips' => $unrated,
+    ]);
+}
+
+public function rate($bookingId) {
+    $bookingId = (int)$bookingId;
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+    $booking = (new Booking())->getById($bookingId);
+
+    if (!$booking) {
+        die('Booking not found.');
+    }
+
+    $ratingModel = new Rating();
+    if ($ratingModel->existsForBooking($bookingId)) {
+        die('Na-rate mo na ang biyaheng ito. <a href="/sitrass/public/customer/myBookings">Bumalik</a>');
+    }
+
+    View::render('customer-rate', [
+        'pageTitle' => 'Mag-rate - SITRASS',
+        'booking' => $booking,
+    ]);
+}
+
+public function submitRating() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $bookingId = (int)($_POST['booking_id'] ?? 0);
+    $booking = (new Booking())->getById($bookingId);
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+
+    if (!$booking) {
+        die('Booking not found.');
+    }
+
+    $ratingModel = new Rating();
+    if ($ratingModel->existsForBooking($bookingId)) {
+        die('Na-rate mo na ang biyaheng ito.');
+    }
+
+    $overall = (int)($_POST['overall_rating'] ?? 0);
+    if ($overall < 1 || $overall > 5) {
+        die('Hindi valid ang rating.');
+    }
+
+    $ratingModel->create([
+        'booking_id' => $bookingId,
+        'customer_id' => $customerId,
+        'driver_id' => $booking['driver_id'],
+        'van_id' => $booking['van_id'],
+        'overall_rating' => $overall,
+        'punctuality_rating' => $_POST['punctuality_rating'] ?? null,
+        'cleanliness_rating' => $_POST['cleanliness_rating'] ?? null,
+        'driving_rating' => $_POST['driving_rating'] ?? null,
+        'comment' => $_POST['comment'] ?? null,
+    ]);
+
+    $_SESSION['booking_message'] = 'Salamat sa pag-rate!';
+    header('Location: /sitrass/public/customer/myBookings');
+    exit;
+}
 }

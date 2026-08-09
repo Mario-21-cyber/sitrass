@@ -11,9 +11,19 @@ class AdminController extends Controller {
     }
 
     public function dashboard() {
+    $reservationModel = new Reservation();
+    $paymentModel = new Payment();
+    $vanModel = new Van();
+    $userModel = new User();
+
     View::render('admin-dashboard', [
         'pageTitle' => 'Dashboard - SITRASS Admin',
         'pageHeading' => 'Dashboard',
+        'reservationStats' => $reservationModel->getStats(),
+        'revenueStats' => $paymentModel->getRevenueStats(),
+        'dailyRevenue' => $paymentModel->getDailyRevenue(7),
+        'vanStats' => $vanModel->getStats(),
+        'userStats' => $userModel->getStats(),
     ]);
 }
     public function pendingCustomers() {
@@ -47,6 +57,9 @@ public function approve() {
                 $driverModel->approve($driver['driver_id'], $_SESSION['user_id']);
             }
         }
+
+        $auditModel = new AuditLog();
+        $auditModel->log($_SESSION['user_id'], 'user.approved', 'user', $userId);
     }
 
     header('Location: /sitrass/public/admin/pending-customers');

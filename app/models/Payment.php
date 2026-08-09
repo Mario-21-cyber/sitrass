@@ -115,4 +115,21 @@ class Payment extends Model {
     $stmt->execute([$methodId, $referenceNumber]);
     return $stmt->fetchColumn() > 0;
 }
+public function getRevenueStats() {
+    $stmt = $this->db->query(
+        "SELECT
+            COALESCE(SUM(CASE WHEN status = 'verified' THEN amount ELSE 0 END), 0) AS total_verified,
+            COALESCE(SUM(CASE WHEN status = 'verified' AND DATE(verified_at) = CURDATE() THEN amount ELSE 0 END), 0) AS today_verified,
+            SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending_count
+         FROM payments"
+    );
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function getDailyRevenue($days = 7) {
+    $stmt = $this->db->query(
+        "SELECT * FROM vw_daily_revenue ORDER BY revenue_date DESC LIMIT " . (int)$days
+    );
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

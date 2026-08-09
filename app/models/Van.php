@@ -58,4 +58,14 @@ class Van extends Model {
         );
         $stmt->execute([$status, $vanId]);
     }
+    public function getStats() {
+    $stmt = $this->db->query(
+        "SELECT
+            COUNT(*) AS total_vans,
+            SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) AS active_count,
+            SUM(CASE WHEN status = 'maintenance' THEN 1 ELSE 0 END) AS maintenance_count
+         FROM vans WHERE deleted_at IS NULL"
+    );
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 }

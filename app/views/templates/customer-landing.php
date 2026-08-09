@@ -5,6 +5,7 @@
 
 <a href="/sitrass/public/customer/search" class="btn" style="display:block; text-align:center; text-decoration:none;">Maghanap ng Biyahe</a>
 <a href="/sitrass/public/customer/myBookings" class="btn-link">Aking Mga Booking</a>
+<a href="/sitrass/public/customer/toRate" class="btn-link">Mag-rate ng Biyahe</a>
 <a href="/sitrass/public/auth/logout" class="btn-link">Logout</a>
 
 <?php require __DIR__ . '/_auth_footer.php'; ?>

@@ -133,4 +133,14 @@ public function approve($userId) {
     $stmt->execute([$userId]);
     return $stmt->rowCount() > 0;
 }
+public function getStats() {
+    $stmt = $this->db->query(
+        "SELECT
+            SUM(CASE WHEN role = 'customer' AND status = 'active' THEN 1 ELSE 0 END) AS active_customers,
+            SUM(CASE WHEN role = 'driver' AND status = 'active' THEN 1 ELSE 0 END) AS active_drivers,
+            SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending_accounts
+         FROM users WHERE deleted_at IS NULL"
+    );
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 }
