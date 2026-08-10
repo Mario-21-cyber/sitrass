@@ -153,8 +153,23 @@ public function confirmBooking() {
         die('May naganap na error sa pag-book. Subukan ulit.');
     }
 
-    // Itago ang napiling paraan ng bayad, para ma-preselect sa Magbayad page mamaya
+   // Itago ang napiling paraan ng bayad, para ma-preselect sa Magbayad page mamaya
     $_SESSION['preferred_method_' . $reservation['reference_code']] = $chosenMethodId;
+
+    $userModel = new User();
+    $customerUser = $userModel->getById($_SESSION['user_id']);
+
+    Mailer::send(
+        $customerUser['email'],
+        $customerUser['first_name'],
+        'Nakumpirma ang Booking - ' . $reservation['reference_code'],
+        '<p>Kumusta, ' . htmlspecialchars($customerUser['first_name']) . '!</p>
+         <p>Narito ang detalye ng iyong booking:</p>
+         <p><strong>Reference Code:</strong> ' . htmlspecialchars($reservation['reference_code']) . '</p>
+         <p><strong>Bilang ng Pasahero:</strong> ' . (int)$passengerCount . '</p>
+         <p><strong>Kailangang Deposit:</strong> ₱' . number_format($totalAmount * 0.30, 2) . '</p>
+         <p>Bayaran ang deposit sa loob ng 2 oras para hindi ma-cancel ang reservation.</p>'
+    );
 
     header('Location: /sitrass/public/customer/booking-confirmed/' . $reservation['reference_code']);
     exit;

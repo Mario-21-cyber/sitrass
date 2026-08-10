@@ -28,10 +28,39 @@ class PaymentsController extends Controller {
     $paymentId = (int)($_POST['payment_id'] ?? 0);
     if ($paymentId > 0) {
         $paymentModel = new Payment();
+        $payment = $paymentModel->getById($paymentId);
         $paymentModel->verify($paymentId, $_SESSION['user_id']);
 
         $auditModel = new AuditLog();
         $auditModel->log($_SESSION['user_id'], 'payment.verified', 'payment', $paymentId);
+
+        // Kunin ang email ng customer para sa notification
+        $db = (new Model())->getConnection();
+        $stmt = $db->prepare(
+            "SELECT u.email, u.first_name, rs.reference_code, rs.total_amount, rs.balance_due
+             FROM payments p
+             JOIN reservations rs ON rs.reservation_id = p.reservation_id
+             JOIN customers c ON c.customer_id = rs.customer_id
+             JOIN users u ON u.user_id = c.user_id
+             WHERE p.payment_id = ?"
+        );
+        $stmt->execute([$paymentId]);
+        $info = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($info) {
+            $balanceMessage = $info['balance_due'] > 0
+                ? '<p>Natitirang balance: ₱' . number_format($info['balance_due'], 2) . '</p>'
+                : '<p>Buo nang bayad ang reservation mo!</p>';
+
+            Mailer::send(
+                $info['email'],
+                $info['first_name'],
+                'Na-verify na ang Bayad Mo - ' . $info['reference_code'],
+                '<p>Kumusta, ' . htmlspecialchars($info['first_name']) . '!</p>
+                 <p>Na-verify na ng admin ang iyong bayad para sa reservation <strong>' . htmlspecialchars($info['reference_code']) . '</strong>.</p>'
+                 . $balanceMessage
+            );
+        }
     }
 
     header('Location: /sitrass/public/payments');
