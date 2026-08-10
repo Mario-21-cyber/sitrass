@@ -36,6 +36,12 @@
                             <a href="/sitrass/public/customer/payReservation/<?= htmlspecialchars($r['reference_code']) ?>" style="display:inline-block; padding:0.3rem 0.8rem; text-decoration:none; font-size:0.8rem; margin-left:0.3rem;">Bayaran ang Balance</a>
                         <?php endif; ?>
                     <?php endif; ?>
+                    <?php if (($r['first_booking_status'] ?? null) === 'en_route'): ?>
+                        <a href="/sitrass/public/customer/trackTrip/<?= (int)$r['first_booking_id'] ?>" class="btn" style="display:inline-block; width:auto; padding:0.3rem 0.8rem; text-decoration:none; font-size:0.8rem; margin-left:0.4rem;">I-track ang Van</a>
+                    <?php endif; ?>
+                    <?php if (!empty($r['first_booking_id']) && in_array($r['first_booking_status'] ?? '', ['accepted','en_route'])): ?>
+                        <a href="/sitrass/public/chat/open/<?= (int)$r['first_booking_id'] ?>" style="display:inline-block; padding:0.3rem 0.8rem; text-decoration:none; font-size:0.8rem; margin-left:0.4rem;">Chat</a>
+                    <?php endif; ?>
                     <a href="/sitrass/public/customer/rescheduleBooking/<?= htmlspecialchars($r['reference_code']) ?>" style="display:inline-block; padding:0.3rem 0.8rem; text-decoration:none; font-size:0.8rem; margin-left:0.4rem;">I-reschedule</a>
                     <form method="POST" action="/sitrass/public/customer/cancelBooking" style="display:inline;" onsubmit="return confirm('Sigurado kang kanselahin ang booking na ito?');">
                         <?= Csrf::field() ?>

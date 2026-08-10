@@ -630,4 +630,24 @@ public function submitFeedback() {
     header('Location: /sitrass/public/customer/feedback');
     exit;
 }
+public function trackTrip($bookingId) {
+    $bookingId = (int)$bookingId;
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+
+    $bookingModel = new Booking();
+    $booking = $bookingModel->getWithDriverForTracking($bookingId, $customerId);
+
+    if (!$booking) {
+        die('Booking not found.');
+    }
+
+    if ($booking['status'] !== 'en_route') {
+        die('Hindi pa nagsisimula ang biyaheng ito, o tapos na. <a href="/sitrass/public/customer/myBookings">Bumalik</a>');
+    }
+
+    View::render('customer-track', [
+        'pageTitle' => 'I-track ang Biyahe - SITRASS',
+        'booking' => $booking,
+    ]);
+}
 }

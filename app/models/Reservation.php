@@ -47,7 +47,16 @@ class Reservation extends Model {
 
     public function getByCustomerId($customerId) {
         $stmt = $this->db->prepare(
-            "SELECT * FROM vw_reservation_summary WHERE customer_id = ? ORDER BY created_at DESC"
+            "SELECT vrs.*,
+                    (SELECT b.booking_id FROM bookings b
+                       WHERE b.reservation_id = vrs.reservation_id
+                       ORDER BY b.travel_date ASC LIMIT 1) AS first_booking_id,
+                    (SELECT b.status FROM bookings b
+                       WHERE b.reservation_id = vrs.reservation_id
+                       ORDER BY b.travel_date ASC LIMIT 1) AS first_booking_status
+             FROM vw_reservation_summary vrs
+             WHERE vrs.customer_id = ?
+             ORDER BY vrs.created_at DESC"
         );
         $stmt->execute([$customerId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

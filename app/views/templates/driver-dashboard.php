@@ -45,12 +45,14 @@
                         <input type="hidden" name="booking_id" value="<?= (int)$b['booking_id'] ?>">
                         <button type="submit" class="btn">Simulan ang Biyahe</button>
                     </form>
+                    <a href="/sitrass/public/chat/open/<?= (int)$b['booking_id'] ?>">Chat</a>
                 <?php elseif ($b['status'] === 'en_route'): ?>
                     <form method="POST" action="/sitrass/public/driver/endTrip" style="display:inline;">
                         <?= Csrf::field() ?>
                         <input type="hidden" name="booking_id" value="<?= (int)$b['booking_id'] ?>">
                         <button type="submit" class="btn">Tapusin ang Biyahe</button>
                     </form>
+                    <a href="/sitrass/public/chat/open/<?= (int)$b['booking_id'] ?>">Chat</a>
                 <?php elseif ($b['status'] === 'completed'): ?>
                     <span style="font-size:0.85rem; color:var(--forest);">Tapos na ang biyaheng ito.</span>
                 <?php endif; ?>
