@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle ?? 'SITRASS Driver') ?></title>
     <link rel="stylesheet" href="/sitrass/public/css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+    <script src="/sitrass/public/js/firebase-config.js"></script>
 </head>
 <body>
     <div class="top-nav">

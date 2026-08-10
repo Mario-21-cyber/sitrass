@@ -59,4 +59,32 @@
     <?php endforeach; ?>
 <?php endif; ?>
 
+<script>
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const activeBookingId = <?= json_encode($activeEnRouteBookingId ?? null) ?>;
+const driverId = <?= json_encode($driverIdForGps ?? null) ?>;
+
+if (activeBookingId && driverId && navigator.geolocation) {
+    function sendLocation() {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            db.ref('driver_locations/' + driverId).set({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+                heading: position.coords.heading || 0,
+                speed: position.coords.speed || 0,
+                bookingId: activeBookingId,
+                updatedAt: Date.now()
+            });
+        }, function(error) {
+            console.warn('Hindi makuha ang GPS location:', error.message);
+        }, { enableHighAccuracy: true, timeout: 10000 });
+    }
+
+    sendLocation();
+    setInterval(sendLocation, 15000);
+}
+</script>
+
 <?php require __DIR__ . '/_driver_footer.php'; ?>

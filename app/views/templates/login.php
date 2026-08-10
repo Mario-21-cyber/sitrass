@@ -10,12 +10,12 @@
 <form method="POST" action="/sitrass/public/auth/authenticate">
     <?= Csrf::field() ?>
     <div class="field">
-        <label>Email</label>
-        <input type="email" name="email" required>
+        <label for="login_email">Email</label>
+        <input type="email" id="login_email" name="email" required>
     </div>
     <div class="field">
-        <label>Password</label>
-        <input type="password" name="password" required>
+        <label for="login_password">Password</label>
+        <input type="password" id="login_password" name="password" required>
     </div>
     <button type="submit" class="btn">Login</button>
 </form>

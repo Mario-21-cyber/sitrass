@@ -11,12 +11,12 @@
     <?= Csrf::field() ?>
     <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
     <div class="field">
-        <label>Bagong Password</label>
-        <input type="password" name="password" required>
+        <label for="new_password">Bagong Password</label>
+        <input type="password" id="new_password" name="password" required>
     </div>
     <div class="field">
-        <label>Kumpirmahin ang Password</label>
-        <input type="password" name="password_confirm" required>
+        <label for="new_password_confirm">Kumpirmahin ang Password</label>
+        <input type="password" id="new_password_confirm" name="password_confirm" required>
     </div>
     <button type="submit" class="btn">I-update ang Password</button>
 </form>

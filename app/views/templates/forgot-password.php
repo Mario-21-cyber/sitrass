@@ -16,9 +16,9 @@
 
 <form method="POST" action="/sitrass/public/auth/sendReset">
     <?= Csrf::field() ?>
-    <div class="field">
-        <label>Email</label>
-        <input type="email" name="email" required>
+   <div class="field">
+        <label for="forgot_email">Email</label>
+        <input type="email" id="forgot_email" name="email" required>
     </div>
     <button type="submit" class="btn">Ipadala ang Reset Link</button>
 </form>

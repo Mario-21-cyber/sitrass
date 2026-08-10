@@ -22,6 +22,15 @@ class DriverController extends Controller {
         $bookingModel = new Booking();
         $bookings = $bookingModel->getForDriver($this->driverRecord['driver_id']);
 
+        // Hanapin kung may aktibong "en_route" na booking - doon lang natin ipapadala ang GPS
+        $activeEnRouteBookingId = null;
+        foreach ($bookings as $b) {
+            if ($b['status'] === 'en_route') {
+                $activeEnRouteBookingId = $b['booking_id'];
+                break;
+            }
+        }
+
         $message = $_SESSION['driver_message'] ?? null;
         $error = $_SESSION['driver_error'] ?? null;
         unset($_SESSION['driver_message'], $_SESSION['driver_error']);
@@ -31,6 +40,8 @@ class DriverController extends Controller {
             'bookings' => $bookings,
             'message' => $message,
             'error' => $error,
+            'activeEnRouteBookingId' => $activeEnRouteBookingId,
+            'driverIdForGps' => $this->driverRecord['driver_id'],
         ]);
     }
 
