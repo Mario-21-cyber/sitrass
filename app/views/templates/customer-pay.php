@@ -32,7 +32,7 @@
     <input type="hidden" name="reference_code" value="<?= htmlspecialchars($reservation['reference_code']) ?>">
 
     <div class="field">
-        <label>Paraan ng Pagbabayad</label>
+        <label for="method_id">Paraan ng Pagbabayad</label>
         <select name="method_id" id="method_id" required onchange="updateMethodDisplay()">
             <?php foreach ($methods as $m): ?>
                 <option value="<?= (int)$m['method_id'] ?>"
@@ -45,18 +45,18 @@
     </div>
 
     <div class="field">
-        <label>Halagang Babayaran (PHP)</label>
-        <input type="number" step="0.01" name="amount" value="<?= htmlspecialchars($reservation['deposit_required']) ?>" required>
+        <label for="pay_amount">Halagang Babayaran (PHP)</label>
+        <input type="number" step="0.01" id="pay_amount" name="amount" value="<?= htmlspecialchars($reservation['deposit_required']) ?>" required>
     </div>
 
     <div class="field">
-        <label>Reference Number (kung GCash)</label>
-        <input type="text" name="reference_number">
+        <label for="pay_ref">Reference Number (kung GCash)</label>
+        <input type="text" id="pay_ref" name="reference_number">
     </div>
 
     <div class="field" id="proof_field">
-        <label>Proof ng Pagbabayad (screenshot)</label>
-        <input type="file" name="proof" accept="image/jpeg,image/png">
+        <label for="pay_proof">Proof ng Pagbabayad (screenshot)</label>
+        <input type="file" id="pay_proof" name="proof" accept="image/jpeg,image/png">
     </div>
 
     <button type="submit" class="btn">Isumite ang Pagbabayad</button>

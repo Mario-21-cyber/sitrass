@@ -14,13 +14,13 @@
     <?= Csrf::field() ?>
 
     <div class="field">
-        <label>Pangalan</label>
-        <input type="text" name="name" value="<?= htmlspecialchars($old['name'] ?? '') ?>" required>
+        <label for="loc_name">Pangalan</label>
+        <input type="text" id="loc_name" name="name" value="<?= htmlspecialchars($old['name'] ?? '') ?>" required>
     </div>
 
     <div class="field">
-        <label>Tipo</label>
-        <select name="location_type" required>
+        <label for="loc_type">Tipo</label>
+        <select id="loc_type" name="location_type" required>
             <option value="both">Pickup at Destination</option>
             <option value="pickup">Pickup lang</option>
             <option value="destination">Destination lang</option>
@@ -28,8 +28,8 @@
     </div>
 
     <div class="field">
-        <label>Kategorya</label>
-        <select name="category" required>
+        <label for="loc_category">Kategorya</label>
+        <select id="loc_category" name="category" required>
             <option value="port">Port</option>
             <option value="terminal">Terminal</option>
             <option value="town_proper">Town Proper</option>
@@ -42,13 +42,13 @@
     </div>
 
     <div class="field">
-        <label>Barangay</label>
-        <input type="text" name="barangay" value="<?= htmlspecialchars($old['barangay'] ?? '') ?>">
+        <label for="loc_barangay">Barangay</label>
+        <input type="text" id="loc_barangay" name="barangay" value="<?= htmlspecialchars($old['barangay'] ?? '') ?>">
     </div>
 
     <div class="field">
-        <label>Munisipyo</label>
-        <select name="municipality" required>
+        <label for="loc_municipality">Munisipyo</label>
+        <select id="loc_municipality" name="municipality" required>
             <option value="Magdiwang">Magdiwang</option>
             <option value="San Fernando">San Fernando</option>
             <option value="Cajidiocan">Cajidiocan</option>
@@ -57,18 +57,18 @@
     </div>
 
     <div class="field">
-        <label>Latitude</label>
-        <input type="text" name="latitude" value="<?= htmlspecialchars($old['latitude'] ?? '') ?>" required placeholder="hal. 12.48861">
+        <label for="loc_lat">Latitude</label>
+        <input type="text" id="loc_lat" name="latitude" value="<?= htmlspecialchars($old['latitude'] ?? '') ?>" required placeholder="hal. 12.48861">
     </div>
 
     <div class="field">
-        <label>Longitude</label>
-        <input type="text" name="longitude" value="<?= htmlspecialchars($old['longitude'] ?? '') ?>" required placeholder="hal. 122.52306">
+        <label for="loc_lng">Longitude</label>
+        <input type="text" id="loc_lng" name="longitude" value="<?= htmlspecialchars($old['longitude'] ?? '') ?>" required placeholder="hal. 122.52306">
     </div>
 
     <div class="field">
-        <label>Landmark</label>
-        <input type="text" name="landmark" value="<?= htmlspecialchars($old['landmark'] ?? '') ?>">
+        <label for="loc_landmark">Landmark</label>
+        <input type="text" id="loc_landmark" name="landmark" value="<?= htmlspecialchars($old['landmark'] ?? '') ?>">
     </div>
 
     <button type="submit" class="btn">I-save ang Lokasyon</button>

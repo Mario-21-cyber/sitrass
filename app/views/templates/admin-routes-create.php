@@ -14,18 +14,18 @@
     <?= Csrf::field() ?>
 
     <div class="field">
-        <label>Route Code (hal. MAG-CAJ)</label>
-        <input type="text" name="route_code" value="<?= htmlspecialchars($old['route_code'] ?? '') ?>" required>
+        <label for="r_code">Route Code (hal. MAG-CAJ)</label>
+        <input type="text" id="r_code" name="route_code" value="<?= htmlspecialchars($old['route_code'] ?? '') ?>" required>
     </div>
 
     <div class="field">
-        <label>Pangalan ng Ruta</label>
-        <input type="text" name="route_name" value="<?= htmlspecialchars($old['route_name'] ?? '') ?>" required>
+        <label for="r_name">Pangalan ng Ruta</label>
+        <input type="text" id="r_name" name="route_name" value="<?= htmlspecialchars($old['route_name'] ?? '') ?>" required>
     </div>
 
     <div class="field">
-        <label>Mula (Origin)</label>
-        <select name="origin_location_id" required>
+        <label for="r_origin">Mula (Origin)</label>
+        <select id="r_origin" name="origin_location_id" required>
             <?php foreach ($locations as $loc): ?>
                 <option value="<?= (int)$loc['location_id'] ?>"><?= htmlspecialchars($loc['name']) ?> (<?= htmlspecialchars($loc['municipality']) ?>)</option>
             <?php endforeach; ?>
@@ -33,8 +33,8 @@
     </div>
 
     <div class="field">
-        <label>Papunta (Destination)</label>
-        <select name="destination_location_id" required>
+        <label for="r_dest">Papunta (Destination)</label>
+        <select id="r_dest" name="destination_location_id" required>
             <?php foreach ($locations as $loc): ?>
                 <option value="<?= (int)$loc['location_id'] ?>"><?= htmlspecialchars($loc['name']) ?> (<?= htmlspecialchars($loc['municipality']) ?>)</option>
             <?php endforeach; ?>
@@ -42,28 +42,28 @@
     </div>
 
     <div class="field">
-        <label>Distansya (km)</label>
-        <input type="number" step="0.01" name="distance_km" value="<?= htmlspecialchars($old['distance_km'] ?? '0') ?>">
+        <label for="r_distance">Distansya (km)</label>
+        <input type="number" step="0.01" id="r_distance" name="distance_km" value="<?= htmlspecialchars($old['distance_km'] ?? '0') ?>">
     </div>
 
     <div class="field">
-        <label>Tantiyang Oras (minuto)</label>
-        <input type="number" name="estimated_duration_minutes" value="<?= htmlspecialchars($old['estimated_duration_minutes'] ?? '0') ?>">
+        <label for="r_duration">Tantiyang Oras (minuto)</label>
+        <input type="number" id="r_duration" name="estimated_duration_minutes" value="<?= htmlspecialchars($old['estimated_duration_minutes'] ?? '0') ?>">
     </div>
 
     <div class="field">
-        <label>Base Fare (PHP)</label>
-        <input type="number" step="0.01" name="base_fare" value="<?= htmlspecialchars($old['base_fare'] ?? '0') ?>">
+        <label for="r_base_fare">Base Fare (PHP)</label>
+        <input type="number" step="0.01" id="r_base_fare" name="base_fare" value="<?= htmlspecialchars($old['base_fare'] ?? '0') ?>">
     </div>
 
     <div class="field">
-        <label>Fare per Passenger (PHP)</label>
-        <input type="number" step="0.01" name="fare_per_passenger" value="<?= htmlspecialchars($old['fare_per_passenger'] ?? '0') ?>">
+        <label for="r_fare_pax">Fare per Passenger (PHP)</label>
+        <input type="number" step="0.01" id="r_fare_pax" name="fare_per_passenger" value="<?= htmlspecialchars($old['fare_per_passenger'] ?? '0') ?>">
     </div>
 
     <div class="field">
-        <label>Kalagayan ng Daan</label>
-        <select name="road_condition" required>
+        <label for="r_road">Kalagayan ng Daan</label>
+        <select id="r_road" name="road_condition" required>
             <option value="paved">Paved</option>
             <option value="partially_paved">Partially Paved</option>
             <option value="rough">Rough</option>

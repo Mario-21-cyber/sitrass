@@ -55,20 +55,16 @@ require __DIR__ . '/' . $headerFile;
         <form method="POST" action="/sitrass/public/profile/update" class="card">
             <?= Csrf::field() ?>
             <div class="field">
-                <label>First Name</label>
-                <input type="text" name="first_name" value="<?= htmlspecialchars($user['first_name']) ?>" required>
+                <label>Kasalukuyang Password</label>
+                <input type="password" name="current_password" required>
             </div>
             <div class="field">
-                <label>Last Name</label>
-                <input type="text" name="last_name" value="<?= htmlspecialchars($user['last_name']) ?>" required>
+                <label>Bagong Password</label>
+                <input type="password" name="new_password" required>
             </div>
             <div class="field">
-                <label>Email (hindi na puwedeng baguhin)</label>
-                <input type="email" value="<?= htmlspecialchars($user['email']) ?>" disabled>
-            </div>
-            <div class="field">
-                <label>Phone</label>
-                <input type="text" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" required>
+                <label>Kumpirmahin ang Bagong Password</label>
+                <input type="password" name="new_password_confirm" required>
             </div>
             <button type="submit" class="btn">I-save ang Impormasyon</button>
         </form>

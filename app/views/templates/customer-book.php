@@ -23,13 +23,13 @@
     <input type="hidden" name="schedule_id" value="<?= (int)$schedule['schedule_id'] ?>">
 
     <div class="field">
-        <label>Bilang ng Pasahero</label>
-        <input type="number" name="passenger_count" value="1" min="1" max="<?= (int)$schedule['available_seats'] ?>" required>
+        <label for="bk_pax">Bilang ng Pasahero</label>
+        <input type="number" id="bk_pax" name="passenger_count" value="1" min="1" max="<?= (int)$schedule['available_seats'] ?>" required>
     </div>
 
     <div class="field">
-        <label>Paraan ng Pagbabayad</label>
-        <select name="method_id" required>
+        <label for="bk_method">Paraan ng Pagbabayad</label>
+        <select id="bk_method" name="method_id" required>
             <?php foreach ($methods as $m): ?>
                 <option value="<?= (int)$m['method_id'] ?>"><?= htmlspecialchars($m['method_name']) ?></option>
             <?php endforeach; ?>

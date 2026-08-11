@@ -7,8 +7,8 @@
     <input type="hidden" name="booking_id" value="<?= (int)$booking['booking_id'] ?>">
 
     <div class="field">
-        <label>Pangkalahatang Rating (1-5)</label>
-        <select name="overall_rating" required>
+        <label for="rate_overall">Pangkalahatang Rating (1-5)</label>
+        <select id="rate_overall" name="overall_rating" required>
             <option value="5">5 - Napakahusay</option>
             <option value="4">4 - Mahusay</option>
             <option value="3">3 - Okay lang</option>
@@ -18,32 +18,32 @@
     </div>
 
     <div class="field">
-        <label>Punctuality (opsyonal)</label>
-        <select name="punctuality_rating">
+        <label for="rate_punctuality">Punctuality (opsyonal)</label>
+        <select id="rate_punctuality" name="punctuality_rating">
             <option value="">-- Laktawan --</option>
             <option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>
         </select>
     </div>
 
     <div class="field">
-        <label>Kalinisan ng Van (opsyonal)</label>
-        <select name="cleanliness_rating">
+        <label for="rate_cleanliness">Kalinisan ng Van (opsyonal)</label>
+        <select id="rate_cleanliness" name="cleanliness_rating">
             <option value="">-- Laktawan --</option>
             <option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>
         </select>
     </div>
 
     <div class="field">
-        <label>Pagmamaneho (opsyonal)</label>
-        <select name="driving_rating">
+        <label for="rate_driving">Pagmamaneho (opsyonal)</label>
+        <select id="rate_driving" name="driving_rating">
             <option value="">-- Laktawan --</option>
             <option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>
         </select>
     </div>
 
     <div class="field">
-        <label>Komento (opsyonal)</label>
-        <input type="text" name="comment">
+        <label for="rate_comment">Komento (opsyonal)</label>
+        <input type="text" id="rate_comment" name="comment">
     </div>
 
     <button type="submit" class="btn">Isumite ang Rating</button>

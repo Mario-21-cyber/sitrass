@@ -10,8 +10,8 @@
     <?= Csrf::field() ?>
 
     <div class="field">
-        <label>Kategorya</label>
-        <select name="category" required>
+        <label for="fb_category">Kategorya</label>
+        <select id="fb_category" name="category" required>
             <option value="bug">Bug / Problema sa System</option>
             <option value="suggestion">Mungkahi</option>
             <option value="complaint">Reklamo</option>
@@ -21,18 +21,18 @@
     </div>
 
     <div class="field">
-        <label>Paksa</label>
-        <input type="text" name="subject" required>
+        <label for="fb_subject">Paksa</label>
+        <input type="text" id="fb_subject" name="subject" required>
     </div>
 
     <div class="field">
-        <label>Mensahe</label>
-        <input type="text" name="message" required>
+        <label for="fb_message">Mensahe</label>
+        <input type="text" id="fb_message" name="message" required>
     </div>
 
     <div class="field">
-        <label>Email para sa Sagot (opsyonal)</label>
-        <input type="email" name="contact_email">
+        <label for="fb_email">Email para sa Sagot (opsyonal)</label>
+        <input type="email" id="fb_email" name="contact_email">
     </div>
 
     <button type="submit" class="btn">Ipadala</button>
