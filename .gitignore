@@ -1,2 +1,3 @@
 config/mail.php
+config/sms.php
 public/uploads/
