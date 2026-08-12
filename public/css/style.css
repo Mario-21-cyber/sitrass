@@ -541,7 +541,7 @@ tr:last-child td {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-3);
 }
 
 .top-nav img.logo {
@@ -551,10 +551,46 @@ tr:last-child td {
 .top-nav .user-info {
   color: var(--sand);
   font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
 }
 
 .top-nav .user-info a {
   color: inherit;
+}
+
+.top-nav .nav-links {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.top-nav .nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+.top-nav .nav-links a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+}
+.top-nav .nav-links a.active {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--white);
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .top-nav .nav-links {
+    display: none;
+  }
 }
 
 .page-wrap {
