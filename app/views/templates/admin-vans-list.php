@@ -1,9 +1,19 @@
 <?php require __DIR__ . '/_admin_header.php'; ?>
 
-<p><a href="/sitrass/public/vans/create" class="btn" style="display:inline-block; width:auto; padding:0.6rem 1.2rem; text-decoration:none;">+ Magdagdag ng Van</a></p>
+<div class="section-heading">
+    <h3 style="margin:0;">Fleet Overview</h3>
+    <a href="/sitrass/public/vans/create" class="btn" style="width:auto; padding:0.6rem 1.2rem;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Magdagdag ng Van
+    </a>
+</div>
 
 <?php if (empty($vans)): ?>
-    <p>Wala pang van na naitala.</p>
+    <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;color:var(--border);margin-bottom:0.75rem;"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+        <div>Wala pang van na naitala.</div>
+        <div class="text-sm">Magdagdag ng unang van para masimulan ang scheduling.</div>
+    </div>
 <?php else: ?>
     <table>
         <tr>
@@ -16,9 +26,9 @@
         </tr>
         <?php foreach ($vans as $van): ?>
             <tr>
-                <td><?= htmlspecialchars($van['plate_number']) ?></td>
+                <td style="font-family:'SF Mono', monospace; font-weight:600;"><?= htmlspecialchars($van['plate_number']) ?></td>
                 <td><?= htmlspecialchars($van['make'] . ' ' . $van['model']) ?></td>
-                <td><?= htmlspecialchars($van['van_type']) ?></td>
+                <td><span class="badge badge-neutral"><?= htmlspecialchars($van['van_type']) ?></span></td>
                 <td><?= (int)$van['seating_capacity'] ?></td>
                 <td>
                     <span class="badge <?= $van['status'] === 'active' ? 'badge-active' : 'badge-pending' ?>">
@@ -26,20 +36,20 @@
                     </span>
                 </td>
                 <td>
-    <a href="/sitrass/public/vans/images/<?= (int)$van['van_id'] ?>" style="margin-right:0.5rem; font-size:0.85rem;">Mga Larawan</a>
-    <?php if ($van['status'] === 'active'): ?>
+                    <a href="/sitrass/public/vans/images/<?= (int)$van['van_id'] ?>" class="btn-ghost" style="margin-right:0.5rem;">Mga Larawan</a>
+                    <?php if ($van['status'] === 'active'): ?>
                         <form method="POST" action="/sitrass/public/vans/toggleStatus" style="display:inline;">
                             <?= Csrf::field() ?>
                             <input type="hidden" name="van_id" value="<?= (int)$van['van_id'] ?>">
                             <input type="hidden" name="status" value="maintenance">
-                            <button type="submit" class="btn" style="width:auto; padding:0.3rem 0.7rem; font-size:0.8rem;">I-maintenance</button>
+                            <button type="submit" class="btn-ghost" style="color:#A6650C !important;">I-maintenance</button>
                         </form>
                     <?php else: ?>
                         <form method="POST" action="/sitrass/public/vans/toggleStatus" style="display:inline;">
                             <?= Csrf::field() ?>
                             <input type="hidden" name="van_id" value="<?= (int)$van['van_id'] ?>">
                             <input type="hidden" name="status" value="active">
-                            <button type="submit" class="btn" style="width:auto; padding:0.3rem 0.7rem; font-size:0.8rem;">I-activate</button>
+                            <button type="submit" class="btn-ghost" style="color:var(--forest) !important;">I-activate</button>
                         </form>
                     <?php endif; ?>
                 </td>

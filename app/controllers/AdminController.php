@@ -74,5 +74,16 @@ public function approve() {
     header('Location: /sitrass/public/admin/pending-customers');
     exit;
 }
+public function testSms() {
+    $userModel = new User();
+    $admin = $userModel->getById($_SESSION['user_id']);
 
+    $result = Sms::send($admin['phone'], 'SITRASS Test SMS - kung natanggap mo ito, gumagana ang SMS setup!');
+
+    if ($result) {
+        die('Successful ang pagpapadala ng test SMS! I-check ang phone mo.');
+    } else {
+        die('Nabigo ang pagpapadala. I-check ang php_error_log para sa detalye.');
+    }
+}
 }
