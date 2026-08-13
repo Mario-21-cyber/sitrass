@@ -10,7 +10,15 @@
 <?php
     // Simpleng active-page detection batay sa URL - walang kailangang baguhin sa mga controller.
     $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-    function navActive($path, $currentPath) {
+    function navActive($path, $currentPath, $exact = false) {
+        $currentPath = rtrim($currentPath, '/');
+        $path = rtrim($path, '/');
+        if ($exact) {
+            // Tumutugma lang kung DITO nagtatapos ang currentPath - hindi lang basta
+            // substring kahit saan (para hindi mag-highlight ang "/payments" kapag
+            // nasa "/payments/methods" tayo).
+            return substr($currentPath, -strlen($path)) === $path ? ' active' : '';
+        }
         return strpos($currentPath, $path) !== false ? ' active' : '';
     }
 ?>
@@ -49,7 +57,7 @@
             </a>
 
             <div class="nav-section-label">Transactions</div>
-            <a class="nav-item<?= navActive('/payments', $currentPath) ?>" href="/sitrass/public/payments">
+            <a class="nav-item<?= navActive('/payments', $currentPath, true) ?>" href="/sitrass/public/payments">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
                 Mga Payment
             </a>

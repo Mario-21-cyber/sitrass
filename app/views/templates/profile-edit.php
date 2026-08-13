@@ -12,7 +12,7 @@ require __DIR__ . '/' . $headerFile;
     <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 
-<div style="display:flex; gap:2rem; flex-wrap:wrap;">
+<div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-start;">
 
     <div style="flex:1; min-width:280px;">
         <div class="form-section">

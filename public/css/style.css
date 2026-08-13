@@ -52,7 +52,7 @@ html {
 
 body {
   margin: 0;
-  font-family: -apple-system, "Inter", "Segoe UI", sans-serif;
+  font-family: poppins, sans-serif;
   background: var(--sand);
   color: var(--ink);
   line-height: 1.55;
@@ -62,7 +62,7 @@ body {
 h1,
 h2,
 h3 {
-  font-family: "Fraunces", Georgia, serif;
+  font-family: poppins, sans-serif;
   font-weight: 600;
   color: var(--teal-dark);
   margin: 0 0 0.6rem;
@@ -420,6 +420,10 @@ a:hover {
   color: var(--sand);
   padding: 1.5rem 1rem;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .sidebar .logo {
