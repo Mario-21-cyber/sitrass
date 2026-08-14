@@ -4,106 +4,127 @@ $footerFile = $_SESSION['role'] === 'admin' ? '_admin_footer.php' : ($_SESSION['
 require __DIR__ . '/' . $headerFile;
 ?>
 
-<?php if (!empty($message)): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
-<?php endif; ?>
+<div style="max-width:560px; margin:0 auto;">
 
-<?php if (!empty($error)): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-<?php endif; ?>
+    <?php if (!empty($message)): ?>
+        <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
+    <?php endif; ?>
 
-<div style="display:flex; gap:2rem; flex-wrap:wrap; align-items:flex-start;">
+    <?php if (!empty($error)): ?>
+        <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
 
-    <div style="flex:1; min-width:280px;">
+    <div class="form-section">
+        <div class="form-section-title">Profile Picture</div>
+        <div class="card" style="text-align:center;">
+            <?php if ($user['profile_picture']): ?>
+                <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="Profile picture" style="width:100px; height:100px; object-fit:cover; border-radius:100px; margin:0 auto 1rem; display:block; border:3px solid var(--slate-bg);">
+            <?php else: ?>
+                <div style="width:100px; height:100px; border-radius:100px; background:var(--slate-bg); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; color:var(--slate);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+                </div>
+            <?php endif; ?>
+            <form method="POST" action="/sitrass/public/profile/uploadPicture" enctype="multipart/form-data">
+                <?= Csrf::field() ?>
+                <div class="field" style="text-align:left;">
+                    <label for="pf_picture">Piliin ang bagong larawan</label>
+                    <input type="file" id="pf_picture" name="picture" accept="image/jpeg,image/png" required>
+                </div>
+                <button type="submit" class="btn" style="width:auto; padding:0.5rem 1.2rem;">I-upload</button>
+            </form>
+        </div>
+    </div>
+
+    <?php if ($_SESSION['role'] === 'driver'): ?>
         <div class="form-section">
-            <div class="form-section-title">Profile Picture</div>
-            <div class="card">
-                <?php if ($user['profile_picture']): ?>
-                    <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="Profile picture" style="width:100px; height:100px; object-fit:cover; border-radius:100px; margin-bottom:1rem; display:block; border:3px solid var(--slate-bg);">
+            <div class="form-section-title">Larawan ng Lisensya</div>
+            <div class="card" style="text-align:center;">
+                <?php if ($driver && $driver['license_image']): ?>
+                    <img src="<?= htmlspecialchars($driver['license_image']) ?>" alt="Larawan ng lisensya" style="width:100%; max-width:220px; border-radius:8px; margin-bottom:1rem; display:block; margin-left:auto; margin-right:auto;">
                 <?php else: ?>
-                    <div style="width:100px; height:100px; border-radius:100px; background:var(--slate-bg); display:flex; align-items:center; justify-content:center; margin-bottom:1rem; color:var(--slate);">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-                    </div>
+                    <p class="text-sm text-muted">Wala pang na-upload na larawan ng lisensya.</p>
                 <?php endif; ?>
-                <form method="POST" action="/sitrass/public/profile/uploadPicture" enctype="multipart/form-data">
+                <form method="POST" action="/sitrass/public/profile/uploadLicense" enctype="multipart/form-data">
                     <?= Csrf::field() ?>
-                    <div class="field">
-                        <label for="pf_picture">Piliin ang bagong larawan</label>
-                        <input type="file" id="pf_picture" name="picture" accept="image/jpeg,image/png" required>
+                    <div class="field" style="text-align:left;">
+                        <label for="pf_license">Piliin ang larawan ng lisensya</label>
+                        <input type="file" id="pf_license" name="license" accept="image/jpeg,image/png" required>
                     </div>
                     <button type="submit" class="btn" style="width:auto; padding:0.5rem 1.2rem;">I-upload</button>
                 </form>
             </div>
         </div>
+    <?php endif; ?>
 
-        <?php if ($_SESSION['role'] === 'driver'): ?>
-            <div class="form-section">
-                <div class="form-section-title">Larawan ng Lisensya</div>
-                <div class="card">
-                    <?php if ($driver && $driver['license_image']): ?>
-                        <img src="<?= htmlspecialchars($driver['license_image']) ?>" alt="Larawan ng lisensya" style="width:100%; max-width:220px; border-radius:8px; margin-bottom:1rem; display:block;">
-                    <?php else: ?>
-                        <p class="text-sm text-muted">Wala pang na-upload na larawan ng lisensya.</p>
-                    <?php endif; ?>
-                    <form method="POST" action="/sitrass/public/profile/uploadLicense" enctype="multipart/form-data">
-                        <?= Csrf::field() ?>
-                        <div class="field">
-                            <label for="pf_license">Piliin ang larawan ng lisensya</label>
-                            <input type="file" id="pf_license" name="license" accept="image/jpeg,image/png" required>
-                        </div>
-                        <button type="submit" class="btn" style="width:auto; padding:0.5rem 1.2rem;">I-upload</button>
-                    </form>
-                </div>
+    <div class="form-section">
+        <div class="section-heading" style="margin-bottom:var(--space-3);">
+            <div class="form-section-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">Personal na Impormasyon</div>
+            <button type="button" id="editToggleBtn" class="btn-ghost" onclick="enableEdit()">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:2px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>
+                I-edit
+            </button>
+        </div>
+        <form method="POST" action="/sitrass/public/profile/update" class="card" id="profileForm">
+            <?= Csrf::field() ?>
+            <div class="field">
+                <label for="pf_first">First Name<span class="required">*</span></label>
+                <input type="text" id="pf_first" name="first_name" value="<?= htmlspecialchars($user['first_name']) ?>" required readonly>
             </div>
-        <?php endif; ?>
+            <div class="field">
+                <label for="pf_last">Last Name<span class="required">*</span></label>
+                <input type="text" id="pf_last" name="last_name" value="<?= htmlspecialchars($user['last_name']) ?>" required readonly>
+            </div>
+            <div class="field">
+                <label for="pf_email">Email (hindi na puwedeng baguhin)</label>
+                <input type="email" id="pf_email" value="<?= htmlspecialchars($user['email']) ?>" disabled>
+            </div>
+            <div class="field">
+                <label for="pf_phone">Phone<span class="required">*</span></label>
+                <input type="text" id="pf_phone" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" required readonly>
+            </div>
+            <div id="profileFormActions" style="display:none; gap:0.5rem;">
+                <button type="submit" class="btn" style="width:auto; padding:0.6rem 1.5rem;">I-save ang Impormasyon</button>
+                <button type="button" class="btn-ghost" onclick="cancelEdit()">Kanselahin</button>
+            </div>
+        </form>
     </div>
 
-    <div style="flex:1; min-width:280px;">
-        <div class="form-section">
-            <div class="form-section-title">Personal na Impormasyon</div>
-            <form method="POST" action="/sitrass/public/profile/update" class="card">
-                <?= Csrf::field() ?>
-                <div class="field">
-                    <label for="pf_first">First Name<span class="required">*</span></label>
-                    <input type="text" id="pf_first" name="first_name" value="<?= htmlspecialchars($user['first_name']) ?>" required>
-                </div>
-                <div class="field">
-                    <label for="pf_last">Last Name<span class="required">*</span></label>
-                    <input type="text" id="pf_last" name="last_name" value="<?= htmlspecialchars($user['last_name']) ?>" required>
-                </div>
-                <div class="field">
-                    <label for="pf_email">Email (hindi na puwedeng baguhin)</label>
-                    <input type="email" id="pf_email" value="<?= htmlspecialchars($user['email']) ?>" disabled>
-                </div>
-                <div class="field">
-                    <label for="pf_phone">Phone<span class="required">*</span></label>
-                    <input type="text" id="pf_phone" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" required>
-                </div>
-                <button type="submit" class="btn">I-save ang Impormasyon</button>
-            </form>
-        </div>
-
-        <div class="form-section">
-            <div class="form-section-title">Palitan ang Password</div>
-            <form method="POST" action="/sitrass/public/profile/changePassword" class="card">
-                <?= Csrf::field() ?>
-                <div class="field">
-                    <label for="pf_current_pw">Kasalukuyang Password<span class="required">*</span></label>
-                    <input type="password" id="pf_current_pw" name="current_password" required>
-                </div>
-                <div class="field">
-                    <label for="pf_new_pw">Bagong Password<span class="required">*</span></label>
-                    <input type="password" id="pf_new_pw" name="new_password" required>
-                </div>
-                <div class="field">
-                    <label for="pf_new_pw_confirm">Kumpirmahin ang Bagong Password<span class="required">*</span></label>
-                    <input type="password" id="pf_new_pw_confirm" name="new_password_confirm" required>
-                </div>
-                <button type="submit" class="btn">Palitan ang Password</button>
-            </form>
-        </div>
+    <div class="form-section">
+        <div class="form-section-title">Palitan ang Password</div>
+        <form method="POST" action="/sitrass/public/profile/changePassword" class="card">
+            <?= Csrf::field() ?>
+            <div class="field">
+                <label for="pf_current_pw">Kasalukuyang Password<span class="required">*</span></label>
+                <input type="password" id="pf_current_pw" name="current_password" required>
+            </div>
+            <div class="field">
+                <label for="pf_new_pw">Bagong Password<span class="required">*</span></label>
+                <input type="password" id="pf_new_pw" name="new_password" required>
+            </div>
+            <div class="field">
+                <label for="pf_new_pw_confirm">Kumpirmahin ang Bagong Password<span class="required">*</span></label>
+                <input type="password" id="pf_new_pw_confirm" name="new_password_confirm" required>
+            </div>
+            <button type="submit" class="btn">Palitan ang Password</button>
+        </form>
     </div>
 
 </div>
+
+<script>
+function enableEdit() {
+    document.getElementById('pf_first').removeAttribute('readonly');
+    document.getElementById('pf_last').removeAttribute('readonly');
+    document.getElementById('pf_phone').removeAttribute('readonly');
+    document.getElementById('profileFormActions').style.display = 'flex';
+    document.getElementById('editToggleBtn').style.display = 'none';
+    document.getElementById('pf_first').focus();
+}
+
+function cancelEdit() {
+    // I-reload ang page para ibalik ang orihinal na values, tapusin ang edit mode
+    window.location.reload();
+}
+</script>
 
 <?php require __DIR__ . '/' . $footerFile; ?>

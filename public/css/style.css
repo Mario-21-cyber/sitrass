@@ -6,7 +6,7 @@
   --sand: #faf9f6;
   --ink: #1a1a1a;
   --forest: #2d6a34;
-  --danger: #b23a3a;
+  --danger: #c41e24;
   --border: #e0ddd5;
   --white: #ffffff;
   --slate: #64708a; /* muted text, secondary info */
@@ -198,11 +198,12 @@ a:hover {
 }
 
 .btn-danger {
+  color: var(--white) !important;
   background: var(--danger);
 }
 
 .btn-danger:hover {
-  background: #8f2e2e;
+  background: #ec5757;
 }
 
 .btn-link {
@@ -282,6 +283,15 @@ a:hover {
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
+  transition:
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+a.stat-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  cursor: pointer;
 }
 
 .stat-card .stat-top-row {
@@ -895,4 +905,10 @@ tbody tr:hover {
   letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.5);
   padding: var(--space-4) var(--space-3) var(--space-2);
+}
+/* --- "View mode" na fields - naka-lock, kailangan i-click ang Edit bago baguhin --- */
+.field input[readonly] {
+  background: var(--slate-bg);
+  color: var(--slate);
+  cursor: not-allowed;
 }
