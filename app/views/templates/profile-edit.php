@@ -90,6 +90,21 @@ require __DIR__ . '/' . $headerFile;
     </div>
 
     <div class="form-section">
+        <div class="form-section-title"><?= t('profile_language') ?></div>
+        <form method="POST" action="/sitrass/public/profile/setLanguage" class="card">
+            <?= Csrf::field() ?>
+            <div class="field">
+                <label for="pf_lang"><?= t('profile_language') ?></label>
+                <select id="pf_lang" name="lang">
+                    <option value="tl" <?= Lang::current() === 'tl' ? 'selected' : '' ?>><?= t('profile_language_tl') ?></option>
+                    <option value="en" <?= Lang::current() === 'en' ? 'selected' : '' ?>><?= t('profile_language_en') ?></option>
+                </select>
+            </div>
+            <button type="submit" class="btn"><?= t('profile_language_save') ?></button>
+        </form>
+    </div>
+
+    <div class="form-section">
         <div class="form-section-title">Palitan ang Password</div>
         <form method="POST" action="/sitrass/public/profile/changePassword" class="card">
             <?= Csrf::field() ?>

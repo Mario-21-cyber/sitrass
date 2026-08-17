@@ -152,4 +152,13 @@ class ProfileController extends Controller {
         header('Location: /sitrass/public/profile/edit');
         exit;
     }
+    public function setLanguage() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        header('Location: /sitrass/public/profile/edit');
+        exit;
+    }
+    Lang::set($_POST['lang'] ?? 'tl');
+    header('Location: /sitrass/public/profile/edit');
+    exit;
+}
 }

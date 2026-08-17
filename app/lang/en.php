@@ -45,6 +45,45 @@ return [
     'dreg_experience' => 'Years of Experience',
     'dreg_submit' => 'Apply as Driver',
 
+    // Admin Nav
+    'nav_dashboard' => 'Dashboard',
+    'nav_pending_accounts' => 'Pending Accounts',
+    'nav_vans' => 'Vans',
+    'nav_locations' => 'Locations',
+    'nav_routes' => 'Routes',
+    'nav_schedules' => 'Schedules',
+    'nav_payments' => 'Payments',
+    'nav_payment_methods' => 'Payment Methods',
+    'nav_ratings' => 'Ratings',
+    'nav_audit_logs' => 'Audit Logs',
+    'nav_settings' => 'Settings',
+    'nav_feedback' => 'Feedback',
+    'nav_profile' => 'My Profile',
+    'nav_logout' => 'Logout',
+    'nav_section_overview' => 'Overview',
+    'nav_section_operations' => 'Operations',
+    'nav_section_transactions' => 'Transactions',
+    'nav_section_administration' => 'Administration',
+    'nav_section_account' => 'Account',
+
+    // Customer Nav
+    'nav_search' => 'Find a Trip',
+    'nav_my_bookings' => 'My Bookings',
+    'nav_rate_trip' => 'Rate a Trip',
+    'nav_give_feedback' => 'Give Feedback',
+    'nav_section_trips' => 'Trips',
+    'nav_section_support' => 'Support',
+
+    // Driver Nav
+    'nav_my_trips' => 'My Bookings',
+    'nav_scan_qr' => 'Verify QR Code',
+
+    // Profile - Language setting
+    'profile_language' => 'Language',
+    'profile_language_tl' => 'Tagalog',
+    'profile_language_en' => 'English',
+    'profile_language_save' => 'Save Language',
+
     // Common
     'lang_switch_label' => 'Language',
 ];
