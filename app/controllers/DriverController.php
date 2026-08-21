@@ -170,4 +170,23 @@ public function verifyQr() {
     header('Location: /sitrass/public/driver/scanQr');
     exit;
 }
+public function trackTrip($bookingId) {
+    $bookingId = (int)$bookingId;
+    $bookingModel = new Booking();
+    $booking = $bookingModel->getForDriverTrackView($bookingId, $this->driverRecord['driver_id']);
+
+    if (!$booking) {
+        die('Booking not found.');
+    }
+
+    if ($booking['status'] !== 'en_route') {
+        die('Hindi pa nagsisimula ang biyaheng ito, o tapos na. <a href="/sitrass/public/driver/dashboard">Bumalik</a>');
+    }
+
+    View::render('driver-track', [
+        'pageTitle' => 'Subaybayan ang Customer - SITRASS',
+        'booking' => $booking,
+        'driverId' => $this->driverRecord['driver_id'],
+    ]);
+}
 }

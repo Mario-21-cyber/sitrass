@@ -155,4 +155,22 @@ public function getWithDriverForTracking($bookingId, $customerId) {
     $stmt->execute([$bookingId, $customerId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+public function getForDriverTrackView($bookingId, $driverId) {
+    $stmt = $this->db->prepare(
+        "SELECT b.*, rs.reference_code, v.plate_number,
+                CONCAT(cu.first_name, ' ', cu.last_name) AS customer_name, cu.phone AS customer_phone,
+                o.name AS pickup_name, o.latitude AS pickup_lat, o.longitude AS pickup_lng,
+                dl.name AS dropoff_name, dl.latitude AS dropoff_lat, dl.longitude AS dropoff_lng
+         FROM bookings b
+         JOIN reservations rs ON rs.reservation_id = b.reservation_id
+         JOIN customers c ON c.customer_id = rs.customer_id
+         JOIN users cu ON cu.user_id = c.user_id
+         JOIN vans v ON v.van_id = b.van_id
+         JOIN locations o ON o.location_id = b.pickup_location_id
+         JOIN locations dl ON dl.location_id = b.dropoff_location_id
+         WHERE b.booking_id = ? AND b.driver_id = ?"
+    );
+    $stmt->execute([$bookingId, $driverId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 }
