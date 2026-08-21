@@ -84,6 +84,16 @@ return [
     'profile_language_en' => 'English',
     'profile_language_save' => 'I-save ang Wika',
 
+        // Page titles (browser tab) na English pa
+    'title_pending_accounts' => 'Mga Naghihintay na Account - SITRASS Admin',
+    'title_driver_dashboard' => 'Driver Dashboard - SITRASS',
+    'title_forgot_password' => 'Nakalimutan ang Password - SITRASS',
+    'title_invalid_link' => 'Invalid na Link - SITRASS',
+    'title_booking_confirmed' => 'Nakumpirma ang Booking - SITRASS',
+
+    // admin-vans-list.php heading
+    'page_fleet_overview' => 'Listahan ng Fleet',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

@@ -185,7 +185,7 @@ public function bookingConfirmed($referenceCode) {
     }
 
     View::render('customer-booking-confirmed', [
-        'pageTitle' => 'Booking Confirmed - SITRASS',
+                'pageTitle' => t('title_booking_confirmed'),
         'reservation' => $reservation,
     ]);
 }

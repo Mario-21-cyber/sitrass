@@ -31,7 +31,7 @@ class AdminController extends Controller {
     $pending = $userModel->getPending();
 
     View::render('admin-pending-customers', [
-        'pageTitle' => 'Pending Accounts - SITRASS Admin',
+                'pageTitle' => t('title_pending_accounts'),
         'pageHeading' => 'Mga Naghihintay na Account',
         'pending' => $pending,
     ]);

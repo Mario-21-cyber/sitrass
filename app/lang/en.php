@@ -84,6 +84,16 @@ return [
     'profile_language_en' => 'English',
     'profile_language_save' => 'Save Language',
 
+        // Page titles (browser tab)
+    'title_pending_accounts' => 'Pending Accounts - SITRASS Admin',
+    'title_driver_dashboard' => 'Driver Dashboard - SITRASS',
+    'title_forgot_password' => 'Forgot Password - SITRASS',
+    'title_invalid_link' => 'Invalid Link - SITRASS',
+    'title_booking_confirmed' => 'Booking Confirmed - SITRASS',
+
+    // admin-vans-list.php heading
+    'page_fleet_overview' => 'Fleet Overview',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

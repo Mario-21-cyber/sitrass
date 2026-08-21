@@ -36,7 +36,7 @@ class DriverController extends Controller {
         unset($_SESSION['driver_message'], $_SESSION['driver_error']);
 
         View::render('driver-dashboard', [
-            'pageTitle' => 'Driver Dashboard - SITRASS',
+                        'pageTitle' => t('title_driver_dashboard'),
             'bookings' => $bookings,
             'message' => $message,
             'error' => $error,

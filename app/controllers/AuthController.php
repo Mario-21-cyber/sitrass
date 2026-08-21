@@ -184,7 +184,7 @@ public function forgotPassword() {
     unset($_SESSION['forgot_message'], $_SESSION['dev_reset_link']);
 
     View::render('forgot-password', [
-        'pageTitle' => 'Forgot Password - SITRASS',
+                'pageTitle' => t('title_forgot_password'),
         'message' => $message,
         'resetLink' => $resetLink,
     ]);
@@ -226,7 +226,7 @@ public function resetPassword() {
 
     if (!$reset) {
         View::render('reset-invalid', [
-            'pageTitle' => 'Invalid Link - SITRASS',
+                        'pageTitle' => t('title_invalid_link'),
         ]);
         return;
     }
@@ -283,7 +283,7 @@ public function registerDriver() {
     unset($_SESSION['driver_register_errors'], $_SESSION['driver_register_old']);
 
     View::render('register-driver', [
-        'pageTitle' => 'Driver Registration - SITRASS',
+                'pageTitle' => t('dreg_title'),
         'errors' => $errors,
         'old' => $old,
     ]);
