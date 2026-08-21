@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 :root {
   --teal-dark: #1b2a6b;
   --ocean: #1b2a6b;
@@ -52,7 +53,11 @@ html {
 
 body {
   margin: 0;
-  font-family: poppins, sans-serif;
+  font-family:
+    "Poppins",
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
   background: var(--sand);
   color: var(--ink);
   line-height: 1.55;
@@ -62,7 +67,7 @@ body {
 h1,
 h2,
 h3 {
-  font-family: poppins, sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 600;
   color: var(--teal-dark);
   margin: 0 0 0.6rem;
