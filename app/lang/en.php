@@ -94,6 +94,75 @@ return [
     // admin-vans-list.php heading
     'page_fleet_overview' => 'Fleet Overview',
 
+        // Van status
+    'status_active' => 'Active',
+    'status_maintenance' => 'Under Maintenance',
+    'status_inactive' => 'Inactive',
+    'status_retired' => 'Retired',
+
+    // Van type
+    'vantype_standard' => 'Standard',
+    'vantype_premium' => 'Premium',
+    'vantype_tourist' => 'Tourist',
+
+    // Location category
+    'category_port' => 'Port',
+    'category_terminal' => 'Terminal',
+    'category_town_proper' => 'Town Proper',
+    'category_barangay' => 'Barangay',
+    'category_resort' => 'Resort',
+    'category_landmark' => 'Landmark',
+    'category_airport' => 'Airport',
+    'category_other' => 'Other',
+
+    // Schedule status
+    'status_scheduled' => 'Scheduled',
+    'status_boarding' => 'Boarding',
+    'status_departed' => 'Departed',
+    'status_completed' => 'Completed',
+    'status_cancelled' => 'Cancelled',
+
+    // Reservation / payment status
+    'status_pending' => 'Pending',
+    'status_confirmed' => 'Confirmed',
+    'status_verified' => 'Verified',
+    'status_rejected' => 'Rejected',
+    'status_paid' => 'Paid',
+    'status_partially_paid' => 'Partially Paid',
+
+    // Feedback category
+    'feedback_bug' => 'Bug',
+    'feedback_suggestion' => 'Suggestion',
+    'feedback_complaint' => 'Complaint',
+    'feedback_compliment' => 'Compliment',
+    'feedback_other' => 'Other',
+
+    // Feedback status
+    'status_new' => 'New',
+    'status_in_review' => 'In Review',
+    'status_resolved' => 'Resolved',
+    'status_closed' => 'Closed',
+
+    // Table headers
+    'th_plate_number' => 'Plate Number',
+    'th_status' => 'Status',
+
+    // Payment method form labels
+    'pm_account_name' => 'Account Name',
+    'pm_account_number' => 'Account Number',
+    'pm_instructions' => 'Instructions',
+
+    // Settings group labels
+    'settings_group_general' => 'General',
+    'settings_group_payment' => 'Payment',
+    'settings_group_booking' => 'Booking',
+    'settings_group_security' => 'Security',
+    'settings_group_notifications' => 'Notifications',
+    'settings_group_map' => 'Map',
+    'settings_group_uploads' => 'Uploads',
+    'settings_group_qr' => 'QR Code',
+    'settings_group_tracking' => 'GPS Tracking',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

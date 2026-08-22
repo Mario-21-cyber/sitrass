@@ -27,17 +27,17 @@
         </select>
     </div>
 
-    <div class="field">
+        <div class="field">
         <label for="loc_category">Kategorya</label>
         <select id="loc_category" name="category" required>
-            <option value="port">Port</option>
-            <option value="terminal">Terminal</option>
-            <option value="town_proper">Town Proper</option>
-            <option value="barangay">Barangay</option>
-            <option value="resort">Resort</option>
-            <option value="landmark">Landmark</option>
-            <option value="airport">Airport</option>
-            <option value="other">Iba pa</option>
+            <option value="port"><?= t('category_port') ?></option>
+            <option value="terminal"><?= t('category_terminal') ?></option>
+            <option value="town_proper"><?= t('category_town_proper') ?></option>
+            <option value="barangay"><?= t('category_barangay') ?></option>
+            <option value="resort"><?= t('category_resort') ?></option>
+            <option value="landmark"><?= t('category_landmark') ?></option>
+            <option value="airport"><?= t('category_airport') ?></option>
+            <option value="other"><?= t('category_other') ?></option>
         </select>
     </div>
 

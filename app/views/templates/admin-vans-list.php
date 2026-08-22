@@ -15,24 +15,24 @@
         <div class="text-sm">Magdagdag ng unang van para masimulan ang scheduling.</div>
     </div>
 <?php else: ?>
-    <table>
+       <table>
         <tr>
-            <th>Plate Number</th>
+            <th><?= t('th_plate_number') ?></th>
             <th>Van</th>
             <th>Tipo</th>
             <th>Upuan</th>
-            <th>Status</th>
+            <th><?= t('th_status') ?></th>
             <th>Aksyon</th>
         </tr>
         <?php foreach ($vans as $van): ?>
             <tr>
                 <td style="font-family:'SF Mono', monospace; font-weight:600;"><?= htmlspecialchars($van['plate_number']) ?></td>
                 <td><?= htmlspecialchars($van['make'] . ' ' . $van['model']) ?></td>
-                <td><span class="badge badge-neutral"><?= htmlspecialchars($van['van_type']) ?></span></td>
+                <td><span class="badge badge-neutral"><?= t('vantype_' . $van['van_type']) ?></span></td>
                 <td><?= (int)$van['seating_capacity'] ?></td>
                 <td>
                     <span class="badge <?= $van['status'] === 'active' ? 'badge-active' : 'badge-pending' ?>">
-                        <?= htmlspecialchars($van['status']) ?>
+                        <?= t('status_' . $van['status']) ?>
                     </span>
                 </td>
                 <td>

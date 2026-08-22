@@ -25,7 +25,7 @@
             <tr>
                 <td><?= htmlspecialchars($loc['name']) ?></td>
                 <td><?= htmlspecialchars($loc['municipality']) ?></td>
-                <td><span class="badge badge-neutral"><?= htmlspecialchars($loc['category']) ?></span></td>
+                                <td><span class="badge badge-neutral"><?= t('category_' . $loc['category']) ?></span></td>
                 <td class="text-muted" style="font-family:'SF Mono', monospace; font-size:0.8rem;"><?= htmlspecialchars($loc['latitude']) ?>, <?= htmlspecialchars($loc['longitude']) ?></td>
             </tr>
         <?php endforeach; ?>

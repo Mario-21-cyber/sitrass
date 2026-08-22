@@ -14,19 +14,19 @@
                 <?= Csrf::field() ?>
                 <input type="hidden" name="method_id" value="<?= (int)$m['method_id'] ?>">
 
-                <?php if ($m['is_online']): ?>
+                                <?php if ($m['is_online']): ?>
                     <div class="field">
-                        <label for="pm_name_<?= (int)$m['method_id'] ?>">Account Name</label>
+                        <label for="pm_name_<?= (int)$m['method_id'] ?>"><?= t('pm_account_name') ?></label>
                         <input type="text" id="pm_name_<?= (int)$m['method_id'] ?>" name="account_name" value="<?= htmlspecialchars($m['account_name'] ?? '') ?>">
                     </div>
                     <div class="field">
-                        <label for="pm_number_<?= (int)$m['method_id'] ?>">Account Number</label>
+                        <label for="pm_number_<?= (int)$m['method_id'] ?>"><?= t('pm_account_number') ?></label>
                         <input type="text" id="pm_number_<?= (int)$m['method_id'] ?>" name="account_number" value="<?= htmlspecialchars($m['account_number'] ?? '') ?>">
                     </div>
                 <?php endif; ?>
 
                 <div class="field">
-                    <label for="pm_instructions_<?= (int)$m['method_id'] ?>">Instructions</label>
+                    <label for="pm_instructions_<?= (int)$m['method_id'] ?>"><?= t('pm_instructions') ?></label>
                     <input type="text" id="pm_instructions_<?= (int)$m['method_id'] ?>" name="instructions" value="<?= htmlspecialchars($m['instructions'] ?? '') ?>">
                 </div>
 

@@ -94,6 +94,75 @@ return [
     // admin-vans-list.php heading
     'page_fleet_overview' => 'Listahan ng Fleet',
 
+        // Van status
+    'status_active' => 'Aktibo',
+    'status_maintenance' => 'Nasa Maintenance',
+    'status_inactive' => 'Hindi Aktibo',
+    'status_retired' => 'Retirado',
+
+    // Van type
+    'vantype_standard' => 'Standard',
+    'vantype_premium' => 'Premium',
+    'vantype_tourist' => 'Turista',
+
+    // Location category
+    'category_port' => 'Daungan',
+    'category_terminal' => 'Terminal',
+    'category_town_proper' => 'Bayan',
+    'category_barangay' => 'Barangay',
+    'category_resort' => 'Resort',
+    'category_landmark' => 'Tanawin',
+    'category_airport' => 'Paliparan',
+    'category_other' => 'Iba pa',
+
+    // Schedule status
+    'status_scheduled' => 'Naka-iskedyul',
+    'status_boarding' => 'Nagsasakay',
+    'status_departed' => 'Umalis na',
+    'status_completed' => 'Tapos na',
+    'status_cancelled' => 'Kinansela',
+
+    // Reservation / payment status
+    'status_pending' => 'Naghihintay',
+    'status_confirmed' => 'Nakumpirma',
+    'status_verified' => 'Na-verify',
+    'status_rejected' => 'Tinanggihan',
+    'status_paid' => 'Bayad na',
+    'status_partially_paid' => 'Bahagyang Bayad',
+
+    // Feedback category
+    'feedback_bug' => 'Bug',
+    'feedback_suggestion' => 'Mungkahi',
+    'feedback_complaint' => 'Reklamo',
+    'feedback_compliment' => 'Papuri',
+    'feedback_other' => 'Iba pa',
+
+    // Feedback status
+    'status_new' => 'Bago',
+    'status_in_review' => 'Sinusuri',
+    'status_resolved' => 'Nalutas na',
+    'status_closed' => 'Sarado',
+
+    // Table headers na natitira pang English
+    'th_plate_number' => 'Plate Number',
+    'th_status' => 'Status',
+
+    // Payment method form labels
+    'pm_account_name' => 'Account Name',
+    'pm_account_number' => 'Account Number',
+    'pm_instructions' => 'Instructions',
+
+    // Settings group labels
+    'settings_group_general' => 'Pangkalahatan',
+    'settings_group_payment' => 'Bayad',
+    'settings_group_booking' => 'Booking',
+    'settings_group_security' => 'Seguridad',
+    'settings_group_notifications' => 'Mga Abiso',
+    'settings_group_map' => 'Mapa',
+    'settings_group_uploads' => 'Pag-upload',
+    'settings_group_qr' => 'QR Code',
+    'settings_group_tracking' => 'GPS Tracking',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

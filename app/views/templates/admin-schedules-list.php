@@ -36,9 +36,9 @@
                 <td><?= htmlspecialchars($s['departure_time']) ?></td>
                 <td><?= (int)$s['available_seats'] ?> / <?= (int)$s['total_seats'] ?></td>
                 <td style="font-weight:600;">₱<?= htmlspecialchars($s['fare_per_seat']) ?></td>
-                <td>
+                                <td>
                     <span class="badge <?= $s['status'] === 'scheduled' ? 'badge-active' : 'badge-pending' ?>">
-                        <?= htmlspecialchars($s['status']) ?>
+                        <?= t('status_' . $s['status']) ?>
                     </span>
                 </td>
                 <td>

@@ -10,11 +10,11 @@
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:start; flex-wrap:wrap; gap:0.5rem;">
                 <div>
-                    <span class="badge badge-neutral" style="text-transform:capitalize;"><?= htmlspecialchars($f['category']) ?></span>
+                                        <span class="badge badge-neutral"><?= t('feedback_' . $f['category']) ?></span>
                     <strong style="margin-left:0.5rem;"><?= htmlspecialchars($f['subject']) ?></strong><br>
                     <span class="text-sm text-muted">Galing kay: <?= htmlspecialchars($f['user_name'] ?? 'Anonymous') ?> &middot; <?= htmlspecialchars($f['created_at']) ?></span>
                 </div>
-                <span class="badge <?= $f['status'] === 'resolved' ? 'badge-active' : 'badge-pending' ?>"><?= htmlspecialchars($f['status']) ?></span>
+                                <span class="badge <?= $f['status'] === 'resolved' ? 'badge-active' : 'badge-pending' ?>"><?= t('status_' . $f['status']) ?></span>
             </div>
 
             <p style="margin:0.75rem 0;"><?= nl2br(htmlspecialchars($f['message'])) ?></p>
