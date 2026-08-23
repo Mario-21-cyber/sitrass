@@ -15,7 +15,7 @@ class LocationsController extends Controller {
 
         View::render('admin-locations-list', [
             'pageTitle' => 'Mga Lokasyon - SITRASS Admin',
-            'pageHeading' => 'Mga Lokasyon',
+                        'pageHeading' => t('locations_page_title'),
             'locations' => $locations,
         ]);
     }
@@ -26,8 +26,8 @@ class LocationsController extends Controller {
         unset($_SESSION['location_errors'], $_SESSION['location_old']);
 
         View::render('admin-locations-create', [
-            'pageTitle' => 'Magdagdag ng Lokasyon - SITRASS Admin',
-            'pageHeading' => 'Magdagdag ng Lokasyon',
+                        'pageTitle' => t('location_create_title') . ' - SITRASS Admin',
+            'pageHeading' => t('location_create_title'),
             'errors' => $errors,
             'old' => $old,
         ]);

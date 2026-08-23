@@ -4,7 +4,7 @@
     <h3 style="margin:0;"><?= t('page_fleet_overview') ?></h3>
     <a href="/sitrass/public/vans/create" class="btn" style="width:auto; padding:0.6rem 1.2rem;">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Magdagdag ng Van
+        <?= t('btn_add_van') ?>
     </a>
 </div>
 
@@ -15,14 +15,14 @@
         <div class="text-sm">Magdagdag ng unang van para masimulan ang scheduling.</div>
     </div>
 <?php else: ?>
-       <table>
+    <table>
         <tr>
             <th><?= t('th_plate_number') ?></th>
-            <th>Van</th>
-            <th>Tipo</th>
-            <th>Upuan</th>
+            <th><?= t('th_van') ?></th>
+            <th><?= t('th_type') ?></th>
+            <th><?= t('th_seats') ?></th>
             <th><?= t('th_status') ?></th>
-            <th>Aksyon</th>
+            <th><?= t('th_action') ?></th>
         </tr>
         <?php foreach ($vans as $van): ?>
             <tr>
@@ -36,20 +36,20 @@
                     </span>
                 </td>
                 <td>
-                    <a href="/sitrass/public/vans/images/<?= (int)$van['van_id'] ?>" class="btn-ghost" style="margin-right:0.5rem;">Mga Larawan</a>
+                    <a href="/sitrass/public/vans/images/<?= (int)$van['van_id'] ?>" class="btn-ghost" style="margin-right:0.5rem;"><?= t('link_images') ?></a>
                     <?php if ($van['status'] === 'active'): ?>
                         <form method="POST" action="/sitrass/public/vans/toggleStatus" style="display:inline;">
                             <?= Csrf::field() ?>
                             <input type="hidden" name="van_id" value="<?= (int)$van['van_id'] ?>">
                             <input type="hidden" name="status" value="maintenance">
-                            <button type="submit" class="btn-ghost" style="color:#A6650C !important;">I-maintenance</button>
+                            <button type="submit" class="btn-ghost" style="color:#A6650C !important;"><?= t('btn_set_maintenance') ?></button>
                         </form>
                     <?php else: ?>
                         <form method="POST" action="/sitrass/public/vans/toggleStatus" style="display:inline;">
                             <?= Csrf::field() ?>
                             <input type="hidden" name="van_id" value="<?= (int)$van['van_id'] ?>">
                             <input type="hidden" name="status" value="active">
-                            <button type="submit" class="btn-ghost" style="color:var(--forest) !important;">I-activate</button>
+                            <button type="submit" class="btn-ghost" style="color:var(--forest) !important;"><?= t('btn_set_active') ?></button>
                         </form>
                     <?php endif; ?>
                 </td>

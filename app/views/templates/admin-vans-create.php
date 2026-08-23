@@ -84,7 +84,7 @@
         <input type="text" id="v_desc" name="description" value="<?= htmlspecialchars($old['description'] ?? '') ?>">
     </div>
 
-    <button type="submit" class="btn">I-save ang Van</button>
+        <button type="submit" class="btn"><?= t('btn_save_van') ?></button>
 </form>
 
 <?php require __DIR__ . '/_admin_footer.php'; ?>

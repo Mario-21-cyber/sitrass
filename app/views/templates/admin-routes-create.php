@@ -70,7 +70,7 @@
         </select>
     </div>
 
-    <button type="submit" class="btn">I-save ang Ruta</button>
+       <button type="submit" class="btn"><?= t('btn_save_route') ?></button>
 </form>
 
 <?php require __DIR__ . '/_admin_footer.php'; ?>

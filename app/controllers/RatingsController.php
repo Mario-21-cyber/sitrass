@@ -15,7 +15,7 @@ class RatingsController extends Controller {
 
         View::render('admin-ratings-list', [
             'pageTitle' => 'Mga Rating - SITRASS Admin',
-            'pageHeading' => 'Mga Rating ng Customer',
+                        'pageHeading' => t('ratings_page_title'),
             'ratings' => $ratings,
         ]);
     }

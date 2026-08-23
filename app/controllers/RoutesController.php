@@ -15,7 +15,7 @@ class RoutesController extends Controller {
 
         View::render('admin-routes-list', [
             'pageTitle' => 'Mga Ruta - SITRASS Admin',
-            'pageHeading' => 'Mga Ruta',
+                        'pageHeading' => t('routes_page_title'),
             'routes' => $routes,
         ]);
     }
@@ -29,8 +29,8 @@ class RoutesController extends Controller {
         unset($_SESSION['route_errors'], $_SESSION['route_old']);
 
         View::render('admin-routes-create', [
-            'pageTitle' => 'Magdagdag ng Ruta - SITRASS Admin',
-            'pageHeading' => 'Magdagdag ng Ruta',
+                        'pageTitle' => t('route_create_title') . ' - SITRASS Admin',
+            'pageHeading' => t('route_create_title'),
             'locations' => $locations,
             'errors' => $errors,
             'old' => $old,

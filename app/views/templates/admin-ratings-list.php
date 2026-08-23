@@ -8,13 +8,13 @@
 <?php else: ?>
     <table>
         <tr>
-            <th>Customer</th>
-            <th>Driver</th>
-            <th>Van</th>
+            <th><?= t('th_customer') ?></th>
+            <th><?= t('th_driver') ?></th>
+            <th><?= t('th_van') ?></th>
             <th>Rating</th>
-            <th>Komento</th>
-            <th>Status</th>
-            <th>Aksyon</th>
+            <th><?= t('th_comment') ?></th>
+            <th><?= t('th_status') ?></th>
+            <th><?= t('th_action') ?></th>
         </tr>
         <?php foreach ($ratings as $r): ?>
             <tr>
@@ -25,7 +25,7 @@
                 <td class="td-truncate"><?= htmlspecialchars($r['comment'] ?? '') ?></td>
                 <td>
                     <span class="badge <?= $r['is_visible'] ? 'badge-active' : 'badge-pending' ?>">
-                        <?= $r['is_visible'] ? 'Nakikita' : 'Nakatago' ?>
+                        <?= $r['is_visible'] ? t('badge_visible') : t('badge_hidden') ?>
                     </span>
                 </td>
                 <td>
@@ -33,13 +33,13 @@
                         <form method="POST" action="/sitrass/public/ratings/hide" style="display:inline;" onsubmit="return confirm('Itago ang rating na ito?');">
                             <?= Csrf::field() ?>
                             <input type="hidden" name="rating_id" value="<?= (int)$r['rating_id'] ?>">
-                            <button type="submit" class="btn-danger" style="width:auto; padding:0.35rem 0.85rem; font-size:0.82rem; border:none; border-radius:6px; cursor:pointer;">Itago</button>
+                            <button type="submit" class="btn-danger" style="width:auto; padding:0.35rem 0.85rem; font-size:0.82rem; border:none; border-radius:6px; cursor:pointer;"><?= t('btn_hide') ?></button>
                         </form>
                     <?php else: ?>
                         <form method="POST" action="/sitrass/public/ratings/unhide" style="display:inline;">
                             <?= Csrf::field() ?>
                             <input type="hidden" name="rating_id" value="<?= (int)$r['rating_id'] ?>">
-                            <button type="submit" class="btn" style="width:auto; padding:0.35rem 0.85rem; font-size:0.82rem;">Ipakita Ulit</button>
+                            <button type="submit" class="btn" style="width:auto; padding:0.35rem 0.85rem; font-size:0.82rem;"><?= t('btn_unhide') ?></button>
                         </form>
                     <?php endif; ?>
                 </td>

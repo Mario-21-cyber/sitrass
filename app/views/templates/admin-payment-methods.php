@@ -4,7 +4,7 @@
     <div class="alert alert-success">Na-save na ang mga pagbabago.</div>
 <?php endif; ?>
 
-<p class="text-muted" style="margin-bottom:var(--space-5);">Ilagay dito ang tamang GCash account name at number - dito babasa ang customer kung saan magpapadala ng bayad.</p>
+<p class="text-muted" style="margin-bottom:var(--space-5);"><?= t('pm_intro') ?></p>
 
 <?php foreach ($methods as $m): ?>
     <div class="form-section">
@@ -14,7 +14,7 @@
                 <?= Csrf::field() ?>
                 <input type="hidden" name="method_id" value="<?= (int)$m['method_id'] ?>">
 
-                                <?php if ($m['is_online']): ?>
+                <?php if ($m['is_online']): ?>
                     <div class="field">
                         <label for="pm_name_<?= (int)$m['method_id'] ?>"><?= t('pm_account_name') ?></label>
                         <input type="text" id="pm_name_<?= (int)$m['method_id'] ?>" name="account_name" value="<?= htmlspecialchars($m['account_name'] ?? '') ?>">
@@ -30,7 +30,7 @@
                     <input type="text" id="pm_instructions_<?= (int)$m['method_id'] ?>" name="instructions" value="<?= htmlspecialchars($m['instructions'] ?? '') ?>">
                 </div>
 
-                <button type="submit" class="btn" style="width:auto; padding:0.5rem 1.2rem;">I-save</button>
+                <button type="submit" class="btn" style="width:auto; padding:0.5rem 1.2rem;"><?= t('btn_save') ?></button>
             </form>
         </div>
     </div>

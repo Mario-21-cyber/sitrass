@@ -30,11 +30,11 @@ class AdminController extends Controller {
     $userModel = new User();
     $pending = $userModel->getPending();
 
-    View::render('admin-pending-customers', [
-                'pageTitle' => t('title_pending_accounts'),
-        'pageHeading' => 'Mga Naghihintay na Account',
-        'pending' => $pending,
-    ]);
+            View::render('admin-pending-customers', [
+            'pageTitle' => t('title_pending_accounts'),
+            'pageHeading' => t('pending_page_title'),
+            'pending' => $pending,
+        ]);
 }
 
 public function approve() {

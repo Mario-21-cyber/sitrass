@@ -79,7 +79,7 @@
             </select>
         </div>
 
-        <button type="submit" class="btn">I-save ang Schedule</button>
+                <button type="submit" class="btn"><?= t('btn_save_schedule') ?></button>
     </form>
 <?php endif; ?>
 

@@ -71,7 +71,7 @@
         <input type="text" id="loc_landmark" name="landmark" value="<?= htmlspecialchars($old['landmark'] ?? '') ?>">
     </div>
 
-    <button type="submit" class="btn">I-save ang Lokasyon</button>
+        <button type="submit" class="btn"><?= t('btn_save_location') ?></button>
 </form>
 
 <?php require __DIR__ . '/_admin_footer.php'; ?>

@@ -15,7 +15,7 @@ class VansController extends Controller {
 
         View::render('admin-vans-list', [
             'pageTitle' => 'Fleet - SITRASS Admin',
-            'pageHeading' => 'Mga Van',
+                        'pageHeading' => t('vans_page_title'),
             'vans' => $vans,
         ]);
     }
@@ -26,8 +26,8 @@ class VansController extends Controller {
         unset($_SESSION['van_errors'], $_SESSION['van_old']);
 
         View::render('admin-vans-create', [
-            'pageTitle' => 'Magdagdag ng Van - SITRASS Admin',
-            'pageHeading' => 'Magdagdag ng Van',
+                        'pageTitle' => t('van_create_title') . ' - SITRASS Admin',
+            'pageHeading' => t('van_create_title'),
             'errors' => $errors,
             'old' => $old,
         ]);

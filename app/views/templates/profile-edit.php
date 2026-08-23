@@ -14,8 +14,8 @@ require __DIR__ . '/' . $headerFile;
         <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
-    <div class="form-section">
-        <div class="form-section-title">Profile Picture</div>
+        <div class="form-section">
+        <div class="form-section-title"><?= t('profile_picture_title') ?></div>
         <div class="card" style="text-align:center;">
             <?php if ($user['profile_picture']): ?>
                 <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="Profile picture" style="width:100px; height:100px; object-fit:cover; border-radius:100px; margin:0 auto 1rem; display:block; border:3px solid var(--slate-bg);">
@@ -27,10 +27,10 @@ require __DIR__ . '/' . $headerFile;
             <form method="POST" action="/sitrass/public/profile/uploadPicture" enctype="multipart/form-data">
                 <?= Csrf::field() ?>
                 <div class="field" style="text-align:left;">
-                    <label for="pf_picture">Piliin ang bagong larawan</label>
+                    <label for="pf_picture"><?= t('profile_pick_new_photo') ?></label>
                     <input type="file" id="pf_picture" name="picture" accept="image/jpeg,image/png" required>
                 </div>
-                <button type="submit" class="btn" style="width:auto; padding:0.5rem 1.2rem;">I-upload</button>
+                <button type="submit" class="btn" style="width:auto; padding:0.5rem 1.2rem;"><?= t('btn_upload') ?></button>
             </form>
         </div>
     </div>
@@ -56,12 +56,12 @@ require __DIR__ . '/' . $headerFile;
         </div>
     <?php endif; ?>
 
-    <div class="form-section">
+        <div class="form-section">
         <div class="section-heading" style="margin-bottom:var(--space-3);">
-            <div class="form-section-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">Personal na Impormasyon</div>
+            <div class="form-section-title" style="margin-bottom:0; border-bottom:none; padding-bottom:0;"><?= t('profile_personal_info') ?></div>
             <button type="button" id="editToggleBtn" class="btn-ghost" onclick="enableEdit()">
                 <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:2px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>
-                I-edit
+                <?= t('btn_edit') ?>
             </button>
         </div>
         <form method="POST" action="/sitrass/public/profile/update" class="card" id="profileForm">

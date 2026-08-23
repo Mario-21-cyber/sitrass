@@ -14,8 +14,8 @@ class PaymentsController extends Controller {
         $pending = $paymentModel->getPending();
 
         View::render('admin-payments-list', [
-            'pageTitle' => 'Mga Pending Payment - SITRASS Admin',
-            'pageHeading' => 'Mga Pending Payment',
+                        'pageTitle' => t('payments_page_title') . ' - SITRASS Admin',
+            'pageHeading' => t('payments_page_title'),
             'payments' => $pending,
         ]);
     }
@@ -90,8 +90,8 @@ class PaymentsController extends Controller {
     unset($_SESSION['method_saved']);
 
     View::render('admin-payment-methods', [
-        'pageTitle' => 'Mga Paraan ng Bayad - SITRASS Admin',
-        'pageHeading' => 'Mga Paraan ng Bayad',
+                'pageTitle' => t('pm_page_title') . ' - SITRASS Admin',
+        'pageHeading' => t('pm_page_title'),
         'methods' => $methodModel->getActive(),
         'saved' => $saved,
     ]);

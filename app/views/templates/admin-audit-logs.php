@@ -8,10 +8,10 @@
 <?php else: ?>
     <table>
         <tr>
-            <th>Petsa/Oras</th>
-            <th>User</th>
-            <th>Aksyon</th>
-            <th>Entity</th>
+            <th><?= t('th_datetime') ?></th>
+            <th><?= t('th_user') ?></th>
+            <th><?= t('th_action') ?></th>
+            <th><?= t('th_entity') ?></th>
         </tr>
         <?php foreach ($logs as $log): ?>
             <tr>

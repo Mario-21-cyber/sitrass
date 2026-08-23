@@ -9,12 +9,12 @@
 <?php else: ?>
     <table>
         <tr>
-            <th>Reference</th>
-            <th>Customer</th>
-            <th>Paraan</th>
-            <th>Halaga</th>
-            <th>Proof</th>
-            <th>Aksyon</th>
+            <th><?= t('th_reference') ?></th>
+            <th><?= t('th_customer') ?></th>
+            <th><?= t('th_method') ?></th>
+            <th><?= t('th_amount') ?></th>
+            <th><?= t('th_proof') ?></th>
+            <th><?= t('th_action') ?></th>
         </tr>
         <?php foreach ($payments as $p): ?>
             <tr>
@@ -24,7 +24,7 @@
                 <td style="font-weight:600;">₱<?= number_format($p['amount'], 2) ?></td>
                 <td>
                     <?php if ($p['proof_image']): ?>
-                        <a href="<?= htmlspecialchars($p['proof_image']) ?>" target="_blank" class="btn-ghost">Tingnan</a>
+                        <a href="<?= htmlspecialchars($p['proof_image']) ?>" target="_blank" class="btn-ghost"><?= t('link_view') ?></a>
                     <?php else: ?>
                         <span class="text-muted">&mdash;</span>
                     <?php endif; ?>
@@ -33,12 +33,12 @@
                     <form method="POST" action="/sitrass/public/payments/verify" style="display:inline;">
                         <?= Csrf::field() ?>
                         <input type="hidden" name="payment_id" value="<?= (int)$p['payment_id'] ?>">
-                        <button type="submit" class="btn" style="width:auto; padding:0.35rem 0.85rem; font-size:0.82rem;">I-verify</button>
+                        <button type="submit" class="btn" style="width:auto; padding:0.35rem 0.85rem; font-size:0.82rem;"><?= t('btn_verify') ?></button>
                     </form>
                     <form method="POST" action="/sitrass/public/payments/reject" style="display:inline;">
                         <?= Csrf::field() ?>
                         <input type="hidden" name="payment_id" value="<?= (int)$p['payment_id'] ?>">
-                        <button type="submit" class="btn-danger" style="width:auto; padding:0.35rem 0.85rem; font-size:0.82rem; border:none; border-radius:6px; cursor:pointer;">Tanggihan</button>
+                        <button type="submit" class="btn-danger" style="width:auto; padding:0.35rem 0.85rem; font-size:0.82rem; border:none; border-radius:6px; cursor:pointer;"><?= t('btn_reject') ?></button>
                     </form>
                 </td>
             </tr>

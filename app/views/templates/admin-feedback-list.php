@@ -10,18 +10,18 @@
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:start; flex-wrap:wrap; gap:0.5rem;">
                 <div>
-                                        <span class="badge badge-neutral"><?= t('feedback_' . $f['category']) ?></span>
+                    <span class="badge badge-neutral"><?= t('feedback_' . $f['category']) ?></span>
                     <strong style="margin-left:0.5rem;"><?= htmlspecialchars($f['subject']) ?></strong><br>
-                    <span class="text-sm text-muted">Galing kay: <?= htmlspecialchars($f['user_name'] ?? 'Anonymous') ?> &middot; <?= htmlspecialchars($f['created_at']) ?></span>
+                    <span class="text-sm text-muted"><?= t('feedback_from') ?>: <?= htmlspecialchars($f['user_name'] ?? 'Anonymous') ?> &middot; <?= htmlspecialchars($f['created_at']) ?></span>
                 </div>
-                                <span class="badge <?= $f['status'] === 'resolved' ? 'badge-active' : 'badge-pending' ?>"><?= t('status_' . $f['status']) ?></span>
+                <span class="badge <?= $f['status'] === 'resolved' ? 'badge-active' : 'badge-pending' ?>"><?= t('status_' . $f['status']) ?></span>
             </div>
 
             <p style="margin:0.75rem 0;"><?= nl2br(htmlspecialchars($f['message'])) ?></p>
 
             <?php if ($f['response']): ?>
                 <div style="background:var(--slate-bg); border-radius:8px; padding:0.75rem; font-size:0.9rem;">
-                    <strong>Sagot ng Admin:</strong> <?= htmlspecialchars($f['response']) ?>
+                    <strong><?= t('feedback_admin_response') ?>:</strong> <?= htmlspecialchars($f['response']) ?>
                 </div>
             <?php else: ?>
                 <div class="actions">

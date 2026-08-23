@@ -15,7 +15,7 @@ class SchedulesController extends Controller {
 
         View::render('admin-schedules-list', [
             'pageTitle' => 'Mga Schedule - SITRASS Admin',
-            'pageHeading' => 'Mga Schedule ng Biyahe',
+            'pageHeading' => t('schedules_page_title'),
             'schedules' => $schedules,
         ]);
     }
@@ -30,8 +30,8 @@ class SchedulesController extends Controller {
         unset($_SESSION['schedule_errors'], $_SESSION['schedule_old']);
 
         View::render('admin-schedules-create', [
-            'pageTitle' => 'Magdagdag ng Schedule - SITRASS Admin',
-            'pageHeading' => 'Magdagdag ng Schedule',
+                        'pageTitle' => t('schedule_create_title') . ' - SITRASS Admin',
+            'pageHeading' => t('schedule_create_title'),
             'routes' => $routeModel->getAll(),
             'vans' => $vanModel->getAll(),
             'drivers' => $driverModel->getAllApproved(),

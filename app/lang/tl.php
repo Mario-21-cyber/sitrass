@@ -163,6 +163,120 @@ return [
     'settings_group_qr' => 'QR Code',
     'settings_group_tracking' => 'GPS Tracking',
 
+        // Dashboard
+    'dash_revenue' => 'Kita (Verified)',
+    'dash_revenue_today' => 'ngayong araw',
+    'dash_reservations' => 'Mga Reservation',
+    'dash_reservations_sub' => 'pending &middot; %d confirmed',
+    'dash_vans' => 'Mga Van',
+    'dash_vans_sub' => 'active &middot; %d maintenance',
+    'dash_users' => 'Mga User',
+    'dash_users_sub' => 'driver &middot; %d pending',
+    'dash_pending_payment' => 'Naghihintay na Payment',
+    'dash_view_these' => 'Tingnan ang mga ito',
+    'dash_revenue_7days' => 'Kita sa Nakaraang 7 Araw',
+    'dash_no_revenue' => 'Wala pang naitalang verified na bayad.',
+    'th_date' => 'Petsa',
+    'th_method' => 'Paraan',
+    'th_transaction_count' => 'Bilang ng Transaksyon',
+    'th_total_amount' => 'Kabuuang Halaga',
+
+    // Pending accounts
+    'pending_page_title' => 'Mga Naghihintay na Account',
+    'pending_empty' => 'Walang naghihintay na account sa ngayon.',
+    'pending_empty_sub' => 'Ang lahat ng bagong registration ay na-approve na.',
+    'th_name' => 'Pangalan',
+    'th_email' => 'Email',
+    'th_phone' => 'Phone',
+    'th_role' => 'Role',
+    'th_created' => 'Ginawa noong',
+    'th_action' => 'Aksyon',
+    'btn_approve' => 'Aprubahan',
+
+    // Vans list/create
+    'vans_page_title' => 'Mga Van',
+    'btn_add_van' => 'Magdagdag ng Van',
+    'th_van' => 'Van',
+    'th_type' => 'Tipo',
+    'th_seats' => 'Upuan',
+    'link_images' => 'Mga Larawan',
+    'btn_set_maintenance' => 'I-maintenance',
+    'btn_set_active' => 'I-activate',
+    'van_create_title' => 'Magdagdag ng Van',
+    'btn_save_van' => 'I-save ang Van',
+
+    // Locations list/create
+    'locations_page_title' => 'Mga Lokasyon',
+    'btn_add_location' => 'Magdagdag ng Lokasyon',
+    'th_municipality' => 'Munisipyo',
+    'th_category' => 'Kategorya',
+    'th_coordinates' => 'Koordinada',
+    'location_create_title' => 'Magdagdag ng Lokasyon',
+    'btn_save_location' => 'I-save ang Lokasyon',
+
+    // Routes list/create
+    'routes_page_title' => 'Mga Ruta',
+    'btn_add_route' => 'Magdagdag ng Ruta',
+    'th_code' => 'Code',
+    'th_from' => 'Mula',
+    'th_to' => 'Papunta',
+    'th_distance' => 'Distansya',
+    'th_est_time' => 'Tantiyang Oras',
+    'route_create_title' => 'Magdagdag ng Ruta',
+    'btn_save_route' => 'I-save ang Ruta',
+
+    // Schedules list/create
+    'schedules_page_title' => 'Mga Schedule ng Biyahe',
+    'btn_add_schedule' => 'Magdagdag ng Schedule',
+    'th_route' => 'Ruta',
+    'th_driver' => 'Driver',
+    'th_time' => 'Oras',
+    'th_fare' => 'Pamasahe',
+    'no_driver_yet' => 'Wala pang driver',
+    'btn_cancel_schedule' => 'Kanselahin',
+    'schedule_create_title' => 'Magdagdag ng Schedule',
+    'btn_save_schedule' => 'I-save ang Schedule',
+
+    // Payments list
+    'payments_page_title' => 'Mga Pending Payment',
+    'th_reference' => 'Reference',
+    'th_customer' => 'Customer',
+    'th_amount' => 'Halaga',
+    'th_proof' => 'Proof',
+    'link_view' => 'Tingnan',
+    'btn_verify' => 'I-verify',
+    'btn_reject' => 'Tanggihan',
+
+    // Payment methods
+    'pm_page_title' => 'Mga Paraan ng Bayad',
+    'pm_intro' => 'Ilagay dito ang tamang GCash account name at number - dito babasa ang customer kung saan magpapadala ng bayad.',
+    'btn_save' => 'I-save',
+
+    // Ratings list
+    'ratings_page_title' => 'Mga Rating ng Customer',
+    'th_comment' => 'Komento',
+    'badge_visible' => 'Nakikita',
+    'badge_hidden' => 'Nakatago',
+    'btn_hide' => 'Itago',
+    'btn_unhide' => 'Ipakita Ulit',
+
+    // Audit logs
+    'th_datetime' => 'Petsa/Oras',
+    'th_user' => 'User',
+    'th_entity' => 'Entity',
+
+    // Feedback
+    'feedback_page_title' => 'Mga Feedback',
+    'feedback_from' => 'Galing kay',
+    'feedback_admin_response' => 'Sagot ng Admin',
+
+    // Profile
+    'profile_picture_title' => 'Profile Picture',
+    'profile_pick_new_photo' => 'Piliin ang bagong larawan',
+    'btn_upload' => 'I-upload',
+    'profile_personal_info' => 'Personal na Impormasyon',
+    'btn_edit' => 'I-edit',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

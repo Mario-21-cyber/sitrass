@@ -15,7 +15,7 @@ class FeedbackController extends Controller {
 
         View::render('admin-feedback-list', [
             'pageTitle' => 'Feedback - SITRASS Admin',
-            'pageHeading' => 'Mga Feedback',
+                        'pageHeading' => t('feedback_page_title'),
             'items' => $items,
         ]);
     }

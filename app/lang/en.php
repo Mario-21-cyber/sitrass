@@ -163,6 +163,120 @@ return [
     'settings_group_qr' => 'QR Code',
     'settings_group_tracking' => 'GPS Tracking',
 
+        // Dashboard
+    'dash_revenue' => 'Revenue (Verified)',
+    'dash_revenue_today' => 'today',
+    'dash_reservations' => 'Reservations',
+    'dash_reservations_sub' => 'pending &middot; %d confirmed',
+    'dash_vans' => 'Vans',
+    'dash_vans_sub' => 'active &middot; %d maintenance',
+    'dash_users' => 'Users',
+    'dash_users_sub' => 'driver &middot; %d pending',
+    'dash_pending_payment' => 'Pending Payments',
+    'dash_view_these' => 'View these',
+    'dash_revenue_7days' => 'Revenue in the Last 7 Days',
+    'dash_no_revenue' => 'No verified payments recorded yet.',
+    'th_date' => 'Date',
+    'th_method' => 'Method',
+    'th_transaction_count' => 'Transaction Count',
+    'th_total_amount' => 'Total Amount',
+
+    // Pending accounts
+    'pending_page_title' => 'Pending Accounts',
+    'pending_empty' => 'No pending accounts at this time.',
+    'pending_empty_sub' => 'All new registrations have been approved.',
+    'th_name' => 'Name',
+    'th_email' => 'Email',
+    'th_phone' => 'Phone',
+    'th_role' => 'Role',
+    'th_created' => 'Created On',
+    'th_action' => 'Action',
+    'btn_approve' => 'Approve',
+
+    // Vans list/create
+    'vans_page_title' => 'Vans',
+    'btn_add_van' => 'Add Van',
+    'th_van' => 'Van',
+    'th_type' => 'Type',
+    'th_seats' => 'Seats',
+    'link_images' => 'Photos',
+    'btn_set_maintenance' => 'Set Maintenance',
+    'btn_set_active' => 'Set Active',
+    'van_create_title' => 'Add Van',
+    'btn_save_van' => 'Save Van',
+
+    // Locations list/create
+    'locations_page_title' => 'Locations',
+    'btn_add_location' => 'Add Location',
+    'th_municipality' => 'Municipality',
+    'th_category' => 'Category',
+    'th_coordinates' => 'Coordinates',
+    'location_create_title' => 'Add Location',
+    'btn_save_location' => 'Save Location',
+
+    // Routes list/create
+    'routes_page_title' => 'Routes',
+    'btn_add_route' => 'Add Route',
+    'th_code' => 'Code',
+    'th_from' => 'From',
+    'th_to' => 'To',
+    'th_distance' => 'Distance',
+    'th_est_time' => 'Est. Time',
+    'route_create_title' => 'Add Route',
+    'btn_save_route' => 'Save Route',
+
+    // Schedules list/create
+    'schedules_page_title' => 'Trip Schedules',
+    'btn_add_schedule' => 'Add Schedule',
+    'th_route' => 'Route',
+    'th_driver' => 'Driver',
+    'th_time' => 'Time',
+    'th_fare' => 'Fare',
+    'no_driver_yet' => 'No driver yet',
+    'btn_cancel_schedule' => 'Cancel',
+    'schedule_create_title' => 'Add Schedule',
+    'btn_save_schedule' => 'Save Schedule',
+
+    // Payments list
+    'payments_page_title' => 'Pending Payments',
+    'th_reference' => 'Reference',
+    'th_customer' => 'Customer',
+    'th_amount' => 'Amount',
+    'th_proof' => 'Proof',
+    'link_view' => 'View',
+    'btn_verify' => 'Verify',
+    'btn_reject' => 'Reject',
+
+    // Payment methods
+    'pm_page_title' => 'Payment Methods',
+    'pm_intro' => 'Enter the correct GCash account name and number here - this is what the customer will see for where to send payment.',
+    'btn_save' => 'Save',
+
+    // Ratings list
+    'ratings_page_title' => 'Customer Ratings',
+    'th_comment' => 'Comment',
+    'badge_visible' => 'Visible',
+    'badge_hidden' => 'Hidden',
+    'btn_hide' => 'Hide',
+    'btn_unhide' => 'Unhide',
+
+    // Audit logs
+    'th_datetime' => 'Date/Time',
+    'th_user' => 'User',
+    'th_entity' => 'Entity',
+
+    // Feedback
+    'feedback_page_title' => 'Feedback',
+    'feedback_from' => 'From',
+    'feedback_admin_response' => 'Admin Response',
+
+    // Profile
+    'profile_picture_title' => 'Profile Picture',
+    'profile_pick_new_photo' => 'Choose a new photo',
+    'btn_upload' => 'Upload',
+    'profile_personal_info' => 'Personal Information',
+    'btn_edit' => 'Edit',
+
     // Common
     'lang_switch_label' => 'Language',
 ];
