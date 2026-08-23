@@ -14,21 +14,21 @@
     <?= Csrf::field() ?>
 
     <div class="field">
-        <label for="loc_name">Pangalan</label>
+        <label for="loc_name"><?= t('th_name') ?></label>
         <input type="text" id="loc_name" name="name" value="<?= htmlspecialchars($old['name'] ?? '') ?>" required>
     </div>
 
     <div class="field">
-        <label for="loc_type">Tipo</label>
+        <label for="loc_type"><?= t('th_type') ?></label>
         <select id="loc_type" name="location_type" required>
-            <option value="both">Pickup at Destination</option>
-            <option value="pickup">Pickup lang</option>
-            <option value="destination">Destination lang</option>
+            <option value="both"><?= t('loctype_both') ?></option>
+            <option value="pickup"><?= t('loctype_pickup') ?></option>
+            <option value="destination"><?= t('loctype_destination') ?></option>
         </select>
     </div>
 
-        <div class="field">
-        <label for="loc_category">Kategorya</label>
+    <div class="field">
+        <label for="loc_category"><?= t('th_category') ?></label>
         <select id="loc_category" name="category" required>
             <option value="port"><?= t('category_port') ?></option>
             <option value="terminal"><?= t('category_terminal') ?></option>
@@ -47,12 +47,12 @@
     </div>
 
     <div class="field">
-        <label for="loc_municipality">Munisipyo</label>
+        <label for="loc_municipality"><?= t('th_municipality') ?></label>
         <select id="loc_municipality" name="municipality" required>
             <option value="Magdiwang">Magdiwang</option>
             <option value="San Fernando">San Fernando</option>
             <option value="Cajidiocan">Cajidiocan</option>
-            <option value="Other">Iba pa</option>
+            <option value="Other"><?= t('category_other') ?></option>
         </select>
     </div>
 
@@ -71,7 +71,7 @@
         <input type="text" id="loc_landmark" name="landmark" value="<?= htmlspecialchars($old['landmark'] ?? '') ?>">
     </div>
 
-        <button type="submit" class="btn"><?= t('btn_save_location') ?></button>
+    <button type="submit" class="btn"><?= t('btn_save_location') ?></button>
 </form>
 
 <?php require __DIR__ . '/_admin_footer.php'; ?>

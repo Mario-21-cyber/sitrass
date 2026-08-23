@@ -18,7 +18,7 @@ class SettingsController extends Controller {
 
         View::render('admin-settings', [
             'pageTitle' => 'Mga Setting - SITRASS Admin',
-            'pageHeading' => 'Mga Setting ng Sistema',
+                        'pageHeading' => t('settings_page_heading'),
             'grouped' => $grouped,
             'saved' => $saved,
         ]);

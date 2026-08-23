@@ -1,13 +1,13 @@
 <?php require __DIR__ . '/_customer_header.php'; ?>
 
-<h2>Maghanap ng Biyahe</h2>
+<h2><?= t('nav_search') ?></h2>
 
 <form method="GET" action="/sitrass/public/customer/search" style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:1.5rem; margin-bottom:1.5rem;">
     <div style="display:flex; gap:1rem; flex-wrap:wrap;">
         <div class="field" style="flex:1; min-width:200px;">
-            <label>Mula</label>
+            <label><?= t('label_from') ?></label>
             <select name="origin">
-                <option value="">-- Kahit saan --</option>
+                <option value=""><?= t('option_anywhere') ?></option>
                 <?php foreach ($locations as $loc): ?>
                     <option value="<?= (int)$loc['location_id'] ?>" <?= $selectedOrigin == $loc['location_id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($loc['name']) ?> (<?= htmlspecialchars($loc['municipality']) ?>)
@@ -17,9 +17,9 @@
         </div>
 
         <div class="field" style="flex:1; min-width:200px;">
-            <label>Papunta</label>
+            <label><?= t('label_to') ?></label>
             <select name="destination">
-                <option value="">-- Kahit saan --</option>
+                <option value=""><?= t('option_anywhere') ?></option>
                 <?php foreach ($locations as $loc): ?>
                     <option value="<?= (int)$loc['location_id'] ?>" <?= $selectedDestination == $loc['location_id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($loc['name']) ?> (<?= htmlspecialchars($loc['municipality']) ?>)
@@ -29,12 +29,12 @@
         </div>
 
         <div class="field" style="flex:1; min-width:150px;">
-            <label>Petsa</label>
+            <label><?= t('label_date') ?></label>
             <input type="date" name="date" value="<?= htmlspecialchars($selectedDate) ?>" min="<?= date('Y-m-d') ?>">
         </div>
     </div>
 
-    <button type="submit" class="btn" style="width:auto; padding:0.7rem 2rem; margin-top:1rem;">Maghanap</button>
+    <button type="submit" class="btn" style="width:auto; padding:0.7rem 2rem; margin-top:1rem;"><?= t('btn_search') ?></button>
 </form>
 
 <?php if ($results !== null): ?>

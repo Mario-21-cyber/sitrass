@@ -24,7 +24,7 @@ class ProfileController extends Controller {
         unset($_SESSION['profile_message'], $_SESSION['profile_error']);
 
         View::render('profile-edit', [
-            'pageTitle' => 'Aking Profile - SITRASS',
+                        'pageTitle' => t('nav_profile') . ' - SITRASS',
             'user' => $user,
             'driver' => $driver,
             'message' => $message,

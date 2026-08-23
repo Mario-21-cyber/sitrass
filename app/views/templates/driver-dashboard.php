@@ -1,8 +1,8 @@
 <?php require __DIR__ . '/_driver_header.php'; ?>
 
-<h2>Mga Booking Ko</h2>
+<h2><?= t('nav_my_trips') ?></h2>
 
-<p><a href="/sitrass/public/driver/scanQr" class="btn" style="display:inline-block; width:auto; padding:0.5rem 1.2rem;">I-verify ang QR Code</a></p>
+<p><a href="/sitrass/public/driver/scanQr" class="btn" style="display:inline-block; width:auto; padding:0.5rem 1.2rem;"><?= t('nav_scan_qr') ?></a></p>
 
 <?php if (!empty($message)): ?>
     <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
@@ -20,7 +20,7 @@
             <div>
                 <span style="font-family:monospace; font-weight:700; color:var(--teal-dark);"><?= htmlspecialchars($b['reference_code']) ?></span><br>
                 <strong><?= htmlspecialchars($b['pickup_name']) ?> &rarr; <?= htmlspecialchars($b['dropoff_name']) ?></strong><br>
-                <span style="font-size:0.85rem;"><?= htmlspecialchars($b['travel_date']) ?> @ <?= htmlspecialchars($b['pickup_time']) ?> &middot; <?= (int)$b['seats_booked'] ?> pasahero</span><br>
+                <span style="font-size:0.85rem;"><?= htmlspecialchars($b['travel_date']) ?> @ <?= htmlspecialchars($b['pickup_time']) ?> &middot; <?= (int)$b['seats_booked'] ?> <?= t('unit_passengers') ?></span><br>
                 <span style="font-size:0.85rem;">Customer: <?= htmlspecialchars($b['customer_name']) ?> (<?= htmlspecialchars($b['customer_phone']) ?>)</span>
             </div>
             <span class="badge <?= in_array($b['status'], ['accepted','en_route','completed']) ? 'badge-active' : 'badge-pending' ?>">
@@ -50,12 +50,12 @@
                     <form method="POST" action="/sitrass/public/driver/endTrip" style="display:inline;">
                         <?= Csrf::field() ?>
                         <input type="hidden" name="booking_id" value="<?= (int)$b['booking_id'] ?>">
-                        <button type="submit" class="btn">Tapusin ang Biyahe</button>
+                        <button type="submit" class="btn"><?= t('btn_end_trip') ?></button>
                     </form>
-                    <a href="/sitrass/public/driver/trackTrip/<?= (int)$b['booking_id'] ?>">Subaybayan</a>
+                    <a href="/sitrass/public/driver/trackTrip/<?= (int)$b['booking_id'] ?>"><?= t('link_track_customer') ?></a>
                     <a href="/sitrass/public/chat/open/<?= (int)$b['booking_id'] ?>">Chat</a>
                 <?php elseif ($b['status'] === 'completed'): ?>
-                    <span style="font-size:0.85rem; color:var(--forest);">Tapos na ang biyaheng ito.</span>
+                    <span style="font-size:0.85rem; color:var(--forest);"><?= t('driver_trip_completed_note') ?></span>
                 <?php endif; ?>
             </div>
         </div>

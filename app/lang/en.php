@@ -277,6 +277,143 @@ return [
     'profile_personal_info' => 'Personal Information',
     'btn_edit' => 'Edit',
 
+        // Driver dashboard body
+    'unit_passengers' => 'passenger(s)',
+    'driver_trip_completed_note' => 'This trip has been completed.',
+    'btn_end_trip' => 'End Trip',
+    'link_track_customer' => 'Track',
+    'btn_accept' => 'Accept',
+    'btn_start_trip' => 'Start Trip',
+
+    // Verify QR page
+    'qr_page_title' => 'Verify QR',
+    'qr_input_label' => 'Type or paste the QR code',
+    'qr_helper_text' => 'For camera-based scanning, the code encoded in the QR is exactly the same text as this - it can be typed manually as an alternative.',
+    'link_back_dashboard' => 'Back to Dashboard',
+
+    // Customer landing
+    'customer_dashboard_title' => 'SITRASS - Dashboard',
+    'welcome_message' => 'Welcome, %s!',
+    'card_search_desc' => 'Browse available trips across Sibuyan Island.',
+    'card_bookings_desc' => 'Track status, pay, or track your trip.',
+    'card_rate_desc' => 'Share your experience from completed trips.',
+    'card_feedback_desc' => 'Found a bug or have a suggestion? Let us know.',
+
+    // Customer search
+    'label_from' => 'From',
+    'label_to' => 'To',
+    'label_date' => 'Date',
+    'option_anywhere' => '-- Anywhere --',
+    'btn_search' => 'Search',
+
+    // Customer bookings
+    'btn_pay' => 'Pay',
+    'btn_track_van' => 'Track Van',
+    'btn_reschedule' => 'Reschedule',
+    'btn_pay_balance' => 'Pay Balance',
+
+    // Rate a trip
+    'rate_list_title' => 'Trips You Can Rate',
+    'btn_rate' => 'Rate',
+
+    // Feedback form
+    'feedback_form_title' => 'Submit Your Feedback',
+    'label_subject' => 'Subject',
+    'label_message' => 'Message',
+    'label_reply_email' => 'Reply Email (optional)',
+    'feedback_option_bug' => 'Bug / System Issue',
+    'feedback_option_suggestion' => 'Suggestion',
+    'feedback_option_complaint' => 'Complaint',
+    'feedback_option_compliment' => 'Compliment',
+    'feedback_option_other' => 'Other',
+    'btn_submit' => 'Submit',
+
+    // Profile password section
+    'profile_password_title' => 'Change Password',
+    'label_current_password' => 'Current Password',
+    'label_new_password' => 'New Password',
+    'label_confirm_new_password' => 'Confirm New Password',
+    'btn_change_password' => 'Change Password',
+
+        // Missing button keys
+    'btn_chat' => 'Chat',
+    'btn_cancel' => 'Cancel',
+    'btn_view_qr' => 'QR Code',
+
+    // Rate form labels
+    'label_overall_rating' => 'Overall Rating (1-5)',
+    'label_punctuality' => 'Punctuality (optional)',
+    'label_van_cleanliness' => 'Van Cleanliness (optional)',
+    'label_driving' => 'Driving (optional)',
+    'label_comment' => 'Comment (optional)',
+    'btn_submit_rating' => 'Submit Rating',
+    'rate_page_h2' => 'Rate Trip',
+
+        // Rating scale options
+    'rate_5' => '5 - Excellent',
+    'rate_4' => '4 - Good',
+    'rate_3' => '3 - Okay',
+    'rate_2' => '2 - Not Good',
+    'rate_1' => '1 - Very Bad',
+    'option_skip' => '-- Skip --',
+
+        // License photo section
+    'license_section_title' => 'License Photo',
+    'license_no_upload' => 'No license photo uploaded yet.',
+    'license_pick_photo' => 'Choose license photo',
+
+        // Van create form
+    'label_plate_number' => 'Plate Number',
+    'label_make_example' => 'Make (e.g. Toyota)',
+    'label_model_example' => 'Model (e.g. HiAce Commuter)',
+    'label_year_model' => 'Year Model',
+    'label_color' => 'Color',
+    'label_van_type' => 'Van Type',
+    'label_luggage_capacity' => 'Luggage Capacity',
+    'label_has_aircon' => 'Has Aircon',
+    'label_has_wifi' => 'Has WiFi',
+    'label_base_fare' => 'Base Fare (PHP)',
+    'label_fare_per_km' => 'Fare per KM (PHP)',
+    'label_day_rate' => 'Whole Van Day Rate (PHP)',
+    'label_description' => 'Description',
+
+    // Location create form
+    'loctype_both' => 'Pickup and Destination',
+    'loctype_pickup' => 'Pickup only',
+    'loctype_destination' => 'Destination only',
+
+    // Route create form
+    'label_route_code_example' => 'Route Code (e.g. MAG-CAJ)',
+    'label_route_name' => 'Route Name',
+    'label_origin' => 'From (Origin)',
+    'label_destination' => 'To (Destination)',
+    'label_distance_km' => 'Distance (km)',
+    'label_est_duration' => 'Estimated Time (minutes)',
+    'label_fare_per_passenger' => 'Fare per Passenger (PHP)',
+    'label_road_condition' => 'Road Condition',
+    'road_paved' => 'Paved',
+    'road_partially_paved' => 'Partially Paved',
+    'road_rough' => 'Rough',
+
+    // Schedule create form
+    'schedule_no_vans' => 'No vans yet.',
+    'schedule_add_van_first' => 'Add a van first',
+    'schedule_no_routes' => 'No routes yet.',
+    'schedule_add_route_first' => 'Add a route first',
+    'label_driver_optional' => 'Driver (optional, can be set later)',
+    'option_none_yet' => '-- None yet --',
+    'label_departure_date' => 'Departure Date',
+    'label_departure_time' => 'Departure Time',
+    'label_est_arrival' => 'Estimated Arrival Time',
+    'label_fare_per_seat' => 'Fare per Seat (PHP)',
+    'label_booking_mode' => 'Booking Mode',
+    'mode_per_seat' => 'Per Seat (shared)',
+    'mode_exclusive' => 'Exclusive (whole van)',
+
+    // Settings
+    'settings_page_heading' => 'System Settings',
+    'btn_save_all_settings' => 'Save All Settings',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

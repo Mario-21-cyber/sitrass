@@ -963,3 +963,34 @@ tbody tr:hover {
   letter-spacing: 0.05em;
   color: var(--amber-light);
 }
+
+/* --- Sticky topbar: manatiling nakikita ang menu button habang nag-scroll,
+   lalo na sa mobile view. Gumagana ito sa admin, customer, at driver dahil
+   parehong .topbar class ang ginagamit ng tatlo. --- */
+/* --- Sticky topbar: manatiling nakikita ang menu button habang nag-scroll,
+   lalo na sa mobile view. Gumagana ito sa admin, customer, at driver dahil
+   parehong .topbar class ang ginagamit ng tatlo. Shadow lang, walang
+   dagdag na border, para hindi mag-double-line sa ilalim. --- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--sand);
+  box-shadow: 0 2px 6px rgba(27, 42, 107, 0.06);
+  margin-bottom: var(--space-4);
+}
+
+/* Kung may existing border-bottom na sa .topbar mula sa dating CSS,
+   i-override natin dito para hindi mag-doble sa shadow. */
+.main-content .topbar {
+  border-bottom: none;
+}
+
+/* --- FONT SAFETY NET: siguraduhing Poppins ang buong system, kasama
+   ang .brand text sa sidebar (SITRASS Admin/Driver) na dating gumagamit
+   ng ibang font, at kahit anong stray element na naiwan sa lumang font. --- */
+.brand,
+.sidebar .brand,
+.brand-sub {
+  font-family: "Poppins", sans-serif !important;
+}

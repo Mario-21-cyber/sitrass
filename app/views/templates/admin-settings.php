@@ -96,7 +96,7 @@ function settingLabel($setting, $overrides) {
         </div>
     <?php endforeach; ?>
 
-    <button type="submit" class="btn" style="width:auto; padding:0.75rem 2rem;">I-save Lahat ng Setting</button>
+        <button type="submit" class="btn" style="width:auto; padding:0.75rem 2rem;"><?= t('btn_save_all_settings') ?></button>
 </form>
 
 <?php require __DIR__ . '/_admin_footer.php'; ?>

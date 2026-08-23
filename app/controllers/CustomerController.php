@@ -27,7 +27,7 @@ class CustomerController extends Controller {
         }
 
         View::render('customer-search', [
-            'pageTitle' => 'Maghanap ng Biyahe - SITRASS',
+                        'pageTitle' => t('nav_search') . ' - SITRASS',
             'locations' => $locationModel->getAll(),
             'results' => $results,
             'selectedOrigin' => $origin,
@@ -200,7 +200,7 @@ public function myBookings() {
     unset($_SESSION['booking_message'], $_SESSION['booking_error']);
 
     View::render('customer-my-bookings', [
-        'pageTitle' => 'Aking Mga Booking - SITRASS',
+                'pageTitle' => t('nav_my_bookings') . ' - SITRASS',
         'reservations' => $reservations,
         'message' => $message,
         'error' => $error,
@@ -547,7 +547,7 @@ public function rate($bookingId) {
     }
 
     View::render('customer-rate', [
-        'pageTitle' => 'Mag-rate - SITRASS',
+                'pageTitle' => t('rate_page_h2') . ' - SITRASS',
         'booking' => $booking,
     ]);
 }

@@ -1,6 +1,6 @@
 <?php require __DIR__ . '/_customer_header.php'; ?>
 
-<h2>Mga Biyaheng Puwede Mo Nang I-rate</h2>
+<h2><?= t('rate_list_title') ?></h2>
 
 <?php if (empty($trips)): ?>
     <div class="empty-state">Wala kang biyaheng naghihintay ng rating sa ngayon.</div>
@@ -14,7 +14,7 @@
                     <?php if ($t['driver_name']): ?> &middot; Driver: <?= htmlspecialchars($t['driver_name']) ?><?php endif; ?>
                 </span>
             </div>
-            <a href="/sitrass/public/customer/rate/<?= (int)$t['booking_id'] ?>" class="btn" style="display:inline-block; width:auto; padding:0.5rem 1.2rem;">I-rate</a>
+            <a href="/sitrass/public/customer/rate/<?= (int)$t['booking_id'] ?>" class="btn" style="display:inline-block; width:auto; padding:0.5rem 1.2rem;"><?= t('btn_rate') ?></a>
         </div>
     <?php endforeach; ?>
 <?php endif; ?>

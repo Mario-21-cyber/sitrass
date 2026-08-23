@@ -36,21 +36,21 @@ require __DIR__ . '/' . $headerFile;
     </div>
 
     <?php if ($_SESSION['role'] === 'driver'): ?>
-        <div class="form-section">
-            <div class="form-section-title">Larawan ng Lisensya</div>
+                <div class="form-section">
+            <div class="form-section-title"><?= t('license_section_title') ?></div>
             <div class="card" style="text-align:center;">
                 <?php if ($driver && $driver['license_image']): ?>
-                    <img src="<?= htmlspecialchars($driver['license_image']) ?>" alt="Larawan ng lisensya" style="width:100%; max-width:220px; border-radius:8px; margin-bottom:1rem; display:block; margin-left:auto; margin-right:auto;">
+                    <img src="<?= htmlspecialchars($driver['license_image']) ?>" alt="License photo" style="width:100%; max-width:220px; border-radius:8px; margin-bottom:1rem; display:block; margin-left:auto; margin-right:auto;">
                 <?php else: ?>
-                    <p class="text-sm text-muted">Wala pang na-upload na larawan ng lisensya.</p>
+                    <p class="text-sm text-muted"><?= t('license_no_upload') ?></p>
                 <?php endif; ?>
                 <form method="POST" action="/sitrass/public/profile/uploadLicense" enctype="multipart/form-data">
                     <?= Csrf::field() ?>
                     <div class="field" style="text-align:left;">
-                        <label for="pf_license">Piliin ang larawan ng lisensya</label>
+                        <label for="pf_license"><?= t('license_pick_photo') ?></label>
                         <input type="file" id="pf_license" name="license" accept="image/jpeg,image/png" required>
                     </div>
-                    <button type="submit" class="btn" style="width:auto; padding:0.5rem 1.2rem;">I-upload</button>
+                    <button type="submit" class="btn" style="width:auto; padding:0.5rem 1.2rem;"><?= t('btn_upload') ?></button>
                 </form>
             </div>
         </div>
@@ -104,25 +104,25 @@ require __DIR__ . '/' . $headerFile;
         </form>
     </div>
 
-    <div class="form-section">
-        <div class="form-section-title">Palitan ang Password</div>
-        <form method="POST" action="/sitrass/public/profile/changePassword" class="card">
-            <?= Csrf::field() ?>
-            <div class="field">
-                <label for="pf_current_pw">Kasalukuyang Password<span class="required">*</span></label>
-                <input type="password" id="pf_current_pw" name="current_password" required>
-            </div>
-            <div class="field">
-                <label for="pf_new_pw">Bagong Password<span class="required">*</span></label>
-                <input type="password" id="pf_new_pw" name="new_password" required>
-            </div>
-            <div class="field">
-                <label for="pf_new_pw_confirm">Kumpirmahin ang Bagong Password<span class="required">*</span></label>
-                <input type="password" id="pf_new_pw_confirm" name="new_password_confirm" required>
-            </div>
-            <button type="submit" class="btn">Palitan ang Password</button>
-        </form>
-    </div>
+            <div class="form-section">
+            <div class="form-section-title"><?= t('profile_password_title') ?></div>
+            <form method="POST" action="/sitrass/public/profile/changePassword" class="card">
+                <?= Csrf::field() ?>
+                <div class="field">
+                    <label for="pf_current_pw"><?= t('label_current_password') ?><span class="required">*</span></label>
+                    <input type="password" id="pf_current_pw" name="current_password" required>
+                </div>
+                <div class="field">
+                    <label for="pf_new_pw"><?= t('label_new_password') ?><span class="required">*</span></label>
+                    <input type="password" id="pf_new_pw" name="new_password" required>
+                </div>
+                <div class="field">
+                    <label for="pf_new_pw_confirm"><?= t('label_confirm_new_password') ?><span class="required">*</span></label>
+                    <input type="password" id="pf_new_pw_confirm" name="new_password_confirm" required>
+                </div>
+                <button type="submit" class="btn"><?= t('btn_change_password') ?></button>
+            </form>
+        </div>
 
 </div>
 

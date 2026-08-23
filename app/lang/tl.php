@@ -60,10 +60,10 @@ return [
     'nav_feedback' => 'Mga Feedback',
     'nav_profile' => 'Aking Profile',
     'nav_logout' => 'Logout',
-    'nav_section_overview' => 'Overview',
-    'nav_section_operations' => 'Operations',
-    'nav_section_transactions' => 'Transactions',
-    'nav_section_administration' => 'Administration',
+        'nav_section_overview' => 'Buod',
+    'nav_section_operations' => 'Operasyon',
+    'nav_section_transactions' => 'Transaksyon',
+    'nav_section_administration' => 'Administrasyon',
     'nav_section_account' => 'Account',
 
     // Customer Nav
@@ -86,7 +86,7 @@ return [
 
         // Page titles (browser tab) na English pa
     'title_pending_accounts' => 'Mga Naghihintay na Account - SITRASS Admin',
-    'title_driver_dashboard' => 'Driver Dashboard - SITRASS',
+        'title_driver_dashboard' => 'Dashboard ng Driver - SITRASS',
     'title_forgot_password' => 'Nakalimutan ang Password - SITRASS',
     'title_invalid_link' => 'Invalid na Link - SITRASS',
     'title_booking_confirmed' => 'Nakumpirma ang Booking - SITRASS',
@@ -271,11 +271,148 @@ return [
     'feedback_admin_response' => 'Sagot ng Admin',
 
     // Profile
-    'profile_picture_title' => 'Profile Picture',
+        'profile_picture_title' => 'Larawan sa Profile',
     'profile_pick_new_photo' => 'Piliin ang bagong larawan',
     'btn_upload' => 'I-upload',
     'profile_personal_info' => 'Personal na Impormasyon',
     'btn_edit' => 'I-edit',
+
+        // Driver dashboard body
+    'unit_passengers' => 'pasahero',
+    'driver_trip_completed_note' => 'Tapos na ang biyaheng ito.',
+    'btn_end_trip' => 'Tapusin ang Biyahe',
+    'link_track_customer' => 'Subaybayan',
+    'btn_accept' => 'Tanggapin',
+    'btn_start_trip' => 'Simulan ang Biyahe',
+
+    // Verify QR page
+    'qr_page_title' => 'I-verify ang QR',
+    'qr_input_label' => 'I-type o i-paste ang QR code',
+    'qr_helper_text' => 'Kung camera-based na scanning ang gusto, ang code na naka-encode sa QR ay eksaktong parehong text na ito - puwedeng i-type nang manu-mano bilang alternatibo.',
+    'link_back_dashboard' => 'Bumalik sa Dashboard',
+
+    // Customer landing
+    'customer_dashboard_title' => 'SITRASS - Dashboard',
+    'welcome_message' => 'Maligayang pagdating, %s!',
+    'card_search_desc' => 'Tingnan ang mga available na biyahe sa buong Sibuyan Island.',
+    'card_bookings_desc' => 'Bantayan ang status, magbayad, o i-track ang biyahe mo.',
+    'card_rate_desc' => 'Ibahagi ang karanasan mo sa mga kompletong biyahe.',
+    'card_feedback_desc' => 'May bug o mungkahi? Ipaalam sa amin.',
+
+    // Customer search
+    'label_from' => 'Mula',
+    'label_to' => 'Papunta',
+    'label_date' => 'Petsa',
+    'option_anywhere' => '-- Kahit saan --',
+    'btn_search' => 'Maghanap',
+
+    // Customer bookings
+    'btn_pay' => 'Magbayad',
+    'btn_track_van' => 'I-track ang Van',
+    'btn_reschedule' => 'I-reschedule',
+    'btn_pay_balance' => 'Bayaran ang Balance',
+
+    // Rate a trip
+    'rate_list_title' => 'Mga Biyaheng Puwede Mo Nang I-rate',
+    'btn_rate' => 'I-rate',
+
+    // Feedback form
+    'feedback_form_title' => 'Ipadala ang Iyong Feedback',
+    'label_subject' => 'Paksa',
+    'label_message' => 'Mensahe',
+    'label_reply_email' => 'Email para sa Sagot (opsyonal)',
+    'feedback_option_bug' => 'Bug / Problema sa System',
+    'feedback_option_suggestion' => 'Mungkahi',
+    'feedback_option_complaint' => 'Reklamo',
+    'feedback_option_compliment' => 'Papuri',
+    'feedback_option_other' => 'Iba pa',
+    'btn_submit' => 'Ipadala',
+
+    // Profile password section
+    'profile_password_title' => 'Palitan ang Password',
+    'label_current_password' => 'Kasalukuyang Password',
+    'label_new_password' => 'Bagong Password',
+    'label_confirm_new_password' => 'Kumpirmahin ang Bagong Password',
+    'btn_change_password' => 'Palitan ang Password',
+
+        // Nawawalang button keys (dahilan ng "btn_chat" atbp. na nakikita mo)
+    'btn_chat' => 'Chat',
+    'btn_cancel' => 'Kanselahin',
+    'btn_view_qr' => 'QR Code',
+
+    // Rate form labels
+    'label_overall_rating' => 'Pangkalahatang Rating (1-5)',
+    'label_punctuality' => 'Pagiging Maagap (opsyonal)',
+    'label_van_cleanliness' => 'Kalinisan ng Van (opsyonal)',
+    'label_driving' => 'Pagmamaneho (opsyonal)',
+    'label_comment' => 'Komento (opsyonal)',
+    'btn_submit_rating' => 'Isumite ang Rating',
+    'rate_page_h2' => 'I-rate ang Biyahe',
+
+        // Rating scale options
+    'rate_5' => '5 - Napakahusay',
+    'rate_4' => '4 - Mahusay',
+    'rate_3' => '3 - Okay lang',
+    'rate_2' => '2 - Hindi Maganda',
+    'rate_1' => '1 - Napakasama',
+    'option_skip' => '-- Laktawan --',
+
+        // License photo section
+    'license_section_title' => 'Larawan ng Lisensya',
+    'license_no_upload' => 'Wala pang na-upload na larawan ng lisensya.',
+    'license_pick_photo' => 'Piliin ang larawan ng lisensya',
+
+        // Van create form
+    'label_plate_number' => 'Plate Number',
+    'label_make_example' => 'Make (hal. Toyota)',
+    'label_model_example' => 'Model (hal. HiAce Commuter)',
+    'label_year_model' => 'Year Model',
+    'label_color' => 'Kulay',
+    'label_van_type' => 'Tipo ng Van',
+    'label_luggage_capacity' => 'Kapasidad ng Bagahe',
+    'label_has_aircon' => 'May Aircon',
+    'label_has_wifi' => 'May WiFi',
+    'label_base_fare' => 'Base Fare (PHP)',
+    'label_fare_per_km' => 'Fare per KM (PHP)',
+    'label_day_rate' => 'Whole Van Day Rate (PHP)',
+    'label_description' => 'Deskripsyon',
+
+    // Location create form
+    'loctype_both' => 'Pickup at Destination',
+    'loctype_pickup' => 'Pickup lang',
+    'loctype_destination' => 'Destination lang',
+
+    // Route create form
+    'label_route_code_example' => 'Route Code (hal. MAG-CAJ)',
+    'label_route_name' => 'Pangalan ng Ruta',
+    'label_origin' => 'Mula (Origin)',
+    'label_destination' => 'Papunta (Destination)',
+    'label_distance_km' => 'Distansya (km)',
+    'label_est_duration' => 'Tantiyang Oras (minuto)',
+    'label_fare_per_passenger' => 'Fare per Passenger (PHP)',
+    'label_road_condition' => 'Kalagayan ng Daan',
+    'road_paved' => 'Maayos na Kalsada',
+    'road_partially_paved' => 'Bahagyang Maayos',
+    'road_rough' => 'Magaspang na Daan',
+
+    // Schedule create form
+    'schedule_no_vans' => 'Wala pang van.',
+    'schedule_add_van_first' => 'Magdagdag muna ng van',
+    'schedule_no_routes' => 'Wala pang ruta.',
+    'schedule_add_route_first' => 'Magdagdag muna ng ruta',
+    'label_driver_optional' => 'Driver (opsyonal, puwedeng itakda mamaya)',
+    'option_none_yet' => '-- Wala pa --',
+    'label_departure_date' => 'Petsa ng Biyahe',
+    'label_departure_time' => 'Oras ng Alis',
+    'label_est_arrival' => 'Tantiyang Oras ng Dating',
+    'label_fare_per_seat' => 'Pamasahe kada Upuan (PHP)',
+    'label_booking_mode' => 'Booking Mode',
+    'mode_per_seat' => 'Per Seat (shared)',
+    'mode_exclusive' => 'Exclusive (buong van)',
+
+    // Settings
+    'settings_page_heading' => 'Mga Setting ng Sistema',
+    'btn_save_all_settings' => 'I-save Lahat ng Setting',
 
     // Common
     'lang_switch_label' => 'Wika',

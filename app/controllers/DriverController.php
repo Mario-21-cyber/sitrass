@@ -122,7 +122,7 @@ class DriverController extends Controller {
     unset($_SESSION['scan_result']);
 
     View::render('driver-scan', [
-        'pageTitle' => 'I-verify ang QR - SITRASS',
+                'pageTitle' => t('nav_scan_qr') . ' - SITRASS',
         'result' => $result,
     ]);
 }
