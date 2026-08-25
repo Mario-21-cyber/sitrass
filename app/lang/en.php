@@ -414,6 +414,20 @@ return [
     'settings_page_heading' => 'System Settings',
     'btn_save_all_settings' => 'Save All Settings',
 
+        // Customer pay page
+    'pay_page_title' => 'Pay',
+    'label_deposit_required' => 'Deposit Required',
+    'label_balance' => 'Balance',
+    'send_to_method' => 'Send to',
+    'label_payment_method' => 'Payment Method',
+    'label_amount_to_pay' => 'Amount to Pay (PHP)',
+    'label_ref_number_gcash' => 'Reference Number (if GCash)',
+    'label_payment_proof' => 'Payment Proof (screenshot)',
+    'btn_submit_payment' => 'Submit Payment',
+
+    // Audit logs empty state
+    'audit_empty' => 'No audit log entries recorded yet.',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

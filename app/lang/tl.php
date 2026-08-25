@@ -414,6 +414,20 @@ return [
     'settings_page_heading' => 'Mga Setting ng Sistema',
     'btn_save_all_settings' => 'I-save Lahat ng Setting',
 
+        // Customer pay page
+    'pay_page_title' => 'Magbayad',
+    'label_deposit_required' => 'Kailangang Deposit',
+    'label_balance' => 'Balance',
+    'send_to_method' => 'Ipadala sa',
+    'label_payment_method' => 'Paraan ng Pagbabayad',
+    'label_amount_to_pay' => 'Halagang Babayaran (PHP)',
+    'label_ref_number_gcash' => 'Reference Number (kung GCash)',
+    'label_payment_proof' => 'Proof ng Pagbabayad (screenshot)',
+    'btn_submit_payment' => 'Isumite ang Pagbabayad',
+
+    // Audit logs empty state
+    'audit_empty' => 'Wala pang audit log na naitala.',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];
