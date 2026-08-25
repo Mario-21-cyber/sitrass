@@ -18,29 +18,21 @@ class DriverController extends Controller {
         }
     }
 
-    public function dashboard() {
+        public function dashboard() {
         $bookingModel = new Booking();
         $bookings = $bookingModel->getForDriver($this->driverRecord['driver_id']);
-
-        // Hanapin kung may aktibong "en_route" na booking - doon lang natin ipapadala ang GPS
-        $activeEnRouteBookingId = null;
-        foreach ($bookings as $b) {
-            if ($b['status'] === 'en_route') {
-                $activeEnRouteBookingId = $b['booking_id'];
-                break;
-            }
-        }
+        $activeBooking = $bookingModel->getActiveBookingForDriver($this->driverRecord['driver_id']);
 
         $message = $_SESSION['driver_message'] ?? null;
         $error = $_SESSION['driver_error'] ?? null;
         unset($_SESSION['driver_message'], $_SESSION['driver_error']);
 
         View::render('driver-dashboard', [
-                        'pageTitle' => t('title_driver_dashboard'),
+            'pageTitle' => t('title_driver_dashboard'),
             'bookings' => $bookings,
             'message' => $message,
             'error' => $error,
-            'activeEnRouteBookingId' => $activeEnRouteBookingId,
+            'activeBooking' => $activeBooking,
             'driverIdForGps' => $this->driverRecord['driver_id'],
         ]);
     }

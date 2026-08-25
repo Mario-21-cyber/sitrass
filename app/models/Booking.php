@@ -173,4 +173,49 @@ public function getForDriverTrackView($bookingId, $driverId) {
     $stmt->execute([$bookingId, $driverId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+public function getActiveBookingForCustomer($customerId) {
+    $stmt = $this->db->prepare(
+        "SELECT b.*, rs.reference_code,
+                d.driver_id, CONCAT(du.first_name,' ',du.last_name) AS driver_name,
+                v.plate_number,
+                o.name AS pickup_name, o.latitude AS pickup_lat, o.longitude AS pickup_lng,
+                dl.name AS dropoff_name, dl.latitude AS dropoff_lat, dl.longitude AS dropoff_lng
+         FROM bookings b
+         JOIN reservations rs ON rs.reservation_id = b.reservation_id
+         LEFT JOIN drivers d ON d.driver_id = b.driver_id
+         LEFT JOIN users du ON du.user_id = d.user_id
+         JOIN vans v ON v.van_id = b.van_id
+         JOIN locations o ON o.location_id = b.pickup_location_id
+         JOIN locations dl ON dl.location_id = b.dropoff_location_id
+         WHERE rs.customer_id = ? AND b.status IN ('accepted','en_route')
+         ORDER BY (b.status = 'en_route') DESC, b.booking_id DESC
+         LIMIT 1"
+    );
+    $stmt->execute([$customerId]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row ?: null;
+}
+
+public function getActiveBookingForDriver($driverId) {
+    $stmt = $this->db->prepare(
+        "SELECT b.*, rs.reference_code,
+                CONCAT(cu.first_name,' ',cu.last_name) AS customer_name, cu.phone AS customer_phone,
+                v.plate_number,
+                o.name AS pickup_name, o.latitude AS pickup_lat, o.longitude AS pickup_lng,
+                dl.name AS dropoff_name, dl.latitude AS dropoff_lat, dl.longitude AS dropoff_lng
+         FROM bookings b
+         JOIN reservations rs ON rs.reservation_id = b.reservation_id
+         JOIN customers c ON c.customer_id = rs.customer_id
+         JOIN users cu ON cu.user_id = c.user_id
+         JOIN vans v ON v.van_id = b.van_id
+         JOIN locations o ON o.location_id = b.pickup_location_id
+         JOIN locations dl ON dl.location_id = b.dropoff_location_id
+         WHERE b.driver_id = ? AND b.status IN ('accepted','en_route')
+         ORDER BY (b.status = 'en_route') DESC, b.booking_id DESC
+         LIMIT 1"
+    );
+    $stmt->execute([$driverId]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row ?: null;
+}
 }

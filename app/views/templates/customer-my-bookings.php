@@ -36,9 +36,7 @@
                             <a href="/sitrass/public/customer/payReservation/<?= htmlspecialchars($r['reference_code']) ?>" style="display:inline-block; padding:0.3rem 0.8rem; text-decoration:none; font-size:0.8rem; margin-left:0.3rem;"><?= t('btn_pay_balance') ?></a>
                         <?php endif; ?>
                     <?php endif; ?>
-                    <?php if (($r['first_booking_status'] ?? null) === 'en_route'): ?>
-                        <a href="/sitrass/public/customer/trackTrip/<?= (int)$r['first_booking_id'] ?>" class="btn" style="display:inline-block; width:auto; padding:0.3rem 0.8rem; text-decoration:none; font-size:0.8rem; margin-left:0.4rem;"><?= t('btn_track_van') ?></a>
-                    <?php endif; ?>
+                    
                     <?php if (!empty($r['first_booking_id']) && in_array($r['first_booking_status'] ?? '', ['accepted','en_route'])): ?>
                         <a href="/sitrass/public/chat/open/<?= (int)$r['first_booking_id'] ?>" style="display:inline-block; padding:0.3rem 0.8rem; text-decoration:none; font-size:0.8rem; margin-left:0.4rem;"><?= t('btn_chat') ?></a>
                     <?php endif; ?>

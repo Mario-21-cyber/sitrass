@@ -428,6 +428,23 @@ return [
     // Audit logs empty state
     'audit_empty' => 'Wala pang audit log na naitala.',
 
+        // Dashboard map (customer at driver)
+    'map_own_location' => 'Ito ang kasalukuyan mong lokasyon.',
+    'map_waiting_driver' => 'Hinihintay ang lokasyon ng driver...',
+    'map_waiting_customer' => 'Hinihintay ang lokasyon ng customer...',
+    'map_live_prefix' => 'Live - na-update',
+    'map_seconds_ago' => 'segundo ang nakalipas.',
+    'map_stale_prefix' => 'Huling nakita:',
+    'eta_distance_label' => 'Tinatayang Layo',
+    'eta_time_label' => 'Tinatayang Oras ng Pagdating (ETA)',
+    'note_driver_assigned_waiting' => 'Naka-assign na ang driver, hinihintay pa ang pag-alis.',
+    'driver_no_active_trip' => 'Wala kang aktibong biyahe sa ngayon.',
+    'dashboard_no_trip_title' => 'Wala ka pang aktibong biyahe',
+    'dashboard_no_trip_desc' => 'Maghanap ng bagong biyahe para makapagbook.',
+    'dashboard_unrated_title' => 'Paano ang biyahe mo?',
+    'dashboard_unrated_desc' => 'Kumpleto na ang biyahe mo - ibahagi ang karanasan mo.',
+    'dashboard_active_title' => 'Kasalukuyang Biyahe',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

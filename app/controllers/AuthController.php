@@ -174,8 +174,25 @@ public function loggedin() {
         exit;
     }
 
+    // Kunin ang customer_id na naka-ugnay sa naka-login na user
+    $db = (new Model())->getConnection();
+    $stmt = $db->prepare("SELECT customer_id FROM customers WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $customerId = $stmt->fetchColumn();
+
+    $bookingModel = new Booking();
+    $activeBooking = $customerId ? $bookingModel->getActiveBookingForCustomer($customerId) : null;
+
+    $unratedBooking = null;
+    if (!$activeBooking && $customerId) {
+        $unrated = $bookingModel->getCompletedUnratedForCustomer($customerId);
+        $unratedBooking = !empty($unrated) ? $unrated[0] : null;
+    }
+
     View::render('customer-landing', [
-        'pageTitle' => 'SITRASS - Dashboard',
+        'pageTitle' => t('customer_dashboard_title'),
+        'activeBooking' => $activeBooking,
+        'unratedBooking' => $unratedBooking,
     ]);
 }
 public function forgotPassword() {

@@ -428,6 +428,23 @@ return [
     // Audit logs empty state
     'audit_empty' => 'No audit log entries recorded yet.',
 
+        // Dashboard map (customer and driver)
+    'map_own_location' => 'This is your current location.',
+    'map_waiting_driver' => 'Waiting for driver location...',
+    'map_waiting_customer' => 'Waiting for customer location...',
+    'map_live_prefix' => 'Live - updated',
+    'map_seconds_ago' => 'seconds ago.',
+    'map_stale_prefix' => 'Last seen:',
+    'eta_distance_label' => 'Estimated Distance',
+    'eta_time_label' => 'Estimated Time of Arrival (ETA)',
+    'note_driver_assigned_waiting' => 'Driver assigned, waiting for departure.',
+    'driver_no_active_trip' => 'You have no active trip right now.',
+    'dashboard_no_trip_title' => "You don't have an active trip",
+    'dashboard_no_trip_desc' => 'Find a new trip to book.',
+    'dashboard_unrated_title' => 'How was your trip?',
+    'dashboard_unrated_desc' => 'Your trip is complete - share your experience.',
+    'dashboard_active_title' => 'Current Trip',
+
     // Common
     'lang_switch_label' => 'Language',
 ];
