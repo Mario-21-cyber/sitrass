@@ -650,4 +650,18 @@ public function trackTrip($bookingId) {
         'booking' => $booking,
     ]);
 }
+public function history() {
+    $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+
+    $reservationModel = new Reservation();
+    $allReservations = $reservationModel->getByCustomerId($customerId);
+    $pastReservations = array_values(array_filter($allReservations, function($r) {
+        return in_array($r['status'], ['completed', 'cancelled']);
+    }));
+
+    View::render('customer-history', [
+        'pageTitle' => t('history_page_title') . ' - SITRASS',
+        'reservations' => $pastReservations,
+    ]);
+}
 }

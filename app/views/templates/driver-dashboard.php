@@ -15,8 +15,8 @@
     </div>
 <?php endif; ?>
 
-<div id="dashMap" style="height:380px; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:0.75rem;"></div>
-<p id="dashStatusText" class="text-sm text-muted" style="margin-top:0;"></p>
+<div id="dashMap" style="height:520px; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:1rem;"></div>
+<p id="dashStatusText" class="text-sm text-muted" style="margin:0 0 1.5rem;"></p>
 
 <?php if ($activeBooking): ?>
     <div class="card" style="margin-bottom:1.5rem;">
@@ -53,8 +53,12 @@
     <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 
+<div class="section-heading" style="margin-top:1.5rem;">
+    <h3><?= t('driver_pending_requests_title') ?></h3>
+</div>
+
 <?php if (empty($bookings)): ?>
-    <div class="empty-state">Wala ka pang naka-assign na booking sa ngayon.</div>
+    <div class="empty-state"><?= t('driver_pending_empty') ?></div>
 <?php else: ?>
     <?php foreach ($bookings as $b): ?>
         <div class="card list-card">
@@ -64,25 +68,19 @@
                 <span style="font-size:0.85rem;"><?= htmlspecialchars($b['travel_date']) ?> @ <?= htmlspecialchars($b['pickup_time']) ?> &middot; <?= (int)$b['seats_booked'] ?> <?= t('unit_passengers') ?></span><br>
                 <span style="font-size:0.85rem;">Customer: <?= htmlspecialchars($b['customer_name']) ?> (<?= htmlspecialchars($b['customer_phone']) ?>)</span>
             </div>
-            <span class="badge <?= in_array($b['status'], ['accepted','en_route','completed']) ? 'badge-active' : 'badge-pending' ?>">
-                <?= t('status_' . $b['status']) ?>
-            </span>
+            <span class="badge badge-pending"><?= t('status_' . $b['status']) ?></span>
 
             <div class="actions">
-                <?php if ($b['status'] === 'pending'): ?>
-                    <form method="POST" action="/sitrass/public/driver/accept" style="display:inline;">
-                        <?= Csrf::field() ?>
-                        <input type="hidden" name="booking_id" value="<?= (int)$b['booking_id'] ?>">
-                        <button type="submit" class="btn"><?= t('btn_accept') ?></button>
-                    </form>
-                    <form method="POST" action="/sitrass/public/driver/reject" style="display:inline;" onsubmit="return confirm('Sigurado kang tanggihan ang booking na ito?');">
-                        <?= Csrf::field() ?>
-                        <input type="hidden" name="booking_id" value="<?= (int)$b['booking_id'] ?>">
-                        <button type="submit" class="btn-danger" style="border:none; border-radius:6px; cursor:pointer;">Tanggihan</button>
-                    </form>
-                <?php elseif ($b['status'] === 'completed'): ?>
-                    <span style="font-size:0.85rem; color:var(--forest);"><?= t('driver_trip_completed_note') ?></span>
-                <?php endif; ?>
+                <form method="POST" action="/sitrass/public/driver/accept" style="display:inline;">
+                    <?= Csrf::field() ?>
+                    <input type="hidden" name="booking_id" value="<?= (int)$b['booking_id'] ?>">
+                    <button type="submit" class="btn"><?= t('btn_accept') ?></button>
+                </form>
+                <form method="POST" action="/sitrass/public/driver/reject" style="display:inline;" onsubmit="return confirm('Sigurado kang tanggihan ang booking na ito?');">
+                    <?= Csrf::field() ?>
+                    <input type="hidden" name="booking_id" value="<?= (int)$b['booking_id'] ?>">
+                    <button type="submit" class="btn-danger" style="border:none; border-radius:6px; cursor:pointer;">Tanggihan</button>
+                </form>
             </div>
         </div>
     <?php endforeach; ?>

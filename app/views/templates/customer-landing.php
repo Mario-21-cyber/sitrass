@@ -15,8 +15,8 @@
     </div>
 <?php endif; ?>
 
-<div id="dashMap" style="height:380px; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:0.75rem;"></div>
-<p id="dashStatusText" class="text-sm text-muted" style="margin-top:0;"><?= t('map_own_location') ?></p>
+<div id="dashMap" style="height:520px; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:1rem;"></div>
+<p id="dashStatusText" class="text-sm text-muted" style="margin:0 0 1.5rem;"><?= t('map_own_location') ?></p>
 
 <?php if ($activeBooking): ?>
     <div class="card" style="margin-top:1rem;">
@@ -26,6 +26,15 @@
         <?php if ($activeBooking['status'] === 'accepted'): ?>
             <p class="text-sm" style="color:var(--slate); margin-bottom:0.75rem;"><?= t('note_driver_assigned_waiting') ?></p>
         <?php endif; ?>
+
+        <?php if ($activeBooking['driver_id']): ?>
+            <div id="driverInfoPanel" style="display:none; background:var(--slate-bg); border-radius:8px; padding:0.75rem 1rem; margin-bottom:0.75rem;">
+                <div style="font-weight:600;"><?= htmlspecialchars($activeBooking['driver_name']) ?></div>
+                <div class="text-sm text-muted"><?= t('driver_info_phone_label') ?>: <?= htmlspecialchars($activeBooking['driver_phone'] ?? '—') ?></div>
+            </div>
+            <button type="button" class="btn-ghost" onclick="var p=document.getElementById('driverInfoPanel'); p.style.display = p.style.display === 'none' ? 'block' : 'none';" style="margin-right:0.5rem;"><?= t('btn_driver_info') ?></button>
+        <?php endif; ?>
+
         <a href="/sitrass/public/chat/open/<?= (int)$activeBooking['booking_id'] ?>" class="btn" style="width:auto; padding:0.6rem 1.4rem; text-decoration:none; display:inline-block;"><?= t('btn_chat') ?></a>
     </div>
 <?php elseif ($unratedBooking): ?>

@@ -18,9 +18,12 @@ class DriverController extends Controller {
         }
     }
 
-        public function dashboard() {
+            public function dashboard() {
         $bookingModel = new Booking();
-        $bookings = $bookingModel->getForDriver($this->driverRecord['driver_id']);
+        $allBookings = $bookingModel->getForDriver($this->driverRecord['driver_id']);
+        $pendingBookings = array_values(array_filter($allBookings, function($b) {
+            return $b['status'] === 'pending';
+        }));
         $activeBooking = $bookingModel->getActiveBookingForDriver($this->driverRecord['driver_id']);
 
         $message = $_SESSION['driver_message'] ?? null;
@@ -29,11 +32,24 @@ class DriverController extends Controller {
 
         View::render('driver-dashboard', [
             'pageTitle' => t('title_driver_dashboard'),
-            'bookings' => $bookings,
+            'bookings' => $pendingBookings,
             'message' => $message,
             'error' => $error,
             'activeBooking' => $activeBooking,
             'driverIdForGps' => $this->driverRecord['driver_id'],
+        ]);
+    }
+
+    public function history() {
+        $bookingModel = new Booking();
+        $allBookings = $bookingModel->getForDriver($this->driverRecord['driver_id']);
+        $completedBookings = array_values(array_filter($allBookings, function($b) {
+            return in_array($b['status'], ['completed', 'cancelled', 'rejected']);
+        }));
+
+        View::render('driver-history', [
+            'pageTitle' => t('history_page_title') . ' - SITRASS',
+            'bookings' => $completedBookings,
         ]);
     }
 

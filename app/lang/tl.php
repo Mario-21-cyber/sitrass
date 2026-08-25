@@ -445,6 +445,18 @@ return [
     'dashboard_unrated_desc' => 'Kumpleto na ang biyahe mo - ibahagi ang karanasan mo.',
     'dashboard_active_title' => 'Kasalukuyang Biyahe',
 
+        // Driver info sa customer dashboard
+    'btn_driver_info' => 'Impormasyon ng Driver',
+    'driver_info_phone_label' => 'Numero',
+
+    // Travel History
+    'nav_history' => 'Kasaysayan ng Biyahe',
+    'history_page_title' => 'Kasaysayan ng Biyahe',
+    'history_empty' => 'Wala ka pang tapos na biyahe.',
+    'driver_history_empty' => 'Wala ka pang tapos na biyahe.',
+    'driver_pending_requests_title' => 'Mga Kahilingan',
+    'driver_pending_empty' => 'Walang bagong kahilingan sa ngayon.',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

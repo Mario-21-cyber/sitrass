@@ -176,7 +176,7 @@ public function getForDriverTrackView($bookingId, $driverId) {
 public function getActiveBookingForCustomer($customerId) {
     $stmt = $this->db->prepare(
         "SELECT b.*, rs.reference_code,
-                d.driver_id, CONCAT(du.first_name,' ',du.last_name) AS driver_name,
+                d.driver_id, CONCAT(du.first_name,' ',du.last_name) AS driver_name, du.phone AS driver_phone,
                 v.plate_number,
                 o.name AS pickup_name, o.latitude AS pickup_lat, o.longitude AS pickup_lng,
                 dl.name AS dropoff_name, dl.latitude AS dropoff_lat, dl.longitude AS dropoff_lng

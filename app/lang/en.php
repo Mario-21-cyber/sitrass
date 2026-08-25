@@ -445,6 +445,18 @@ return [
     'dashboard_unrated_desc' => 'Your trip is complete - share your experience.',
     'dashboard_active_title' => 'Current Trip',
 
+        // Driver info on customer dashboard
+    'btn_driver_info' => 'Driver Info',
+    'driver_info_phone_label' => 'Phone',
+
+    // Travel History
+    'nav_history' => 'Travel History',
+    'history_page_title' => 'Travel History',
+    'history_empty' => 'You have no completed trips yet.',
+    'driver_history_empty' => 'You have no completed trips yet.',
+    'driver_pending_requests_title' => 'Requests',
+    'driver_pending_empty' => 'No new requests right now.',
+
     // Common
     'lang_switch_label' => 'Language',
 ];
