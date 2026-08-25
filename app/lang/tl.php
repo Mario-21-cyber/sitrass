@@ -457,6 +457,16 @@ return [
     'driver_pending_requests_title' => 'Mga Kahilingan',
     'driver_pending_empty' => 'Walang bagong kahilingan sa ngayon.',
 
+        // Camera QR scanning
+    'qr_camera_tab' => 'Gamitin ang Camera',
+    'qr_manual_tab' => 'I-type nang Manu-mano',
+    'qr_camera_start' => 'Buksan ang Camera',
+    'qr_camera_stop' => 'Isara ang Camera',
+    'qr_camera_scanning' => 'Hinahanap ang QR code...',
+    'qr_camera_detected' => 'Nakita ang QR code!',
+    'qr_camera_permission_denied' => 'Hindi ma-access ang camera. Siguraduhing binigyan mo ng pahintulot ang browser, o gamitin na lang ang manu-manong pag-type.',
+    'qr_camera_not_supported' => 'Hindi suportado ng browser na ito ang camera scanning. Gamitin ang manu-manong pag-type.',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

@@ -457,6 +457,16 @@ return [
     'driver_pending_requests_title' => 'Requests',
     'driver_pending_empty' => 'No new requests right now.',
 
+        // Camera QR scanning
+    'qr_camera_tab' => 'Use Camera',
+    'qr_manual_tab' => 'Type Manually',
+    'qr_camera_start' => 'Open Camera',
+    'qr_camera_stop' => 'Close Camera',
+    'qr_camera_scanning' => 'Looking for QR code...',
+    'qr_camera_detected' => 'QR code detected!',
+    'qr_camera_permission_denied' => 'Could not access the camera. Make sure you granted browser permission, or use manual typing instead.',
+    'qr_camera_not_supported' => 'This browser does not support camera scanning. Please use manual typing.',
+
     // Common
     'lang_switch_label' => 'Language',
 ];
