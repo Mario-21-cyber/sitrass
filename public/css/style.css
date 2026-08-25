@@ -994,3 +994,72 @@ tbody tr:hover {
 .brand-sub {
   font-family: "Poppins", sans-serif !important;
 }
+
+/* --- QR scan page: tabs (Camera / Manual) --- */
+.qr-tabs {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--slate-bg);
+  border-radius: 100px;
+  padding: 4px;
+  margin-bottom: var(--space-5);
+  max-width: 400px;
+}
+.qr-tab {
+  flex: 1;
+  text-align: center;
+  padding: 0.55rem 1rem;
+  border-radius: 100px;
+  border: none;
+  background: transparent;
+  color: var(--slate);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.qr-tab.active {
+  background: var(--teal-dark);
+  color: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+
+/* --- Floating confirmation modal (ginagamit sa QR scan confirmation) --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 42, 107, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: var(--space-4);
+}
+.modal-box {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  max-width: 420px;
+  width: 100%;
+  box-shadow: var(--shadow-md);
+}
+.modal-box h3 {
+  margin-top: 0;
+}
+.modal-box .field-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.modal-box .field-row:last-of-type {
+  border-bottom: none;
+}
+.modal-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}

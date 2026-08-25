@@ -3,31 +3,42 @@
 class QrBooking extends Model {
     protected $table = 'qr_bookings';
 
-    // Ang raw token ay iniimbak DIN sa qr_image_path column bilang backup para
-    // makita ito ng customer sa susunod pang pagbisita. Ito ay technically hindi
-    // kasing-ligtas ng purong hash-only storage, pero kinakailangan para gumana
-    // ang "ipakita ang QR code ko" nang paulit-ulit nang hindi gumagawa ng bagong
-    // token kada pagkakataon (na sisira sa dating naka-print o naka-screenshot
-    // na QR). Ang column na ito ay hindi ginagamit sa verification - ang
-    // token_hash pa rin ang tanging batayan doon.
+    // Ang laman ng QR ay ang Reference Code mismo ng booking - simple at
+    // makabuluhan, madaling makilala ng customer at driver. Ang expiry ay
+    // batay sa oras ng biyahe (hindi sa oras ng paggawa), dahil ginagawa na
+    // natin ito agad noong mag-book pa lang, hindi lang kapag binuksan ng
+    // customer ang QR page.
     public function getOrCreate($bookingId) {
         $stmt = $this->db->prepare("SELECT * FROM qr_bookings WHERE booking_id = ?");
         $stmt->execute([$bookingId]);
         $existing = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($existing) {
-            $existing['raw_token'] = $existing['qr_image_path']; // dito naka-store ang plain token
+            $existing['raw_token'] = $existing['qr_image_path'];
             return $existing;
         }
 
-        $token = bin2hex(random_bytes(16));
+        $stmt = $this->db->prepare(
+            "SELECT rs.reference_code, b.travel_date, b.pickup_time
+             FROM bookings b
+             JOIN reservations rs ON rs.reservation_id = b.reservation_id
+             WHERE b.booking_id = ?"
+        );
+        $stmt->execute([$bookingId]);
+        $bookingInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$bookingInfo) {
+            return null;
+        }
+
+        $token = $bookingInfo['reference_code'];
         $tokenHash = hash('sha256', $token);
 
         $stmt = $this->db->prepare(
             "INSERT INTO qr_bookings (booking_id, token_hash, qr_image_path, expires_at)
-             VALUES (?, ?, ?, DATE_ADD(NOW(), INTERVAL 24 HOUR))"
+             VALUES (?, ?, ?, ADDTIME(TIMESTAMP(?, ?), '12:00:00'))"
         );
-        $stmt->execute([$bookingId, $tokenHash, $token]);
+        $stmt->execute([$bookingId, $tokenHash, $token, $bookingInfo['travel_date'], $bookingInfo['pickup_time']]);
 
         return [
             'qr_id' => $this->db->lastInsertId(),

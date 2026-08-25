@@ -37,6 +37,12 @@
 
         <a href="/sitrass/public/chat/open/<?= (int)$activeBooking['booking_id'] ?>" class="btn" style="width:auto; padding:0.6rem 1.4rem; text-decoration:none; display:inline-block;"><?= t('btn_chat') ?></a>
     </div>
+<?php elseif ($unratedBooking && $unratedBooking['payment_status'] !== 'paid'): ?>
+    <div class="card" style="margin-top:1rem; text-align:center;">
+        <div class="form-section-title" style="margin-bottom:0.5rem; border:none; padding:0;"><?= t('dashboard_unpaid_title') ?></div>
+        <p class="text-sm text-muted" style="margin-bottom:1rem;"><?= t('dashboard_unpaid_desc') ?></p>
+        <a href="/sitrass/public/customer/payReservation/<?= htmlspecialchars($unratedBooking['reference_code']) ?>" class="btn" style="width:auto; padding:0.6rem 1.4rem; text-decoration:none; display:inline-block;"><?= t('btn_pay_balance') ?></a>
+    </div>
 <?php elseif ($unratedBooking): ?>
     <div class="card" style="margin-top:1rem; text-align:center;">
         <div class="form-section-title" style="margin-bottom:0.5rem; border:none; padding:0;"><?= t('dashboard_unrated_title') ?></div>

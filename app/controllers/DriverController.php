@@ -125,13 +125,15 @@ class DriverController extends Controller {
         header('Location: /sitrass/public/driver/dashboard');
         exit;
     }
-    public function scanQr() {
+        public function scanQr() {
     $result = $_SESSION['scan_result'] ?? null;
+    $pending = $_SESSION['scan_pending'] ?? null;
     unset($_SESSION['scan_result']);
 
     View::render('driver-scan', [
-                'pageTitle' => t('nav_scan_qr') . ' - SITRASS',
+        'pageTitle' => t('nav_scan_qr') . ' - SITRASS',
         'result' => $result,
+        'pending' => $pending,
     ]);
 }
 
@@ -169,15 +171,116 @@ public function verifyQr() {
         exit;
     }
 
-    $qrModel->markScanned($qr['qr_id'], $_SESSION['user_id']);
-
-    $_SESSION['scan_result'] = [
-        'success' => true,
-        'message' => 'Verified! ' . $qr['customer_name'] . ' - ' . $qr['reference_code'] . ' (' . (int)$qr['seats_booked'] . ' pasahero)',
+        // Sa halip na agad markahan bilang "used," ipakita muna ang detalye ng
+    // pasahero sa isang popup - markScanned() lang tatawagin kapag kinumpirma
+    // na ng driver sa confirmBoarding().
+    $_SESSION['scan_pending'] = [
+        'qr_id' => $qr['qr_id'],
+        'reference_code' => $qr['reference_code'],
+        'customer_name' => $qr['customer_name'],
+        'seats_booked' => (int)$qr['seats_booked'],
+        'travel_date' => $qr['travel_date'],
+        'pickup_time' => $qr['pickup_time'],
     ];
     header('Location: /sitrass/public/driver/scanQr');
     exit;
 }
+
+public function confirmBoarding() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $qrId = (int)($_POST['qr_id'] ?? 0);
+    $pending = $_SESSION['scan_pending'] ?? null;
+    unset($_SESSION['scan_pending']);
+
+    if (!$pending || (int)$pending['qr_id'] !== $qrId) {
+        $_SESSION['scan_result'] = ['success' => false, 'message' => 'Nag-expire na ang confirmation na ito. Subukan ulit i-scan.'];
+        header('Location: /sitrass/public/driver/scanQr');
+        exit;
+    }
+
+    $qrModel = new QrBooking();
+    $qrModel->markScanned($qrId, $_SESSION['user_id']);
+
+    $_SESSION['scan_result'] = [
+        'success' => true,
+        'message' => 'Verified! ' . $pending['customer_name'] . ' - ' . $pending['reference_code'] . ' (' . $pending['seats_booked'] . ' pasahero)',
+    ];
+    header('Location: /sitrass/public/driver/scanQr');
+    exit;
+}
+
+public function cancelScan() {
+    unset($_SESSION['scan_pending']);
+    header('Location: /sitrass/public/driver/scanQr');
+    exit;
+}
+
+public function payments() {
+    $paymentModel = new Payment();
+    $pending = $paymentModel->getPendingCashBalanceForDriver($this->driverRecord['driver_id']);
+
+    View::render('driver-payments', [
+        'pageTitle' => t('driver_payments_title') . ' - SITRASS',
+        'payments' => $pending,
+    ]);
+}
+
+public function verifyPayment() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $paymentId = (int)($_POST['payment_id'] ?? 0);
+    $paymentModel = new Payment();
+    $payment = $paymentModel->getById($paymentId);
+    if (!$payment) {
+        die('Payment not found.');
+    }
+
+    // I-verify na ang payment na ito ay talagang kabilang sa isang booking na naka-assign sa driver na ito
+    $db = (new Model())->getConnection();
+    $stmt = $db->prepare("SELECT COUNT(*) FROM bookings WHERE reservation_id = ? AND driver_id = ?");
+    $stmt->execute([$payment['reservation_id'], $this->driverRecord['driver_id']]);
+    if ($stmt->fetchColumn() == 0) {
+        die('Wala kang access sa payment na ito.');
+    }
+
+    $paymentModel->verify($paymentId, $_SESSION['user_id']);
+
+    $_SESSION['driver_message'] = 'Na-verify ang bayad.';
+    header('Location: /sitrass/public/driver/payments');
+    exit;
+}
+
+public function rejectPayment() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $paymentId = (int)($_POST['payment_id'] ?? 0);
+    $paymentModel = new Payment();
+    $payment = $paymentModel->getById($paymentId);
+    if (!$payment) {
+        die('Payment not found.');
+    }
+
+    $db = (new Model())->getConnection();
+    $stmt = $db->prepare("SELECT COUNT(*) FROM bookings WHERE reservation_id = ? AND driver_id = ?");
+    $stmt->execute([$payment['reservation_id'], $this->driverRecord['driver_id']]);
+    if ($stmt->fetchColumn() == 0) {
+        die('Wala kang access sa payment na ito.');
+    }
+
+    $paymentModel->reject($paymentId, 'Tinanggihan ng driver');
+
+    $_SESSION['driver_message'] = 'Tinanggihan ang bayad.';
+    header('Location: /sitrass/public/driver/payments');
+    exit;
+}
+
 public function trackTrip($bookingId) {
     $bookingId = (int)$bookingId;
     $bookingModel = new Booking();

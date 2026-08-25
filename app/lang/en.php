@@ -467,6 +467,24 @@ return [
     'qr_camera_permission_denied' => 'Could not access the camera. Make sure you granted browser permission, or use manual typing instead.',
     'qr_camera_not_supported' => 'This browser does not support camera scanning. Please use manual typing.',
 
+        // Dashboard: pay balance before rating
+    'dashboard_unpaid_title' => 'Outstanding Balance',
+    'dashboard_unpaid_desc' => 'Please pay the remaining balance before rating your trip.',
+
+        // Scan confirmation modal
+    'scan_confirm_title' => 'Confirm Passenger',
+    'scan_confirm_ref' => 'Reference Code',
+    'scan_confirm_customer' => 'Name',
+    'scan_confirm_seats' => 'Passenger Count',
+    'scan_confirm_schedule' => 'Date/Time',
+    'btn_confirm_boarding' => 'Confirm',
+    'btn_cancel_scan' => 'Cancel',
+
+    // Driver payments
+    'nav_driver_payments' => 'Payments',
+    'driver_payments_title' => 'Payments to Verify',
+    'driver_payments_empty' => 'No payments awaiting verification.',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

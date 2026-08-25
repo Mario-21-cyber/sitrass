@@ -21,7 +21,9 @@ class Payment extends Model {
         return $this->db->lastInsertId();
     }
 
-    public function getPending() {
+        public function getPending() {
+        // Hindi na kasama dito ang F2F balance payments - dito na sila naka-
+        // assign sa driver na mag-veverify, hindi na sa admin.
         $stmt = $this->db->query(
             "SELECT p.*, pm.method_name, rs.reference_code, rs.customer_id,
                     CONCAT(u.first_name, ' ', u.last_name) AS customer_name
@@ -31,8 +33,28 @@ class Payment extends Model {
              JOIN customers c ON c.customer_id = rs.customer_id
              JOIN users u ON u.user_id = c.user_id
              WHERE p.status = 'pending'
+               AND NOT (pm.is_online = 0 AND p.payment_type = 'balance')
              ORDER BY p.created_at ASC"
         );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPendingCashBalanceForDriver($driverId) {
+        $stmt = $this->db->prepare(
+            "SELECT p.*, pm.method_name, rs.reference_code, rs.customer_id,
+                    CONCAT(u.first_name, ' ', u.last_name) AS customer_name
+             FROM payments p
+             JOIN payment_methods pm ON pm.method_id = p.method_id
+             JOIN reservations rs ON rs.reservation_id = p.reservation_id
+             JOIN customers c ON c.customer_id = rs.customer_id
+             JOIN users u ON u.user_id = c.user_id
+             JOIN bookings b ON b.reservation_id = rs.reservation_id
+             WHERE p.status = 'pending' AND pm.is_online = 0 AND p.payment_type = 'balance'
+               AND b.driver_id = ?
+             GROUP BY p.payment_id
+             ORDER BY p.created_at ASC"
+        );
+        $stmt->execute([$driverId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

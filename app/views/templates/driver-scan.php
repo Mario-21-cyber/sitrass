@@ -10,9 +10,9 @@
     </div>
 <?php endif; ?>
 
-<div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
-    <button type="button" id="tabCameraBtn" class="btn" style="width:auto; padding:0.5rem 1rem;" onclick="showTab('camera')"><?= t('qr_camera_tab') ?></button>
-    <button type="button" id="tabManualBtn" class="btn-ghost" style="padding:0.5rem 1rem;" onclick="showTab('manual')"><?= t('qr_manual_tab') ?></button>
+<div class="qr-tabs">
+    <button type="button" id="tabCameraBtn" class="qr-tab active" onclick="showTab('camera')"><?= t('qr_camera_tab') ?></button>
+    <button type="button" id="tabManualBtn" class="qr-tab" onclick="showTab('manual')"><?= t('qr_manual_tab') ?></button>
 </div>
 
 <div id="cameraTab" style="max-width:400px;">
@@ -57,13 +57,13 @@ function showTab(tab) {
     if (tab === 'camera') {
         cameraTab.style.display = 'block';
         manualTab.style.display = 'none';
-        cameraBtn.className = 'btn';
-        manualBtn.className = 'btn-ghost';
+        cameraBtn.className = 'qr-tab active';
+        manualBtn.className = 'qr-tab';
     } else {
         cameraTab.style.display = 'none';
         manualTab.style.display = 'block';
-        cameraBtn.className = 'btn-ghost';
-        manualBtn.className = 'btn';
+        cameraBtn.className = 'qr-tab';
+        manualBtn.className = 'qr-tab active';
         stopCameraStream();
     }
 }

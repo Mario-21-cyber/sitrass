@@ -120,7 +120,9 @@ public function endTrip($bookingId, $driverId) {
 }
 public function getCompletedUnratedForCustomer($customerId) {
     $stmt = $this->db->prepare(
-        "SELECT b.*, rs.reference_code, v.plate_number,
+        "SELECT b.*, rs.reference_code, rs.payment_status, rs.total_amount, rs.amount_paid,
+                (rs.total_amount - rs.amount_paid) AS balance_due,
+                v.plate_number,
                 CONCAT(du.first_name, ' ', du.last_name) AS driver_name,
                 o.name AS pickup_name, dl.name AS dropoff_name
          FROM bookings b

@@ -467,6 +467,24 @@ return [
     'qr_camera_permission_denied' => 'Hindi ma-access ang camera. Siguraduhing binigyan mo ng pahintulot ang browser, o gamitin na lang ang manu-manong pag-type.',
     'qr_camera_not_supported' => 'Hindi suportado ng browser na ito ang camera scanning. Gamitin ang manu-manong pag-type.',
 
+        // Dashboard: bayaran muna ang balance bago mag-rate
+    'dashboard_unpaid_title' => 'May Natitirang Balance',
+    'dashboard_unpaid_desc' => 'Bayaran muna ang natitirang balance bago mag-rate ng biyahe.',
+
+        // Scan confirmation modal
+    'scan_confirm_title' => 'Kumpirmahin ang Pasahero',
+    'scan_confirm_ref' => 'Reference Code',
+    'scan_confirm_customer' => 'Pangalan',
+    'scan_confirm_seats' => 'Bilang ng Pasahero',
+    'scan_confirm_schedule' => 'Petsa/Oras',
+    'btn_confirm_boarding' => 'Kumpirmahin',
+    'btn_cancel_scan' => 'Kanselahin',
+
+    // Driver payments
+    'nav_driver_payments' => 'Mga Bayad',
+    'driver_payments_title' => 'Mga Bayad na Ipapatunayan',
+    'driver_payments_empty' => 'Walang bayad na hinihintay ng pag-verify.',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

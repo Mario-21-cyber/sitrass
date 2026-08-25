@@ -132,7 +132,7 @@ public function confirmBooking() {
         ]);
 
         $bookingModel = new Booking();
-        $bookingModel->create([
+                $newBookingId = $bookingModel->create([
             'reservation_id' => $reservation['reservation_id'],
             'schedule_id' => $scheduleId,
             'route_id' => $schedule['route_id'],
@@ -159,6 +159,20 @@ public function confirmBooking() {
     $userModel = new User();
     $customerUser = $userModel->getById($_SESSION['user_id']);
 
+    // Gumawa ng QR code (base sa Reference Code) at ikabit sa email, kung
+    // matagumpay na nakuha ang booking ID - kung hindi, ipadala pa rin ang
+    // email nang walang QR sa halip na biguin ang buong booking.
+    $qrImageHtml = '';
+    if (!empty($newBookingId)) {
+        $qrModel = new QrBooking();
+        $qr = $qrModel->getOrCreate($newBookingId);
+        if ($qr && !empty($qr['raw_token'])) {
+            $qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . urlencode($qr['raw_token']);
+            $qrImageHtml = '<p><img src="' . $qrImageUrl . '" alt="QR Code"></p>
+                             <p style="font-size:0.85rem;color:#666;">Ipakita ang QR code na ito sa driver bago sumakay.</p>';
+        }
+    }
+
     Mailer::send(
         $customerUser['email'],
         $customerUser['first_name'],
@@ -169,6 +183,7 @@ public function confirmBooking() {
          <p><strong>Bilang ng Pasahero:</strong> ' . (int)$passengerCount . '</p>
          <p><strong>Kailangang Deposit:</strong> ₱' . number_format($totalAmount * 0.30, 2) . '</p>
          <p>Bayaran ang deposit sa loob ng 2 oras para hindi ma-cancel ang reservation.</p>'
+        . $qrImageHtml
     );
 
     header('Location: /sitrass/public/customer/booking-confirmed/' . $reservation['reference_code']);
