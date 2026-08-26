@@ -34,9 +34,13 @@
             </a>
 
             <div class="nav-section-label"><?= t('nav_section_operations') ?></div>
-            <a class="nav-item<?= navActiveDrv('/driver/scanQr', $currentPath) ?>" href="/sitrass/public/driver/scanQr">
+                        <a class="nav-item<?= navActiveDrv('/driver/scanQr', $currentPath) ?>" href="/sitrass/public/driver/scanQr">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="21" y2="14"/><line x1="14" y1="21" x2="21" y2="21"/><line x1="17" y1="14" x2="17" y2="21"/></svg>
                 <?= t('nav_scan_qr') ?>
+            </a>
+            <a class="nav-item<?= navActiveDrv('/driver/payments', $currentPath) ?>" href="/sitrass/public/driver/payments">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                <?= t('nav_driver_payments') ?>
             </a>
 
             <div class="nav-section-label"><?= t('nav_section_account') ?></div>

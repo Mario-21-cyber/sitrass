@@ -1063,3 +1063,25 @@ tbody tr:hover {
   gap: var(--space-2);
   margin-top: var(--space-4);
 }
+
+/* --- Ayusin ang Leaflet map na tumatakip sa mobile sidebar/menu ---
+   Ang Leaflet ay may sariling mataas na z-index para sa mapa nito na
+   mas mataas kaysa sa ating sidebar - kailangan nating tiyakin na mas
+   mataas pa rin ang sidebar overlay kaysa sa kahit anong Leaflet pane. */
+.leaflet-container {
+  z-index: 1 !important;
+}
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 5 !important;
+}
+
+@media (max-width: 720px) {
+  .sidebar-overlay.open {
+    z-index: 998 !important;
+  }
+  .sidebar.open {
+    z-index: 999 !important;
+  }
+}

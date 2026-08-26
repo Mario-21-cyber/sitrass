@@ -4,6 +4,30 @@
 
 <h2><?= t('nav_scan_qr') ?></h2>
 
+<?php if (!empty($pending)): ?>
+    <div class="modal-overlay">
+        <div class="modal-box">
+            <h3><?= t('scan_confirm_title') ?></h3>
+            <div class="field-row"><span class="text-muted"><?= t('scan_confirm_ref') ?></span><strong><?= htmlspecialchars($pending['reference_code']) ?></strong></div>
+            <div class="field-row"><span class="text-muted"><?= t('scan_confirm_customer') ?></span><strong><?= htmlspecialchars($pending['customer_name']) ?></strong></div>
+            <div class="field-row"><span class="text-muted"><?= t('scan_confirm_seats') ?></span><strong><?= (int)$pending['seats_booked'] ?></strong></div>
+            <div class="field-row"><span class="text-muted"><?= t('scan_confirm_schedule') ?></span><strong><?= htmlspecialchars($pending['travel_date']) ?> @ <?= htmlspecialchars($pending['pickup_time']) ?></strong></div>
+
+            <div class="modal-actions">
+                <form method="POST" action="/sitrass/public/driver/confirmBoarding" style="flex:1;">
+                    <?= Csrf::field() ?>
+                    <input type="hidden" name="qr_id" value="<?= (int)$pending['qr_id'] ?>">
+                    <button type="submit" class="btn"><?= t('btn_confirm_boarding') ?></button>
+                </form>
+                <form method="POST" action="/sitrass/public/driver/cancelScan" style="flex:1;">
+                    <?= Csrf::field() ?>
+                    <button type="submit" class="btn-ghost" style="width:100%;"><?= t('btn_cancel_scan') ?></button>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
 <?php if (!empty($result)): ?>
     <div class="alert <?= $result['success'] ? 'alert-success' : 'alert-error' ?>">
         <?= htmlspecialchars($result['message']) ?>
