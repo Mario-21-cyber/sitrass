@@ -1,6 +1,6 @@
 <?php require __DIR__ . '/_driver_header.php'; ?>
 
-<h2><?= t('history_page_title') ?></h2>
+
 
 <?php if (empty($bookings)): ?>
     <div class="empty-state"><?= t('driver_history_empty') ?></div>

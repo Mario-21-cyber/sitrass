@@ -1,6 +1,6 @@
 <?php require __DIR__ . '/_customer_header.php'; ?>
 
-<h2><?= t('history_page_title') ?></h2>
+
 
 <?php if (empty($reservations)): ?>
     <div class="empty-state"><?= t('history_empty') ?></div>

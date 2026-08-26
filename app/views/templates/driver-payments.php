@@ -1,6 +1,6 @@
 <?php require __DIR__ . '/_driver_header.php'; ?>
 
-<h2><?= t('driver_payments_title') ?></h2>
+
 
 <?php if (!empty($message)): ?>
     <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>

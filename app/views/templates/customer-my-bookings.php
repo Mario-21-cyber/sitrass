@@ -1,6 +1,6 @@
 <?php require __DIR__ . '/_customer_header.php'; ?>
 
-<h2><?= t('nav_my_bookings') ?></h2>
+
 
 <?php if (!empty($message)): ?>
     <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
