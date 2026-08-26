@@ -208,14 +208,20 @@ public function bookingConfirmed($referenceCode) {
 public function myBookings() {
     $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
     $reservationModel = new Reservation();
-    $reservations = $reservationModel->getByCustomerId($customerId);
+    $allReservations = $reservationModel->getByCustomerId($customerId);
+
+    // Dito na lang natin ipapakita ang mga aktibong reservation - ang mga
+    // "completed" at "cancelled" ay napupunta na sa Kasaysayan ng Biyahe.
+    $reservations = array_values(array_filter($allReservations, function($r) {
+        return !in_array($r['status'], ['completed', 'cancelled']);
+    }));
 
     $message = $_SESSION['booking_message'] ?? null;
     $error = $_SESSION['booking_error'] ?? null;
     unset($_SESSION['booking_message'], $_SESSION['booking_error']);
 
     View::render('customer-my-bookings', [
-                'pageTitle' => t('nav_my_bookings') . ' - SITRASS',
+        'pageTitle' => t('nav_my_bookings') . ' - SITRASS',
         'reservations' => $reservations,
         'message' => $message,
         'error' => $error,
@@ -257,11 +263,18 @@ public function payReservation($referenceCode) {
 
     $preferredMethodId = $_SESSION['preferred_method_' . $referenceCode] ?? null;
 
+    // Kung wala pang deposit, iyon ang dapat unahing halaga - kung bayad na
+    // ang deposit, ang natitirang balance na ang dapat lumitaw bilang default.
+    $amountToPay = $reservation['payment_status'] === 'pending'
+        ? $reservation['deposit_required']
+        : $reservation['balance_due'];
+
     View::render('customer-pay', [
-        'pageTitle' => 'Magbayad - SITRASS',
+        'pageTitle' => t('pay_page_title') . ' - SITRASS',
         'reservation' => $reservation,
         'methods' => $methodModel->getActiveWithDynamicText(),
         'preferredMethodId' => $preferredMethodId,
+        'amountToPay' => $amountToPay,
         'error' => $error,
     ]);
 }

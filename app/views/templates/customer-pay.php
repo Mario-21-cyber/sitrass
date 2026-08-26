@@ -44,9 +44,9 @@
         </select>
     </div>
 
-    <div class="field">
+        <div class="field">
         <label for="pay_amount"><?= t('label_amount_to_pay') ?></label>
-        <input type="number" step="0.01" id="pay_amount" name="amount" value="<?= htmlspecialchars($reservation['deposit_required']) ?>" required>
+        <input type="number" step="0.01" id="pay_amount" name="amount" value="<?= htmlspecialchars($amountToPay) ?>" required>
     </div>
 
     <div class="field">

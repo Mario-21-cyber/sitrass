@@ -1,4 +1,5 @@
 <?php require __DIR__ . '/_driver_header.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 
 <h2><?= t('nav_my_trips') ?></h2>
 
@@ -47,16 +48,35 @@
     <div class="modal-overlay" id="boardingModal" style="display:none;">
         <div class="modal-box">
             <h3><?= t('boarding_verify_title') ?></h3>
-            <form method="POST" action="/sitrass/public/driver/verifyBoarding">
+
+            <div class="qr-tabs">
+                <button type="button" id="boardCameraTabBtn" class="qr-tab active" onclick="showBoardTab('camera')"><?= t('qr_camera_tab') ?></button>
+                <button type="button" id="boardManualTabBtn" class="qr-tab" onclick="showBoardTab('manual')"><?= t('qr_manual_tab') ?></button>
+            </div>
+
+            <form method="POST" action="/sitrass/public/driver/verifyBoarding" id="boardingForm">
                 <?= Csrf::field() ?>
                 <input type="hidden" name="booking_id" value="<?= (int)$activeBooking['booking_id'] ?>">
-                <div class="field">
-                    <label><?= t('boarding_verify_input_label') ?></label>
-                    <input type="text" name="token" required autofocus>
+
+                <div id="boardCameraTab">
+                    <div id="boardCameraContainer" style="display:none; position:relative; border-radius:var(--radius); overflow:hidden; margin-bottom:0.75rem; background:#000;">
+                        <video id="boardVideo" style="width:100%; display:block;" playsinline></video>
+                        <canvas id="boardCanvas" style="display:none;"></canvas>
+                    </div>
+                    <p id="boardCameraStatus" class="text-sm text-muted" style="margin-bottom:0.5rem;"></p>
+                    <button type="button" id="boardCameraToggleBtn" class="btn-ghost" onclick="toggleBoardCamera()"><?= t('qr_camera_start') ?></button>
                 </div>
+
+                <div id="boardManualTab" style="display:none;">
+                    <div class="field">
+                        <label><?= t('boarding_verify_input_label') ?></label>
+                        <input type="text" name="token" id="boardTokenInput">
+                    </div>
+                </div>
+
                 <div class="modal-actions">
                     <button type="submit" class="btn" style="flex:1;"><?= t('btn_confirm') ?></button>
-                    <button type="button" class="btn-ghost" style="flex:1;" onclick="document.getElementById('boardingModal').style.display='none';"><?= t('btn_cancel') ?></button>
+                    <button type="button" class="btn-ghost" style="flex:1;" onclick="closeBoardingModal();"><?= t('btn_cancel') ?></button>
                 </div>
             </form>
         </div>
@@ -70,7 +90,7 @@
         <p class="text-sm text-muted" style="margin:0 0 0.75rem;"><?= htmlspecialchars($activeBooking['reference_code']) ?> &middot; <?= htmlspecialchars($activeBooking['customer_name']) ?> (<?= htmlspecialchars($activeBooking['customer_phone']) ?>)</p>
 
         <?php if ($activeBooking['status'] === 'accepted' && $activeBooking['qr_status'] !== 'used'): ?>
-            <button type="button" class="btn" style="width:auto; padding:0.6rem 1.4rem;" onclick="document.getElementById('boardingModal').style.display='flex';"><?= t('btn_verify_boarding') ?></button>
+            <button type="button" class="btn" style="width:auto; padding:0.6rem 1.4rem;" onclick="openBoardingModal();"><?= t('btn_verify_boarding') ?></button>
         <?php elseif ($activeBooking['status'] === 'accepted'): ?>
             <form method="POST" action="/sitrass/public/driver/startTrip" style="display:inline;">
                 <?= Csrf::field() ?>
@@ -89,8 +109,6 @@
 <?php else: ?>
     <p class="text-sm text-muted" style="margin-bottom:1.5rem;"><?= t('driver_no_active_trip') ?></p>
 <?php endif; ?>
-
-<p><a href="/sitrass/public/driver/scanQr" class="btn" style="display:inline-block; width:auto; padding:0.5rem 1.2rem;"><?= t('nav_scan_qr') ?></a></p>
 
 <?php if (!empty($message)): ?>
     <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
@@ -262,6 +280,105 @@ if (bookingId) {
             map.setView(customerPos, 13);
         }
     });
+}
+
+// --- Boarding verification modal: camera + manual ---
+function openBoardingModal() {
+    const modal = document.getElementById('boardingModal');
+    if (modal) modal.style.display = 'flex';
+}
+function closeBoardingModal() {
+    const modal = document.getElementById('boardingModal');
+    if (modal) modal.style.display = 'none';
+    stopBoardCamera();
+}
+function showBoardTab(tab) {
+    const cameraTab = document.getElementById('boardCameraTab');
+    const manualTab = document.getElementById('boardManualTab');
+    const cameraBtn = document.getElementById('boardCameraTabBtn');
+    const manualBtn = document.getElementById('boardManualTabBtn');
+    if (tab === 'camera') {
+        cameraTab.style.display = 'block';
+        manualTab.style.display = 'none';
+        cameraBtn.className = 'qr-tab active';
+        manualBtn.className = 'qr-tab';
+    } else {
+        cameraTab.style.display = 'none';
+        manualTab.style.display = 'block';
+        cameraBtn.className = 'qr-tab';
+        manualBtn.className = 'qr-tab active';
+        stopBoardCamera();
+    }
+}
+
+let boardCameraStream = null;
+let boardScanLoopId = null;
+
+function toggleBoardCamera() {
+    if (boardCameraStream) {
+        stopBoardCamera();
+    } else {
+        startBoardCamera();
+    }
+}
+
+function startBoardCamera() {
+    const statusEl = document.getElementById('boardCameraStatus');
+    const container = document.getElementById('boardCameraContainer');
+    const toggleBtn = document.getElementById('boardCameraToggleBtn');
+    const video = document.getElementById('boardVideo');
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        statusEl.textContent = <?= json_encode(t('qr_camera_not_supported')) ?>;
+        return;
+    }
+
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+        .then(function(stream) {
+            boardCameraStream = stream;
+            video.srcObject = stream;
+            video.setAttribute('playsinline', true);
+            video.play();
+            container.style.display = 'block';
+            toggleBtn.textContent = <?= json_encode(t('qr_camera_stop')) ?>;
+            statusEl.textContent = <?= json_encode(t('qr_camera_scanning')) ?>;
+            boardScanLoopId = requestAnimationFrame(scanBoardFrame);
+        })
+        .catch(function() {
+            statusEl.textContent = <?= json_encode(t('qr_camera_permission_denied')) ?>;
+        });
+}
+
+function stopBoardCamera() {
+    if (boardScanLoopId) { cancelAnimationFrame(boardScanLoopId); boardScanLoopId = null; }
+    if (boardCameraStream) { boardCameraStream.getTracks().forEach(function(t) { t.stop(); }); boardCameraStream = null; }
+    const container = document.getElementById('boardCameraContainer');
+    if (container) container.style.display = 'none';
+    const toggleBtn = document.getElementById('boardCameraToggleBtn');
+    if (toggleBtn) toggleBtn.textContent = <?= json_encode(t('qr_camera_start')) ?>;
+    const statusEl = document.getElementById('boardCameraStatus');
+    if (statusEl) statusEl.textContent = '';
+}
+
+function scanBoardFrame() {
+    const video = document.getElementById('boardVideo');
+    const canvas = document.getElementById('boardCanvas');
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height);
+        if (code && code.data) {
+            document.getElementById('boardCameraStatus').textContent = <?= json_encode(t('qr_camera_detected')) ?>;
+            document.getElementById('boardTokenInput').value = code.data;
+            stopBoardCamera();
+            document.getElementById('boardingForm').submit();
+            return;
+        }
+    }
+    boardScanLoopId = requestAnimationFrame(scanBoardFrame);
 }
 </script>
 

@@ -137,7 +137,7 @@ class DriverController extends Controller {
         exit;
     }
 
-        public function endTrip() {
+            public function endTrip() {
         if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
             die('Invalid na session.');
         }
@@ -152,6 +152,18 @@ class DriverController extends Controller {
             // meron - ipapakita bilang popup sa susunod na dashboard load.
             if ($booking) {
                 $_SESSION['check_payment_reservation_id'] = $booking['reservation_id'];
+
+                // Kapag tapos na ang lahat ng booking sa ilalim ng reservation na ito,
+                // markahan din ang reservation bilang "completed" - dito na-aalis ang
+                // buong reservation sa "Aking Mga Booking," lilipat na lang ito sa
+                // "Kasaysayan ng Biyahe."
+                $db = (new Model())->getConnection();
+                $stmt = $db->prepare("SELECT COUNT(*) FROM bookings WHERE reservation_id = ? AND status != 'completed'");
+                $stmt->execute([$booking['reservation_id']]);
+                if ($stmt->fetchColumn() == 0) {
+                    $stmt = $db->prepare("UPDATE reservations SET status = 'completed' WHERE reservation_id = ?");
+                    $stmt->execute([$booking['reservation_id']]);
+                }
             }
         } else {
             $_SESSION['driver_error'] = 'Hindi na-process ang aksyon.';
