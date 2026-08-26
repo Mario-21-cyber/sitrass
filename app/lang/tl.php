@@ -485,6 +485,10 @@ return [
     'driver_payments_title' => 'Mga Bayad na Ipapatunayan',
     'driver_payments_empty' => 'Walang bayad na hinihintay ng pag-verify.',
 
+        // Driver info modal (pinalawak)
+    'driver_info_van_label' => 'Van',
+    'driver_info_plate_label' => 'Plate Number',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

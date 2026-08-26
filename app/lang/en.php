@@ -485,6 +485,10 @@ return [
     'driver_payments_title' => 'Payments to Verify',
     'driver_payments_empty' => 'No payments awaiting verification.',
 
+        // Driver info modal (expanded)
+    'driver_info_van_label' => 'Van',
+    'driver_info_plate_label' => 'Plate Number',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

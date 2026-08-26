@@ -179,7 +179,8 @@ public function getActiveBookingForCustomer($customerId) {
     $stmt = $this->db->prepare(
         "SELECT b.*, rs.reference_code,
                 d.driver_id, CONCAT(du.first_name,' ',du.last_name) AS driver_name, du.phone AS driver_phone,
-                v.plate_number,
+                du.profile_picture AS driver_photo,
+                v.plate_number, v.make AS van_make, v.model AS van_model, v.color AS van_color, v.van_type,
                 o.name AS pickup_name, o.latitude AS pickup_lat, o.longitude AS pickup_lng,
                 dl.name AS dropoff_name, dl.latitude AS dropoff_lat, dl.longitude AS dropoff_lng
          FROM bookings b

@@ -27,10 +27,25 @@
             <p class="text-sm" style="color:var(--slate); margin-bottom:0.75rem;"><?= t('note_driver_assigned_waiting') ?></p>
         <?php endif; ?>
 
-        <?php if ($activeBooking['driver_id']): ?>
+                <?php if ($activeBooking['driver_id']): ?>
             <div id="driverInfoPanel" style="display:none; background:var(--slate-bg); border-radius:8px; padding:0.75rem 1rem; margin-bottom:0.75rem;">
-                <div style="font-weight:600;"><?= htmlspecialchars($activeBooking['driver_name']) ?></div>
-                <div class="text-sm text-muted"><?= t('driver_info_phone_label') ?>: <?= htmlspecialchars($activeBooking['driver_phone'] ?? '—') ?></div>
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
+                    <?php if (!empty($activeBooking['driver_photo'])): ?>
+                        <img src="<?= htmlspecialchars($activeBooking['driver_photo']) ?>" alt="" style="width:44px; height:44px; border-radius:100px; object-fit:cover;">
+                    <?php else: ?>
+                        <div style="width:44px; height:44px; border-radius:100px; background:var(--white); display:flex; align-items:center; justify-content:center; color:var(--slate);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+                        </div>
+                    <?php endif; ?>
+                    <div>
+                        <div style="font-weight:600;"><?= htmlspecialchars($activeBooking['driver_name']) ?></div>
+                        <div class="text-sm text-muted"><?= t('driver_info_phone_label') ?>: <?= htmlspecialchars($activeBooking['driver_phone'] ?? '—') ?></div>
+                    </div>
+                </div>
+                <div class="text-sm" style="border-top:1px solid var(--border); padding-top:0.5rem;">
+                    <div><?= t('driver_info_van_label') ?>: <?= htmlspecialchars($activeBooking['van_make'] . ' ' . $activeBooking['van_model']) ?> (<?= htmlspecialchars($activeBooking['van_color'] ?: '—') ?>)</div>
+                    <div><?= t('driver_info_plate_label') ?>: <strong><?= htmlspecialchars($activeBooking['plate_number']) ?></strong></div>
+                </div>
             </div>
             <button type="button" class="btn-ghost" onclick="var p=document.getElementById('driverInfoPanel'); p.style.display = p.style.display === 'none' ? 'block' : 'none';" style="margin-right:0.5rem;"><?= t('btn_driver_info') ?></button>
         <?php endif; ?>
