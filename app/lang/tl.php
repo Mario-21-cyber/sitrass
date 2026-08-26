@@ -489,6 +489,16 @@ return [
     'driver_info_van_label' => 'Van',
     'driver_info_plate_label' => 'Plate Number',
 
+       // Inline boarding verification modal
+    'btn_verify_boarding' => 'I-verify',
+    'boarding_verify_title' => 'I-verify ang Pasahero',
+    'boarding_verify_input_label' => 'I-type o i-scan ang QR code (Reference Code)',
+    'btn_confirm' => 'Kumpirmahin',
+
+    // End-trip payment verification popup
+    'endtrip_payment_title' => 'I-verify ang Bayad',
+    'endtrip_payment_desc' => 'May natanggap na F2F balance payment na kailangang i-verify.',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

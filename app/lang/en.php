@@ -489,6 +489,16 @@ return [
     'driver_info_van_label' => 'Van',
     'driver_info_plate_label' => 'Plate Number',
 
+        // Inline boarding verification modal
+    'btn_verify_boarding' => 'Verify',
+    'boarding_verify_title' => 'Verify Passenger',
+    'boarding_verify_input_label' => 'Type or scan the QR code (Reference Code)',
+    'btn_confirm' => 'Confirm',
+
+    // End-trip payment verification popup
+    'endtrip_payment_title' => 'Verify Payment',
+    'endtrip_payment_desc' => 'A F2F balance payment was submitted and needs verification.',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

@@ -154,4 +154,22 @@ public function getDailyRevenue($days = 7) {
     );
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+    public function getPendingCashBalanceForReservation($reservationId) {
+        $stmt = $this->db->prepare(
+            "SELECT p.*, pm.method_name, rs.reference_code, rs.customer_id,
+                    CONCAT(u.first_name, ' ', u.last_name) AS customer_name
+             FROM payments p
+             JOIN payment_methods pm ON pm.method_id = p.method_id
+             JOIN reservations rs ON rs.reservation_id = p.reservation_id
+             JOIN customers c ON c.customer_id = rs.customer_id
+             JOIN users u ON u.user_id = c.user_id
+             WHERE p.status = 'pending' AND pm.is_online = 0 AND p.payment_type = 'balance'
+               AND p.reservation_id = ?
+             ORDER BY p.created_at DESC
+             LIMIT 1"
+        );
+        $stmt->execute([$reservationId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ?: null;
+    }
 }

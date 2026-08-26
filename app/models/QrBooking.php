@@ -73,4 +73,9 @@ class QrBooking extends Model {
         );
         $stmt->execute([$scannedByUserId, $qrId]);
     }
+    public function getByBookingId($bookingId) {
+    $stmt = $this->db->prepare("SELECT * FROM qr_bookings WHERE booking_id = ?");
+    $stmt->execute([$bookingId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 }

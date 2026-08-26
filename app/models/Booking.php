@@ -60,7 +60,7 @@ public function moveToNewSchedule($bookingId, $newSchedule) {
 }
 public function getForDriver($driverId) {
     $stmt = $this->db->prepare(
-        "SELECT b.*, rs.reference_code,
+        "SELECT b.*, rs.reference_code, rs.status AS reservation_status,
                 o.name AS pickup_name, d.name AS dropoff_name,
                 CONCAT(cu.first_name, ' ', cu.last_name) AS customer_name,
                 cu.phone AS customer_phone
@@ -205,7 +205,8 @@ public function getActiveBookingForDriver($driverId) {
                 CONCAT(cu.first_name,' ',cu.last_name) AS customer_name, cu.phone AS customer_phone,
                 v.plate_number,
                 o.name AS pickup_name, o.latitude AS pickup_lat, o.longitude AS pickup_lng,
-                dl.name AS dropoff_name, dl.latitude AS dropoff_lat, dl.longitude AS dropoff_lng
+                dl.name AS dropoff_name, dl.latitude AS dropoff_lat, dl.longitude AS dropoff_lng,
+                qb.qr_id, qb.status AS qr_status
          FROM bookings b
          JOIN reservations rs ON rs.reservation_id = b.reservation_id
          JOIN customers c ON c.customer_id = rs.customer_id
@@ -213,6 +214,7 @@ public function getActiveBookingForDriver($driverId) {
          JOIN vans v ON v.van_id = b.van_id
          JOIN locations o ON o.location_id = b.pickup_location_id
          JOIN locations dl ON dl.location_id = b.dropoff_location_id
+         LEFT JOIN qr_bookings qb ON qb.booking_id = b.booking_id
          WHERE b.driver_id = ? AND b.status IN ('accepted','en_route')
          ORDER BY (b.status = 'en_route') DESC, b.booking_id DESC
          LIMIT 1"

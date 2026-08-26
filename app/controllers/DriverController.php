@@ -18,17 +18,28 @@ class DriverController extends Controller {
         }
     }
 
-            public function dashboard() {
+                public function dashboard() {
         $bookingModel = new Booking();
         $allBookings = $bookingModel->getForDriver($this->driverRecord['driver_id']);
+        // Itago ang mga booking hangga't hindi pa verified ng admin ang deposit -
+        // hindi pa ito dapat lumitaw kung tatanggapin ng driver o hindi.
         $pendingBookings = array_values(array_filter($allBookings, function($b) {
-            return $b['status'] === 'pending';
+            return $b['status'] === 'pending' && $b['reservation_status'] === 'confirmed';
         }));
         $activeBooking = $bookingModel->getActiveBookingForDriver($this->driverRecord['driver_id']);
 
         $message = $_SESSION['driver_message'] ?? null;
         $error = $_SESSION['driver_error'] ?? null;
         unset($_SESSION['driver_message'], $_SESSION['driver_error']);
+
+        // Popup ng payment verification pagkatapos mag-end trip, kung may
+        // pending F2F balance payment - ipapakita isang beses lang.
+        $paymentToVerify = null;
+        if (!empty($_SESSION['check_payment_reservation_id'])) {
+            $paymentModel = new Payment();
+            $paymentToVerify = $paymentModel->getPendingCashBalanceForReservation($_SESSION['check_payment_reservation_id']);
+            unset($_SESSION['check_payment_reservation_id']);
+        }
 
         View::render('driver-dashboard', [
             'pageTitle' => t('title_driver_dashboard'),
@@ -37,6 +48,7 @@ class DriverController extends Controller {
             'error' => $error,
             'activeBooking' => $activeBooking,
             'driverIdForGps' => $this->driverRecord['driver_id'],
+            'paymentToVerify' => $paymentToVerify,
         ]);
     }
 
@@ -53,13 +65,30 @@ class DriverController extends Controller {
         ]);
     }
 
-    public function accept() {
+        public function accept() {
         if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
             die('Invalid na session.');
         }
 
         $bookingId = (int)($_POST['booking_id'] ?? 0);
         $bookingModel = new Booking();
+
+        // Segurong-seguro: kahit direktang POST request, hindi puwedeng tanggapin
+        // kung hindi pa verified ng admin ang deposit ng reservation na ito.
+        $db = (new Model())->getConnection();
+        $stmt = $db->prepare(
+            "SELECT rs.status FROM bookings b
+             JOIN reservations rs ON rs.reservation_id = b.reservation_id
+             WHERE b.booking_id = ?"
+        );
+        $stmt->execute([$bookingId]);
+        $reservationStatus = $stmt->fetchColumn();
+
+        if ($reservationStatus !== 'confirmed') {
+            $_SESSION['driver_error'] = 'Hindi pa verified ang deposit ng booking na ito.';
+            header('Location: /sitrass/public/driver/dashboard');
+            exit;
+        }
 
         if ($bookingModel->accept($bookingId, $this->driverRecord['driver_id'])) {
             $_SESSION['driver_message'] = 'Tinanggap ang booking.';
@@ -108,20 +137,64 @@ class DriverController extends Controller {
         exit;
     }
 
-    public function endTrip() {
+        public function endTrip() {
         if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
             die('Invalid na session.');
         }
 
         $bookingId = (int)($_POST['booking_id'] ?? 0);
         $bookingModel = new Booking();
+        $booking = $bookingModel->getById($bookingId);
 
         if ($bookingModel->endTrip($bookingId, $this->driverRecord['driver_id'])) {
             $_SESSION['driver_message'] = 'Tapos na ang biyahe.';
+            // Ipaalala natin sa driver na i-verify ang F2F balance payment, kung
+            // meron - ipapakita bilang popup sa susunod na dashboard load.
+            if ($booking) {
+                $_SESSION['check_payment_reservation_id'] = $booking['reservation_id'];
+            }
         } else {
             $_SESSION['driver_error'] = 'Hindi na-process ang aksyon.';
         }
 
+        header('Location: /sitrass/public/driver/dashboard');
+        exit;
+    }
+
+    public function verifyBoarding() {
+        if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+            die('Invalid na session.');
+        }
+
+        $bookingId = (int)($_POST['booking_id'] ?? 0);
+        $token = trim($_POST['token'] ?? '');
+
+        $bookingModel = new Booking();
+        $booking = $bookingModel->getById($bookingId);
+
+        if (!$booking || $booking['driver_id'] != $this->driverRecord['driver_id'] || $booking['status'] !== 'accepted') {
+            $_SESSION['driver_error'] = 'Hindi valid ang booking na ito.';
+            header('Location: /sitrass/public/driver/dashboard');
+            exit;
+        }
+
+        $qrModel = new QrBooking();
+        $qr = $qrModel->getByBookingId($bookingId);
+
+        if (!$qr || hash('sha256', $token) !== $qr['token_hash']) {
+            $_SESSION['driver_error'] = 'Hindi tugma ang QR code sa bookingang ito.';
+            header('Location: /sitrass/public/driver/dashboard');
+            exit;
+        }
+
+        if ($qr['status'] === 'used') {
+            $_SESSION['driver_error'] = 'Na-verify na ang pasaherong ito noon.';
+            header('Location: /sitrass/public/driver/dashboard');
+            exit;
+        }
+
+        $qrModel->markScanned($qr['qr_id'], $_SESSION['user_id']);
+        $_SESSION['driver_message'] = 'Na-verify ang pasahero. Puwede nang simulan ang biyahe.';
         header('Location: /sitrass/public/driver/dashboard');
         exit;
     }

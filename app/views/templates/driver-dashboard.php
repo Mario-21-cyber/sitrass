@@ -18,13 +18,60 @@
 <div id="dashMap" style="height:520px; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:1rem;"></div>
 <p id="dashStatusText" class="text-sm text-muted" style="margin:0 0 1.5rem;"></p>
 
+<?php if (!empty($paymentToVerify)): ?>
+    <div class="modal-overlay">
+        <div class="modal-box">
+            <h3><?= t('endtrip_payment_title') ?></h3>
+            <p class="text-sm text-muted"><?= t('endtrip_payment_desc') ?></p>
+            <div class="field-row"><span class="text-muted"><?= t('th_reference') ?></span><strong><?= htmlspecialchars($paymentToVerify['reference_code']) ?></strong></div>
+            <div class="field-row"><span class="text-muted"><?= t('th_customer') ?></span><strong><?= htmlspecialchars($paymentToVerify['customer_name']) ?></strong></div>
+            <div class="field-row"><span class="text-muted"><?= t('th_amount') ?></span><strong>₱<?= number_format($paymentToVerify['amount'], 2) ?></strong></div>
+
+            <div class="modal-actions">
+                <form method="POST" action="/sitrass/public/driver/verifyPayment" style="flex:1;">
+                    <?= Csrf::field() ?>
+                    <input type="hidden" name="payment_id" value="<?= (int)$paymentToVerify['payment_id'] ?>">
+                    <button type="submit" class="btn"><?= t('btn_verify') ?></button>
+                </form>
+                <form method="POST" action="/sitrass/public/driver/rejectPayment" style="flex:1;">
+                    <?= Csrf::field() ?>
+                    <input type="hidden" name="payment_id" value="<?= (int)$paymentToVerify['payment_id'] ?>">
+                    <button type="submit" class="btn-danger" style="width:100%; border:none; border-radius:6px; cursor:pointer;"><?= t('btn_reject') ?></button>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<?php if ($activeBooking && $activeBooking['status'] === 'accepted' && $activeBooking['qr_status'] !== 'used'): ?>
+    <div class="modal-overlay" id="boardingModal" style="display:none;">
+        <div class="modal-box">
+            <h3><?= t('boarding_verify_title') ?></h3>
+            <form method="POST" action="/sitrass/public/driver/verifyBoarding">
+                <?= Csrf::field() ?>
+                <input type="hidden" name="booking_id" value="<?= (int)$activeBooking['booking_id'] ?>">
+                <div class="field">
+                    <label><?= t('boarding_verify_input_label') ?></label>
+                    <input type="text" name="token" required autofocus>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn" style="flex:1;"><?= t('btn_confirm') ?></button>
+                    <button type="button" class="btn-ghost" style="flex:1;" onclick="document.getElementById('boardingModal').style.display='none';"><?= t('btn_cancel') ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+<?php endif; ?>
+
 <?php if ($activeBooking): ?>
     <div class="card" style="margin-bottom:1.5rem;">
         <div class="form-section-title" style="margin-bottom:0.75rem; border:none; padding:0;"><?= t('dashboard_active_title') ?></div>
         <p style="margin:0 0 0.25rem;"><strong><?= htmlspecialchars($activeBooking['pickup_name']) ?> &rarr; <?= htmlspecialchars($activeBooking['dropoff_name']) ?></strong></p>
         <p class="text-sm text-muted" style="margin:0 0 0.75rem;"><?= htmlspecialchars($activeBooking['reference_code']) ?> &middot; <?= htmlspecialchars($activeBooking['customer_name']) ?> (<?= htmlspecialchars($activeBooking['customer_phone']) ?>)</p>
 
-        <?php if ($activeBooking['status'] === 'accepted'): ?>
+        <?php if ($activeBooking['status'] === 'accepted' && $activeBooking['qr_status'] !== 'used'): ?>
+            <button type="button" class="btn" style="width:auto; padding:0.6rem 1.4rem;" onclick="document.getElementById('boardingModal').style.display='flex';"><?= t('btn_verify_boarding') ?></button>
+        <?php elseif ($activeBooking['status'] === 'accepted'): ?>
             <form method="POST" action="/sitrass/public/driver/startTrip" style="display:inline;">
                 <?= Csrf::field() ?>
                 <input type="hidden" name="booking_id" value="<?= (int)$activeBooking['booking_id'] ?>">
