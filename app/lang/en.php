@@ -517,6 +517,9 @@ return [
     'payment_type_balance' => 'Balance',
     'label_verified_on' => 'Verified on',
 
+        // Show/hide password
+    'btn_show_password' => 'Show password',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

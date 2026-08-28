@@ -517,6 +517,9 @@ return [
     'payment_type_balance' => 'Balance',
     'label_verified_on' => 'Na-verify noong',
 
+        // Show/hide password
+    'btn_show_password' => 'Ipakita ang password',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

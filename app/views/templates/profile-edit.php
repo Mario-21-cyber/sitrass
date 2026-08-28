@@ -104,25 +104,51 @@ require __DIR__ . '/' . $headerFile;
         </form>
     </div>
 
-            <div class="form-section">
+                    <div class="form-section">
             <div class="form-section-title"><?= t('profile_password_title') ?></div>
             <form method="POST" action="/sitrass/public/profile/changePassword" class="card">
                 <?= Csrf::field() ?>
                 <div class="field">
                     <label for="pf_current_pw"><?= t('label_current_password') ?><span class="required">*</span></label>
-                    <input type="password" id="pf_current_pw" name="current_password" required>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="pf_current_pw" name="current_password" required>
+                        <button type="button" class="pwd-toggle-btn" onclick="togglePwd('pf_current_pw', this)" aria-label="<?= t('btn_show_password') ?>">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="field">
                     <label for="pf_new_pw"><?= t('label_new_password') ?><span class="required">*</span></label>
-                    <input type="password" id="pf_new_pw" name="new_password" required>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="pf_new_pw" name="new_password" required>
+                        <button type="button" class="pwd-toggle-btn" onclick="togglePwd('pf_new_pw', this)" aria-label="<?= t('btn_show_password') ?>">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <div class="field">
                     <label for="pf_new_pw_confirm"><?= t('label_confirm_new_password') ?><span class="required">*</span></label>
-                    <input type="password" id="pf_new_pw_confirm" name="new_password_confirm" required>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="pf_new_pw_confirm" name="new_password_confirm" required>
+                        <button type="button" class="pwd-toggle-btn" onclick="togglePwd('pf_new_pw_confirm', this)" aria-label="<?= t('btn_show_password') ?>">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
                 </div>
                 <button type="submit" class="btn"><?= t('btn_change_password') ?></button>
             </form>
         </div>
+
+        <script>
+        function togglePwd(inputId, btn) {
+            var input = document.getElementById(inputId);
+            var showing = input.type === 'text';
+            input.type = showing ? 'password' : 'text';
+            btn.innerHTML = showing
+                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+        }
+        </script>
 
 </div>
 

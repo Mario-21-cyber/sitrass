@@ -1083,3 +1083,31 @@ tbody tr:hover {
     z-index: 999 !important;
   }
 }
+
+/* --- Show/Hide password toggle --- */
+.password-field-wrapper {
+  position: relative;
+}
+.password-field-wrapper input {
+  padding-right: 2.75rem;
+}
+.pwd-toggle-btn {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0.3rem;
+  cursor: pointer;
+  color: var(--slate);
+  display: flex;
+  align-items: center;
+}
+.pwd-toggle-btn:hover {
+  color: var(--teal-dark);
+}
+.pwd-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+}

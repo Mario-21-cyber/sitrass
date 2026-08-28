@@ -186,6 +186,17 @@ public function confirmBooking() {
         . $qrImageHtml
     );
 
+    // SMS backup - lalabas lang kung naka-on ang setting at may naka-store na
+    // phone number ang customer. Hindi nagpapabigo ang buong booking kung
+    // sakaling mabigo ang SMS - text lang ito, hindi kritikal.
+    $settingModel = new SystemSetting();
+    if ($settingModel->getValue('sms_enabled', 0) && !empty($customerUser['phone'])) {
+        Sms::send(
+            $customerUser['phone'],
+            'SITRASS: Nakumpirma ang booking mo (' . $reservation['reference_code'] . '). Bayaran ang deposit sa loob ng 2 oras.'
+        );
+    }
+
     header('Location: /sitrass/public/customer/booking-confirmed/' . $reservation['reference_code']);
     exit;
 }
