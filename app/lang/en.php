@@ -507,6 +507,10 @@ return [
     'scan_confirm_payment_status' => 'Payment Status',
     'scan_confirm_balance' => 'Remaining Balance',
 
+        // My Bookings: dynamic amount that still needs to be paid
+    'amount_due_label' => 'Amount Due',
+    'amount_paid_full_label' => 'Fully Paid',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

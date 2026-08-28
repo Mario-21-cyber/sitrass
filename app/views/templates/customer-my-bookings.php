@@ -20,9 +20,26 @@
                     <span style="font-family:monospace; font-weight:700; color:var(--teal-dark);"><?= htmlspecialchars($r['reference_code']) ?></span><br>
                     <span style="font-size:0.85rem;"><?= t('th_date') ?>: <?= htmlspecialchars($r['first_travel_date']) ?> &middot; <?= (int)$r['passenger_count'] ?> <?= t('unit_passengers') ?></span>
                 </div>
+                                <?php
+                    // Iisang lohika para sa lahat ng reservation, hindi na isa-isang
+                    // kaso: kung wala pang bayad, ipakita ang kailangang deposit;
+                    // kung may natitirang balance, ipakita iyon; kung bayad na nang
+                    // buo, ipakita ang total bilang "Bayad na nang Buo."
+                    if ($r['payment_status'] === 'pending') {
+                        $displayLabel = t('amount_due_label');
+                        $displayAmount = $r['deposit_required'];
+                    } elseif ($r['balance_due'] > 0) {
+                        $displayLabel = t('amount_due_label');
+                        $displayAmount = $r['balance_due'];
+                    } else {
+                        $displayLabel = t('amount_paid_full_label');
+                        $displayAmount = $r['total_amount'];
+                    }
+                ?>
                 <div style="text-align:right;">
                     <span class="badge <?= $r['status'] === 'confirmed' ? 'badge-active' : 'badge-pending' ?>"><?= t('status_' . $r['status']) ?></span><br>
-                    <span style="font-size:0.85rem;">₱<?= htmlspecialchars($r['total_amount']) ?></span>
+                    <span class="text-sm text-muted" style="display:block;"><?= $displayLabel ?></span>
+                    <span style="font-size:0.9rem; font-weight:600;">₱<?= htmlspecialchars($displayAmount) ?></span>
                 </div>
             </div>
 

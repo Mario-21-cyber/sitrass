@@ -507,6 +507,10 @@ return [
     'scan_confirm_payment_status' => 'Katayuan ng Bayad',
     'scan_confirm_balance' => 'Natitirang Balance',
 
+        // My Bookings: dynamic na halaga na dapat bayaran
+    'amount_due_label' => 'Kailangang Bayaran',
+    'amount_paid_full_label' => 'Bayad na nang Buo',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];
