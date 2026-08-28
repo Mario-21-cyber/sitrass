@@ -44,6 +44,33 @@
     </div>
 <?php endif; ?>
 
+<?php if (!empty($boardingPending)): ?>
+    <div class="modal-overlay">
+        <div class="modal-box">
+            <h3><?= t('scan_confirm_title') ?></h3>
+            <div class="field-row"><span class="text-muted"><?= t('scan_confirm_ref') ?></span><strong><?= htmlspecialchars($boardingPending['reference_code']) ?></strong></div>
+            <div class="field-row"><span class="text-muted"><?= t('scan_confirm_customer') ?></span><strong><?= htmlspecialchars($boardingPending['customer_name']) ?></strong></div>
+            <div class="field-row"><span class="text-muted"><?= t('scan_confirm_seats') ?></span><strong><?= (int)$boardingPending['seats_booked'] ?></strong></div>
+            <div class="field-row"><span class="text-muted"><?= t('scan_confirm_payment_status') ?></span><strong><?= t('status_' . $boardingPending['payment_status']) ?></strong></div>
+            <?php if ($boardingPending['balance_due'] > 0): ?>
+                <div class="field-row"><span class="text-muted"><?= t('scan_confirm_balance') ?></span><strong>₱<?= number_format($boardingPending['balance_due'], 2) ?></strong></div>
+            <?php endif; ?>
+
+            <div class="modal-actions">
+                <form method="POST" action="/sitrass/public/driver/verifyBoardingConfirm" style="flex:1;">
+                    <?= Csrf::field() ?>
+                    <input type="hidden" name="qr_id" value="<?= (int)$boardingPending['qr_id'] ?>">
+                    <button type="submit" class="btn"><?= t('btn_confirm_boarding') ?></button>
+                </form>
+                <form method="POST" action="/sitrass/public/driver/verifyBoardingCancel" style="flex:1;">
+                    <?= Csrf::field() ?>
+                    <button type="submit" class="btn-ghost" style="width:100%;"><?= t('btn_cancel_scan') ?></button>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
 <?php if ($activeBooking && $activeBooking['status'] === 'accepted' && $activeBooking['qr_status'] !== 'used'): ?>
     <div class="modal-overlay" id="boardingModal" style="display:none;">
         <div class="modal-box">

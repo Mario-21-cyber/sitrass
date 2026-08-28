@@ -41,7 +41,7 @@ class DriverController extends Controller {
             unset($_SESSION['check_payment_reservation_id']);
         }
 
-        View::render('driver-dashboard', [
+                View::render('driver-dashboard', [
             'pageTitle' => t('title_driver_dashboard'),
             'bookings' => $pendingBookings,
             'message' => $message,
@@ -49,6 +49,7 @@ class DriverController extends Controller {
             'activeBooking' => $activeBooking,
             'driverIdForGps' => $this->driverRecord['driver_id'],
             'paymentToVerify' => $paymentToVerify,
+            'boardingPending' => $_SESSION['boarding_pending'] ?? null,
         ]);
     }
 
@@ -173,7 +174,7 @@ class DriverController extends Controller {
         exit;
     }
 
-    public function verifyBoarding() {
+        public function verifyBoarding() {
         if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
             die('Invalid na session.');
         }
@@ -205,8 +206,61 @@ class DriverController extends Controller {
             exit;
         }
 
-        $qrModel->markScanned($qr['qr_id'], $_SESSION['user_id']);
+        // Hindi pa natin agad ma-mamarkahan ang QR bilang "used" - kailangan
+        // munang makita ng driver ang detalye ng pasahero (ilan sila, bayad na
+        // ba) at kumpirmahin muna, bago talaga tuluyang i-verify.
+        $db = (new Model())->getConnection();
+        $stmt = $db->prepare(
+            "SELECT rs.reference_code, rs.payment_status, rs.total_amount, rs.amount_paid,
+                    (rs.total_amount - rs.amount_paid) AS balance_due,
+                    CONCAT(u.first_name,' ',u.last_name) AS customer_name
+             FROM reservations rs
+             JOIN customers c ON c.customer_id = rs.customer_id
+             JOIN users u ON u.user_id = c.user_id
+             WHERE rs.reservation_id = ?"
+        );
+        $stmt->execute([$booking['reservation_id']]);
+        $resInfo = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $_SESSION['boarding_pending'] = [
+            'qr_id' => $qr['qr_id'],
+            'booking_id' => $bookingId,
+            'reference_code' => $resInfo['reference_code'] ?? '',
+            'customer_name' => $resInfo['customer_name'] ?? '',
+            'seats_booked' => (int)$booking['seats_booked'],
+            'payment_status' => $resInfo['payment_status'] ?? 'pending',
+            'balance_due' => $resInfo['balance_due'] ?? 0,
+        ];
+
+        header('Location: /sitrass/public/driver/dashboard');
+        exit;
+    }
+
+    public function verifyBoardingConfirm() {
+        if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+            die('Invalid na session.');
+        }
+
+        $pending = $_SESSION['boarding_pending'] ?? null;
+        $qrId = (int)($_POST['qr_id'] ?? 0);
+        unset($_SESSION['boarding_pending']);
+
+        if (!$pending || (int)$pending['qr_id'] !== $qrId) {
+            $_SESSION['driver_error'] = 'Nag-expire na ang confirmation na ito. Subukan ulit i-verify.';
+            header('Location: /sitrass/public/driver/dashboard');
+            exit;
+        }
+
+        $qrModel = new QrBooking();
+        $qrModel->markScanned($qrId, $_SESSION['user_id']);
+
         $_SESSION['driver_message'] = 'Na-verify ang pasahero. Puwede nang simulan ang biyahe.';
+        header('Location: /sitrass/public/driver/dashboard');
+        exit;
+    }
+
+    public function verifyBoardingCancel() {
+        unset($_SESSION['boarding_pending']);
         header('Location: /sitrass/public/driver/dashboard');
         exit;
     }

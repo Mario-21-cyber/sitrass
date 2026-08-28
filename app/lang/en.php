@@ -499,6 +499,14 @@ return [
     'endtrip_payment_title' => 'Verify Payment',
     'endtrip_payment_desc' => 'A F2F balance payment was submitted and needs verification.',
 
+        // Schedule conflict errors
+    'error_van_conflict' => 'This van already has an overlapping schedule at this time.',
+    'error_driver_conflict' => 'This driver already has an overlapping schedule at this time.',
+
+    // Boarding confirmation popup (expanded)
+    'scan_confirm_payment_status' => 'Payment Status',
+    'scan_confirm_balance' => 'Remaining Balance',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

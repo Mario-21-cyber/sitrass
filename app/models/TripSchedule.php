@@ -39,12 +39,65 @@ class TripSchedule extends Model {
         return $this->db->lastInsertId();
     }
 
-    public function slotTaken($vanId, $date, $time) {
+        public function slotTaken($vanId, $date, $time) {
         $stmt = $this->db->prepare(
             "SELECT COUNT(*) FROM trip_schedules WHERE van_id = ? AND departure_date = ? AND departure_time = ?"
         );
         $stmt->execute([$vanId, $date, $time]);
         return $stmt->fetchColumn() > 0;
+    }
+
+    // Hindi lang exact time match ang tinitignan - kinukuwenta rin natin ang
+    // tantiyang tagal ng bawat biyahe (batay sa ruta), para hindi din maka-
+    // gawa ng schedule na nag-o-overlap sa oras, kahit magkaiba ang exact
+    // na oras ng alis.
+    public function hasVanConflict($vanId, $date, $time, $durationMinutes, $excludeScheduleId = null) {
+        $sql = "SELECT ts.departure_time, r.estimated_duration_minutes
+                FROM trip_schedules ts
+                JOIN routes r ON r.route_id = ts.route_id
+                WHERE ts.van_id = ? AND ts.departure_date = ? AND ts.status != 'cancelled'";
+        $params = [$vanId, $date];
+        if ($excludeScheduleId) {
+            $sql .= " AND ts.schedule_id != ?";
+            $params[] = $excludeScheduleId;
+        }
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $this->rangesOverlap($stmt->fetchAll(PDO::FETCH_ASSOC), $time, $durationMinutes);
+    }
+
+    public function hasDriverConflict($driverId, $date, $time, $durationMinutes, $excludeScheduleId = null) {
+        if (empty($driverId)) {
+            return false;
+        }
+        $sql = "SELECT ts.departure_time, r.estimated_duration_minutes
+                FROM trip_schedules ts
+                JOIN routes r ON r.route_id = ts.route_id
+                WHERE ts.driver_id = ? AND ts.departure_date = ? AND ts.status != 'cancelled'";
+        $params = [$driverId, $date];
+        if ($excludeScheduleId) {
+            $sql .= " AND ts.schedule_id != ?";
+            $params[] = $excludeScheduleId;
+        }
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+        return $this->rangesOverlap($stmt->fetchAll(PDO::FETCH_ASSOC), $time, $durationMinutes);
+    }
+
+    protected function rangesOverlap($existingSchedules, $newTime, $newDurationMinutes) {
+        $newStart = strtotime($newTime);
+        $newEnd = $newStart + (($newDurationMinutes ?: 60) * 60);
+
+        foreach ($existingSchedules as $row) {
+            $existStart = strtotime($row['departure_time']);
+            $existEnd = $existStart + (((int)$row['estimated_duration_minutes'] ?: 60) * 60);
+
+            // May overlap kung nagsisimula ang isa bago pa matapos ang isa pa.
+            if ($newStart < $existEnd && $existStart < $newEnd) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function cancel($scheduleId, $reason) {

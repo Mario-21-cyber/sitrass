@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <?php if (in_array($r['status'], ['pending', 'confirmed'])): ?>
+                        <?php if (in_array($r['status'], ['pending', 'confirmed']) && !in_array($r['first_booking_status'] ?? '', ['en_route', 'completed'])): ?>
                 <div style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid var(--border);">
                     <?php if ($r['payment_status'] === 'pending'): ?>
                         <a href="/sitrass/public/customer/payReservation/<?= htmlspecialchars($r['reference_code']) ?>" class="btn" style="display:inline-block; width:auto; padding:0.3rem 0.8rem; text-decoration:none; font-size:0.8rem;"><?= t('btn_pay') ?></a>

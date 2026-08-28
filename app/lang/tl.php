@@ -499,6 +499,14 @@ return [
     'endtrip_payment_title' => 'I-verify ang Bayad',
     'endtrip_payment_desc' => 'May natanggap na F2F balance payment na kailangang i-verify.',
 
+        // Schedule conflict errors
+    'error_van_conflict' => 'May schedule na ang van na ito na nag-o-overlap sa oras na ito.',
+    'error_driver_conflict' => 'May schedule na ang driver na ito na nag-o-overlap sa oras na ito.',
+
+    // Boarding confirmation popup (pinalawak)
+    'scan_confirm_payment_status' => 'Katayuan ng Bayad',
+    'scan_confirm_balance' => 'Natitirang Balance',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

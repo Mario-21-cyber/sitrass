@@ -71,10 +71,24 @@ class SchedulesController extends Controller {
             exit;
         }
 
-        $scheduleModel = new TripSchedule();
+                $scheduleModel = new TripSchedule();
 
-        if ($scheduleModel->slotTaken($_POST['van_id'], $_POST['departure_date'], $_POST['departure_time'])) {
-            $_SESSION['schedule_errors'] = ['May schedule na ang van na ito sa parehong petsa at oras.'];
+        // Kunin ang tantiyang tagal ng biyahe batay sa napiling ruta - dito
+        // natin ikukumpara kung nag-o-overlap ang bagong schedule sa iba.
+        $db = (new Model())->getConnection();
+        $stmt = $db->prepare("SELECT estimated_duration_minutes FROM routes WHERE route_id = ?");
+        $stmt->execute([$_POST['route_id']]);
+        $routeDuration = (int)$stmt->fetchColumn() ?: 60;
+
+        if ($scheduleModel->hasVanConflict($_POST['van_id'], $_POST['departure_date'], $_POST['departure_time'], $routeDuration)) {
+            $_SESSION['schedule_errors'] = [t('error_van_conflict')];
+            $_SESSION['schedule_old'] = $_POST;
+            header('Location: /sitrass/public/schedules/create');
+            exit;
+        }
+
+        if (!empty($_POST['driver_id']) && $scheduleModel->hasDriverConflict($_POST['driver_id'], $_POST['departure_date'], $_POST['departure_time'], $routeDuration)) {
+            $_SESSION['schedule_errors'] = [t('error_driver_conflict')];
             $_SESSION['schedule_old'] = $_POST;
             header('Location: /sitrass/public/schedules/create');
             exit;

@@ -478,9 +478,6 @@ a.stat-card:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border);
   gap: 1rem;
   flex-wrap: wrap;
 }
@@ -964,26 +961,18 @@ tbody tr:hover {
   color: var(--amber-light);
 }
 
-/* --- Sticky topbar: manatiling nakikita ang menu button habang nag-scroll,
-   lalo na sa mobile view. Gumagana ito sa admin, customer, at driver dahil
-   parehong .topbar class ang ginagamit ng tatlo. --- */
-/* --- Sticky topbar: manatiling nakikita ang menu button habang nag-scroll,
-   lalo na sa mobile view. Gumagana ito sa admin, customer, at driver dahil
-   parehong .topbar class ang ginagamit ng tatlo. Shadow lang, walang
-   dagdag na border, para hindi mag-double-line sa ilalim. --- */
+/* --- Sticky topbar: iisang consolidated na block na ito na lang -
+   nag-set ito ng lahat ng spacing, background, at sticky behavior sa
+   isang lugar, para walang conflicting properties sa dalawang bersyon. --- */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 20;
   background: var(--sand);
   box-shadow: 0 2px 6px rgba(27, 42, 107, 0.06);
-  margin-bottom: var(--space-4);
-}
-
-/* Kung may existing border-bottom na sa .topbar mula sa dating CSS,
-   i-override natin dito para hindi mag-doble sa shadow. */
-.main-content .topbar {
-  border-bottom: none;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
 }
 
 /* --- FONT SAFETY NET: siguraduhing Poppins ang buong system, kasama
