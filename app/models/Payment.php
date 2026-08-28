@@ -172,4 +172,15 @@ public function getDailyRevenue($days = 7) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
+        public function getVerifiedForReservation($reservationId) {
+        $stmt = $this->db->prepare(
+            "SELECT p.*, pm.method_name
+             FROM payments p
+             JOIN payment_methods pm ON pm.method_id = p.method_id
+             WHERE p.reservation_id = ? AND p.status = 'verified'
+             ORDER BY p.verified_at ASC"
+        );
+        $stmt->execute([$reservationId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

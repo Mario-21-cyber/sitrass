@@ -961,18 +961,27 @@ tbody tr:hover {
   color: var(--amber-light);
 }
 
-/* --- Sticky topbar: iisang consolidated na block na ito na lang -
-   nag-set ito ng lahat ng spacing, background, at sticky behavior sa
-   isang lugar, para walang conflicting properties sa dalawang bersyon. --- */
+/* --- Sticky topbar: full-width sa loob ng main-content column, flush
+   sa pinaka-itaas (walang puwang sa gilid o sa taas) - ginagawa natin
+   ito sa pamamagitan ng negative margin na eksaktong katumbas ng padding
+   ng .main-content, tapus ibinabalik natin ang padding sa loob mismo ng
+   topbar para manatiling naka-align ang laman nito sa ibang content. --- */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 20;
   background: var(--sand);
   box-shadow: 0 2px 6px rgba(27, 42, 107, 0.06);
-  margin-bottom: 2rem;
-  padding: 1rem 0;
+  margin: -2rem -2.5rem 2rem -2.5rem;
+  padding: 1.25rem 2.5rem;
   border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    margin: -1.25rem -1rem 1.5rem -1rem;
+    padding: 1rem;
+  }
 }
 
 /* --- FONT SAFETY NET: siguraduhing Poppins ang buong system, kasama

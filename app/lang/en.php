@@ -511,6 +511,12 @@ return [
     'amount_due_label' => 'Amount Due',
     'amount_paid_full_label' => 'Fully Paid',
 
+        // Payment history in My Bookings
+    'payment_history_title' => 'Payment History',
+    'payment_type_deposit' => 'Deposit',
+    'payment_type_balance' => 'Balance',
+    'label_verified_on' => 'Verified on',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

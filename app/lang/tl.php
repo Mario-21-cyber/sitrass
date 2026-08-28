@@ -511,6 +511,12 @@ return [
     'amount_due_label' => 'Kailangang Bayaran',
     'amount_paid_full_label' => 'Bayad na nang Buo',
 
+        // Payment history sa My Bookings
+    'payment_history_title' => 'Kasaysayan ng Bayad',
+    'payment_type_deposit' => 'Deposit',
+    'payment_type_balance' => 'Balance',
+    'label_verified_on' => 'Na-verify noong',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

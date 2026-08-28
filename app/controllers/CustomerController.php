@@ -216,6 +216,15 @@ public function myBookings() {
         return !in_array($r['status'], ['completed', 'cancelled']);
     }));
 
+    // Ikabit ang payment history sa bawat reservation - listahan ng bawat
+    // verified na bayad (deposit, tapos balance), hindi nagpapalit, dumadagdag
+    // lang bawat pagkakataon na may bagong verified payment.
+    $paymentModel = new Payment();
+    foreach ($reservations as &$r) {
+        $r['payment_history'] = $paymentModel->getVerifiedForReservation($r['reservation_id']);
+    }
+    unset($r);
+
     $message = $_SESSION['booking_message'] ?? null;
     $error = $_SESSION['booking_error'] ?? null;
     unset($_SESSION['booking_message'], $_SESSION['booking_error']);

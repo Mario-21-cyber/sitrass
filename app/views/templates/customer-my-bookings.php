@@ -36,12 +36,28 @@
                         $displayAmount = $r['total_amount'];
                     }
                 ?>
-                <div style="text-align:right;">
+                                <div style="text-align:right;">
                     <span class="badge <?= $r['status'] === 'confirmed' ? 'badge-active' : 'badge-pending' ?>"><?= t('status_' . $r['status']) ?></span><br>
                     <span class="text-sm text-muted" style="display:block;"><?= $displayLabel ?></span>
                     <span style="font-size:0.9rem; font-weight:600;">₱<?= htmlspecialchars($displayAmount) ?></span>
                 </div>
             </div>
+
+            <?php if (!empty($r['payment_history'])): ?>
+                <div style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid var(--border);">
+                    <div class="text-sm" style="font-weight:600; margin-bottom:0.4rem;"><?= t('payment_history_title') ?></div>
+                    <?php foreach ($r['payment_history'] as $p): ?>
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem; padding:0.25rem 0;">
+                            <span class="text-muted">
+                                <?= t('payment_type_' . $p['payment_type']) ?>
+                                &middot; <?= htmlspecialchars($p['method_name']) ?>
+                                &middot; <?= t('label_verified_on') ?> <?= htmlspecialchars($p['verified_at']) ?>
+                            </span>
+                            <span style="font-weight:600;">₱<?= number_format($p['amount'], 2) ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
 
                         <?php if (in_array($r['status'], ['pending', 'confirmed']) && !in_array($r['first_booking_status'] ?? '', ['en_route', 'completed'])): ?>
                 <div style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid var(--border);">
