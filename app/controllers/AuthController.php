@@ -220,15 +220,24 @@ public function sendReset() {
 
     // Parehong mensahe kahit walang account - para hindi malaman ng attacker
     // kung aling email ang meron ngang account (account enumeration).
-    $_SESSION['forgot_message'] = 'Kung may account na gumagamit ng email na iyan, may reset link na ipinadala (o ipinakita sa ibaba).';
+    $_SESSION['forgot_message'] = 'Kung may account na gumagamit ng email na iyan, may reset link na ipinadala sa email na iyon.';
 
     if ($user && $user['status'] === 'active') {
         $token = $userModel->createResetToken($user['user_id']);
-        $resetLink = '/sitrass/public/auth/resetPassword?token=' . $token;
 
-        // DEV MODE: ipinapakita natin ang link dito sa halip na i-email.
-        // Sa Step 13, papalitan ito ng: Mailer::send($user['email'], $resetLink);
-        $_SESSION['dev_reset_link'] = $resetLink;
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+        $baseUrl = $scheme . $_SERVER['HTTP_HOST'];
+        $resetLink = $baseUrl . '/sitrass/public/auth/resetPassword?token=' . $token;
+
+        Mailer::send(
+            $user['email'],
+            $user['first_name'],
+            'I-reset ang Password - SITRASS',
+            '<p>Kumusta, ' . htmlspecialchars($user['first_name']) . '!</p>
+             <p>May hiniling na pag-reset ng password para sa account mo. I-click ang link sa ibaba para gumawa ng bagong password:</p>
+             <p><a href="' . htmlspecialchars($resetLink) . '">' . htmlspecialchars($resetLink) . '</a></p>
+             <p>Kung hindi ikaw ang humiling nito, puwede mo na lang balewalain ang email na ito.</p>'
+        );
     }
 
     header('Location: /sitrass/public/auth/forgotPassword');
@@ -243,7 +252,7 @@ public function resetPassword() {
 
     if (!$reset) {
         View::render('reset-invalid', [
-                        'pageTitle' => t('title_invalid_link'),
+            'pageTitle' => t('title_invalid_link'),
         ]);
         return;
     }
@@ -252,7 +261,7 @@ public function resetPassword() {
     unset($_SESSION['reset_error']);
 
     View::render('reset-password', [
-        'pageTitle' => 'Bagong Password - SITRASS',
+        'pageTitle' => t('reset_title') . ' - SITRASS',
         'error' => $error,
         'token' => $token,
     ]);

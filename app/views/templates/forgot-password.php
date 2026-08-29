@@ -7,12 +7,7 @@
     <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
 <?php endif; ?>
 
-<?php if (!empty($resetLink)): ?>
-    <div class="alert alert-success">
-        <strong>[DEV MODE lang - papalitan ng email sa totoong deployment]</strong><br>
-        Reset link: <a href="<?= htmlspecialchars($resetLink) ?>"><?= htmlspecialchars($resetLink) ?></a>
-    </div>
-<?php endif; ?>
+
 
 <form method="POST" action="/sitrass/public/auth/sendReset">
     <?= Csrf::field() ?>

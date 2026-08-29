@@ -36,8 +36,8 @@ class PaymentsController extends Controller {
 
         // Kunin ang email ng customer para sa notification
         $db = (new Model())->getConnection();
-        $stmt = $db->prepare(
-            "SELECT u.email, u.first_name, rs.reference_code, rs.total_amount, rs.balance_due
+                $stmt = $db->prepare(
+            "SELECT u.email, u.first_name, u.phone, rs.reference_code, rs.total_amount, rs.balance_due
              FROM payments p
              JOIN reservations rs ON rs.reservation_id = p.reservation_id
              JOIN customers c ON c.customer_id = rs.customer_id
@@ -47,7 +47,7 @@ class PaymentsController extends Controller {
         $stmt->execute([$paymentId]);
         $info = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($info) {
+                if ($info) {
             $balanceMessage = $info['balance_due'] > 0
                 ? '<p>Natitirang balance: ₱' . number_format($info['balance_due'], 2) . '</p>'
                 : '<p>Buo nang bayad ang reservation mo!</p>';
@@ -60,6 +60,14 @@ class PaymentsController extends Controller {
                  <p>Na-verify na ng admin ang iyong bayad para sa reservation <strong>' . htmlspecialchars($info['reference_code']) . '</strong>.</p>'
                  . $balanceMessage
             );
+
+            $settingModel = new SystemSetting();
+            if ($settingModel->getValue('sms_enabled', 0) && !empty($info['phone'])) {
+                $smsText = $info['balance_due'] > 0
+                    ? 'SITRASS: Na-verify ang bayad mo (' . $info['reference_code'] . '). Natitirang balance: PHP' . number_format($info['balance_due'], 2)
+                    : 'SITRASS: Na-verify ang bayad mo (' . $info['reference_code'] . '). Buo na ang bayad!';
+                Sms::send($info['phone'], $smsText);
+            }
         }
     }
 
