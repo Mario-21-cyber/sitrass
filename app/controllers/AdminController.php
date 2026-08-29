@@ -61,7 +61,7 @@ public function approve() {
         $auditModel = new AuditLog();
         $auditModel->log($_SESSION['user_id'], 'user.approved', 'user', $userId);
 
-                Mailer::send(
+        Mailer::send(
             $user['email'],
             $user['first_name'] . ' ' . $user['last_name'],
             'Na-approve na ang SITRASS Account Mo',
