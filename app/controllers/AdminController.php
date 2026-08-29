@@ -61,7 +61,7 @@ public function approve() {
         $auditModel = new AuditLog();
         $auditModel->log($_SESSION['user_id'], 'user.approved', 'user', $userId);
 
-        Mailer::send(
+                Mailer::send(
             $user['email'],
             $user['first_name'] . ' ' . $user['last_name'],
             'Na-approve na ang SITRASS Account Mo',
@@ -69,6 +69,14 @@ public function approve() {
              <p>Na-approve na ang iyong SITRASS account. Puwede ka nang mag-login gamit ang email at password mo.</p>
              <p><a href="http://localhost/sitrass/public/auth/login">I-click dito para mag-login</a></p>'
         );
+
+        $settingModel = new SystemSetting();
+        if ($settingModel->getValue('sms_enabled', 0) && !empty($user['phone'])) {
+            Sms::send(
+                $user['phone'],
+                'SITRASS: Na-approve na ang account mo! Puwede ka nang mag-login gamit ang email at password mo.'
+            );
+        }
     }
 
     header('Location: /sitrass/public/admin/pending-customers');
