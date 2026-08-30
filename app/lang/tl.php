@@ -7,7 +7,7 @@ return [
     'home_register' => 'Wala pang account? Mag-register',
 
     // Login
-    'login_title' => 'SITRASS Admin Login',
+    'login_title' => 'SITRASS - Login ng Admin',
     'login_email' => 'Email',
     'login_password' => 'Password',
     'login_submit' => 'Login',
@@ -16,20 +16,20 @@ return [
 
     // Register
     'register_title' => 'Gumawa ng Account',
-    'register_subtitle' => 'Customer Registration',
-    'register_first_name' => 'First Name',
-    'register_last_name' => 'Last Name',
+    'register_subtitle' => 'Pagrehistro ng Customer',
+    'register_first_name' => 'Pangalan',
+    'register_last_name' => 'Apelyido',
     'register_email' => 'Email',
-    'register_phone' => 'Phone (+639XXXXXXXXX)',
+    'register_phone' => 'Telepono (+639XXXXXXXXX)',
     'register_password' => 'Password',
     'register_confirm_password' => 'Kumpirmahin ang Password',
-    'register_submit' => 'Register',
+    'register_submit' => 'Mag-register',
     'register_has_account' => 'May account na? Login dito',
     'register_driver_link' => 'Driver ka ba? Mag-apply dito',
 
     // Forgot / Reset
     'forgot_title' => 'Nakalimutan ang Password',
-    'forgot_subtitle' => 'Password Recovery',
+    'forgot_subtitle' => 'Pagbawi ng Password',
     'forgot_submit' => 'Ipadala ang Reset Link',
     'forgot_back' => 'Bumalik sa Login',
     'reset_title' => 'Bagong Password',
@@ -39,10 +39,10 @@ return [
 
     // Driver Register
     'dreg_title' => 'Mag-register bilang Driver',
-    'dreg_subtitle' => 'Driver Application',
-    'dreg_license_number' => 'License Number',
-    'dreg_license_expiry' => 'License Expiry',
-    'dreg_experience' => 'Years of Experience',
+    'dreg_subtitle' => 'Aplikasyon ng Driver',
+    'dreg_license_number' => 'Numero ng Lisensya',
+    'dreg_license_expiry' => 'Pag-expire ng Lisensya',
+    'dreg_experience' => 'Taon ng Karanasan',
     'dreg_submit' => 'Mag-apply bilang Driver',
 
     // Admin Nav
@@ -84,7 +84,7 @@ return [
     'profile_language_en' => 'English',
     'profile_language_save' => 'I-save ang Wika',
 
-        // Page titles (browser tab) na English pa
+    // Page titles (browser tab)
     'title_pending_accounts' => 'Mga Naghihintay na Account - SITRASS Admin',
         'title_driver_dashboard' => 'Dashboard ng Driver - SITRASS',
     'title_forgot_password' => 'Nakalimutan ang Password - SITRASS',
@@ -143,14 +143,14 @@ return [
     'status_resolved' => 'Nalutas na',
     'status_closed' => 'Sarado',
 
-    // Table headers na natitira pang English
+    // Table headers
     'th_plate_number' => 'Plate Number',
-    'th_status' => 'Status',
+    'th_status' => 'Katayuan',
 
     // Payment method form labels
-    'pm_account_name' => 'Account Name',
-    'pm_account_number' => 'Account Number',
-    'pm_instructions' => 'Instructions',
+    'pm_account_name' => 'Pangalan ng Account',
+    'pm_account_number' => 'Numero ng Account',
+    'pm_instructions' => 'Mga Instruksyon',
 
     // Settings group labels
     'settings_group_general' => 'Pangkalahatan',
@@ -161,17 +161,17 @@ return [
     'settings_group_map' => 'Mapa',
     'settings_group_uploads' => 'Pag-upload',
     'settings_group_qr' => 'QR Code',
-    'settings_group_tracking' => 'GPS Tracking',
+    'settings_group_tracking' => 'Pagsubaybay (GPS)',
 
         // Dashboard
     'dash_revenue' => 'Kita (Verified)',
     'dash_revenue_today' => 'ngayong araw',
     'dash_reservations' => 'Mga Reservation',
-    'dash_reservations_sub' => 'pending &middot; %d confirmed',
+    'dash_reservations_sub' => 'naghihintay &middot; %d nakumpirma',
     'dash_vans' => 'Mga Van',
-    'dash_vans_sub' => 'active &middot; %d maintenance',
+    'dash_vans_sub' => 'aktibo &middot; %d nasa maintenance',
     'dash_users' => 'Mga User',
-    'dash_users_sub' => 'driver &middot; %d pending',
+    'dash_users_sub' => 'driver &middot; %d naghihintay',
     'dash_pending_payment' => 'Naghihintay na Payment',
     'dash_view_these' => 'Tingnan ang mga ito',
     'dash_revenue_7days' => 'Kita sa Nakaraang 7 Araw',
@@ -187,8 +187,8 @@ return [
     'pending_empty_sub' => 'Ang lahat ng bagong registration ay na-approve na.',
     'th_name' => 'Pangalan',
     'th_email' => 'Email',
-    'th_phone' => 'Phone',
-    'th_role' => 'Role',
+    'th_phone' => 'Telepono',
+    'th_role' => 'Papel',
     'th_created' => 'Ginawa noong',
     'th_action' => 'Aksyon',
     'btn_approve' => 'Aprubahan',
@@ -263,7 +263,7 @@ return [
     // Audit logs
     'th_datetime' => 'Petsa/Oras',
     'th_user' => 'User',
-    'th_entity' => 'Entity',
+    'th_entity' => 'Entidad',
 
     // Feedback
     'feedback_page_title' => 'Mga Feedback',
@@ -335,8 +335,8 @@ return [
     'label_confirm_new_password' => 'Kumpirmahin ang Bagong Password',
     'btn_change_password' => 'Palitan ang Password',
 
-        // Nawawalang button keys (dahilan ng "btn_chat" atbp. na nakikita mo)
-    'btn_chat' => 'Chat',
+    // Missing button keys
+    'btn_chat' => 'Makipag-chat',
     'btn_cancel' => 'Kanselahin',
     'btn_view_qr' => 'QR Code',
 
@@ -363,18 +363,18 @@ return [
     'license_pick_photo' => 'Piliin ang larawan ng lisensya',
 
         // Van create form
-    'label_plate_number' => 'Plate Number',
+    'label_plate_number' => 'Numero ng Plaka',
     'label_make_example' => 'Make (hal. Toyota)',
     'label_model_example' => 'Model (hal. HiAce Commuter)',
-    'label_year_model' => 'Year Model',
+    'label_year_model' => 'Taon ng Modelo',
     'label_color' => 'Kulay',
     'label_van_type' => 'Tipo ng Van',
     'label_luggage_capacity' => 'Kapasidad ng Bagahe',
     'label_has_aircon' => 'May Aircon',
     'label_has_wifi' => 'May WiFi',
-    'label_base_fare' => 'Base Fare (PHP)',
-    'label_fare_per_km' => 'Fare per KM (PHP)',
-    'label_day_rate' => 'Whole Van Day Rate (PHP)',
+    'label_base_fare' => 'Batayang Pamasahe (PHP)',
+    'label_fare_per_km' => 'Pamasahe kada KM (PHP)',
+    'label_day_rate' => 'Upa sa Buong Van Kada Araw (PHP)',
     'label_description' => 'Deskripsyon',
 
     // Location create form
@@ -389,7 +389,7 @@ return [
     'label_destination' => 'Papunta (Destination)',
     'label_distance_km' => 'Distansya (km)',
     'label_est_duration' => 'Tantiyang Oras (minuto)',
-    'label_fare_per_passenger' => 'Fare per Passenger (PHP)',
+    'label_fare_per_passenger' => 'Pamasahe kada Pasahero (PHP)',
     'label_road_condition' => 'Kalagayan ng Daan',
     'road_paved' => 'Maayos na Kalsada',
     'road_partially_paved' => 'Bahagyang Maayos',
@@ -406,8 +406,8 @@ return [
     'label_departure_time' => 'Oras ng Alis',
     'label_est_arrival' => 'Tantiyang Oras ng Dating',
     'label_fare_per_seat' => 'Pamasahe kada Upuan (PHP)',
-    'label_booking_mode' => 'Booking Mode',
-    'mode_per_seat' => 'Per Seat (shared)',
+    'label_booking_mode' => 'Uri ng Booking',
+    'mode_per_seat' => 'Bawat Upuan (shared)',
     'mode_exclusive' => 'Exclusive (buong van)',
 
     // Settings
@@ -487,7 +487,7 @@ return [
 
         // Driver info modal (pinalawak)
     'driver_info_van_label' => 'Van',
-    'driver_info_plate_label' => 'Plate Number',
+    'driver_info_plate_label' => 'Numero ng Plaka',
 
        // Inline boarding verification modal
     'btn_verify_boarding' => 'I-verify',

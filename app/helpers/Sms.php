@@ -39,6 +39,37 @@ class Sms {
 
         return true;
     }
+    // Kapareho ng send(), pero ibinabalik ang raw na sagot ng Semaphore
+    // para magamit sa pag-debug (tingnan ang AdminController::testSms).
+    public static function sendDebug($phoneNumber, $message) {
+        $config = require __DIR__ . '/../../config/sms.php';
+
+        $formattedNumber = self::formatNumber($phoneNumber);
+
+        $postData = [
+            'apikey' => $config['api_key'],
+            'number' => $formattedNumber,
+            'message' => $message,
+            'sendername' => $config['sender_name'],
+        ];
+
+        $ch = curl_init('https://api.semaphore.co/api/v4/messages');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($curlError) {
+            return 'CURL ERROR: ' . $curlError;
+        }
+
+        return 'HTTP ' . $httpCode . "\n" . $response;
+    }
 
     protected static function formatNumber($phoneNumber) {
         // +639171234567 -> 09171234567
