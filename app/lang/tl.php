@@ -520,6 +520,18 @@ return [
         // Show/hide password
     'btn_show_password' => 'Ipakita ang password',
 
+        // User Management
+    'nav_users' => 'Mga User',
+    'users_page_title' => 'Pamamahala ng User',
+    'filter_all_roles' => 'Lahat',
+    'filter_customers' => 'Mga Customer',
+    'filter_drivers' => 'Mga Driver',
+    'filter_admins' => 'Mga Admin',
+    'btn_deactivate' => 'I-deactivate',
+    'btn_reactivate' => 'I-reactivate',
+    'badge_deactivated' => 'Naka-deactivate',
+    'confirm_deactivate' => 'Sigurado kang i-deactivate ang user na ito? Hindi na sila makakapag-login, pero hindi mabubura ang kanilang mga record.',
+
     // Common
     'lang_switch_label' => 'Wika',
 ];

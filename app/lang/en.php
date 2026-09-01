@@ -520,6 +520,18 @@ return [
         // Show/hide password
     'btn_show_password' => 'Show password',
 
+        // User Management
+    'nav_users' => 'Users',
+    'users_page_title' => 'User Management',
+    'filter_all_roles' => 'All',
+    'filter_customers' => 'Customers',
+    'filter_drivers' => 'Drivers',
+    'filter_admins' => 'Admins',
+    'btn_deactivate' => 'Deactivate',
+    'btn_reactivate' => 'Reactivate',
+    'badge_deactivated' => 'Deactivated',
+    'confirm_deactivate' => 'Are you sure you want to deactivate this user? They will no longer be able to log in, but their records will not be deleted.',
+
     // Common
     'lang_switch_label' => 'Language',
 ];

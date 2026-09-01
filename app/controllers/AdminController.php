@@ -90,4 +90,46 @@ public function testSms() {
 
     die('<pre>Phone na ginamit: ' . htmlspecialchars($admin['phone']) . "\n\nSagot ng Semaphore:\n" . htmlspecialchars($rawResponse) . '</pre>');
 }
+public function users() {
+    $roleFilter = $_GET['role'] ?? null;
+    $userModel = new User();
+    $allUsers = $userModel->getAllIncludingDeactivated($roleFilter ?: null);
+
+    View::render('admin-users-list', [
+        'pageTitle' => t('users_page_title') . ' - SITRASS Admin',
+        'pageHeading' => t('users_page_title'),
+        'users' => $allUsers,
+        'roleFilter' => $roleFilter,
+    ]);
+}
+
+public function deactivateUser() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+    $userId = (int)($_POST['user_id'] ?? 0);
+    if ($userId > 0 && $userId != $_SESSION['user_id']) {
+        $userModel = new User();
+        $userModel->deactivate($userId);
+        $auditModel = new AuditLog();
+        $auditModel->log($_SESSION['user_id'], 'user.deactivated', 'user', $userId);
+    }
+    header('Location: /sitrass/public/admin/users');
+    exit;
+}
+
+public function reactivateUser() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+    $userId = (int)($_POST['user_id'] ?? 0);
+    if ($userId > 0) {
+        $userModel = new User();
+        $userModel->reactivate($userId);
+        $auditModel = new AuditLog();
+        $auditModel->log($_SESSION['user_id'], 'user.reactivated', 'user', $userId);
+    }
+    header('Location: /sitrass/public/admin/users');
+    exit;
+}
 }

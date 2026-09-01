@@ -170,4 +170,39 @@ public function verifyCurrentPassword($userId, $currentPassword) {
     $hash = $stmt->fetchColumn();
     return $hash && password_verify($currentPassword, $hash);
 }
+public function getAllWithRole($roleFilter = null) {
+    $sql = "SELECT * FROM users WHERE deleted_at IS NULL";
+    $params = [];
+    if ($roleFilter) {
+        $sql .= " AND role = ?";
+        $params[] = $roleFilter;
+    }
+    $sql .= " ORDER BY created_at DESC";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function deactivate($userId) {
+    $stmt = $this->db->prepare("UPDATE users SET deleted_at = NOW() WHERE user_id = ?");
+    $stmt->execute([$userId]);
+}
+
+public function reactivate($userId) {
+    $stmt = $this->db->prepare("UPDATE users SET deleted_at = NULL WHERE user_id = ?");
+    $stmt->execute([$userId]);
+}
+
+public function getAllIncludingDeactivated($roleFilter = null) {
+    $sql = "SELECT * FROM users WHERE 1=1";
+    $params = [];
+    if ($roleFilter) {
+        $sql .= " AND role = ?";
+        $params[] = $roleFilter;
+    }
+    $sql .= " ORDER BY created_at DESC";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }
