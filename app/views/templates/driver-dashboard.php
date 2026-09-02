@@ -158,7 +158,7 @@
                 <span style="font-family:monospace; font-weight:700; color:var(--teal-dark);"><?= htmlspecialchars($b['reference_code']) ?></span><br>
                 <strong><?= htmlspecialchars($b['pickup_name']) ?> &rarr; <?= htmlspecialchars($b['dropoff_name']) ?></strong><br>
                 <span style="font-size:0.85rem;"><?= htmlspecialchars($b['travel_date']) ?> @ <?= htmlspecialchars($b['pickup_time']) ?> &middot; <?= (int)$b['seats_booked'] ?> <?= t('unit_passengers') ?></span><br>
-                <span style="font-size:0.85rem;">Customer: <?= htmlspecialchars($b['customer_name']) ?> (<?= htmlspecialchars($b['customer_phone']) ?>)</span>
+                <span style="font-size:0.85rem;"><?= t('label_customer') ?>: <?= htmlspecialchars($b['customer_name']) ?> (<?= htmlspecialchars($b['customer_phone']) ?>)</span>
             </div>
             <span class="badge badge-pending"><?= t('status_' . $b['status']) ?></span>
 
@@ -171,7 +171,7 @@
                 <form method="POST" action="/sitrass/public/driver/reject" style="display:inline;" onsubmit="return confirm('Sigurado kang tanggihan ang booking na ito?');">
                     <?= Csrf::field() ?>
                     <input type="hidden" name="booking_id" value="<?= (int)$b['booking_id'] ?>">
-                    <button type="submit" class="btn-danger" style="border:none; border-radius:6px; cursor:pointer;">Tanggihan</button>
+                    <button type="submit" class="btn-danger" style="border:none; border-radius:6px; cursor:pointer;"><?= t('btn_reject') ?></button>
                 </form>
             </div>
         </div>

@@ -69,7 +69,7 @@ function settingLabel($setting, $overrides) {
 ?>
 
 <?php if (!empty($saved)): ?>
-    <div class="alert alert-success">Na-save na ang mga setting.</div>
+    <div class="alert alert-success"><?= t('settings_saved') ?></div>
 <?php endif; ?>
 
 <form method="POST" action="/sitrass/public/settings/update">
@@ -84,8 +84,8 @@ function settingLabel($setting, $overrides) {
                         <label for="setting_<?= (int)$s['setting_id'] ?>"><?= htmlspecialchars(settingLabel($s, $settingDescOverrides)) ?></label>
                         <?php if ($s['data_type'] === 'boolean'): ?>
                             <select id="setting_<?= (int)$s['setting_id'] ?>" name="setting_<?= (int)$s['setting_id'] ?>">
-                                <option value="1" <?= $s['setting_value'] == '1' ? 'selected' : '' ?>>Oo</option>
-                                <option value="0" <?= $s['setting_value'] == '0' ? 'selected' : '' ?>>Hindi</option>
+                                <option value="1" <?= $s['setting_value'] == '1' ? 'selected' : '' ?>><?= t('option_yes') ?></option>
+                                <option value="0" <?= $s['setting_value'] == '0' ? 'selected' : '' ?>><?= t('option_no') ?></option>
                             </select>
                         <?php else: ?>
                             <input type="text" id="setting_<?= (int)$s['setting_id'] ?>" name="setting_<?= (int)$s['setting_id'] ?>" value="<?= htmlspecialchars($s['setting_value']) ?>">

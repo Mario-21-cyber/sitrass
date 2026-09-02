@@ -11,7 +11,7 @@
                 <span style="font-family:monospace; font-weight:700; color:var(--teal-dark);"><?= htmlspecialchars($b['reference_code']) ?></span><br>
                 <strong><?= htmlspecialchars($b['pickup_name']) ?> &rarr; <?= htmlspecialchars($b['dropoff_name']) ?></strong><br>
                 <span style="font-size:0.85rem;"><?= htmlspecialchars($b['travel_date']) ?> @ <?= htmlspecialchars($b['pickup_time']) ?> &middot; <?= (int)$b['seats_booked'] ?> <?= t('unit_passengers') ?></span><br>
-                <span style="font-size:0.85rem;">Customer: <?= htmlspecialchars($b['customer_name']) ?></span>
+                <span style="font-size:0.85rem;"><?= t('label_customer') ?>: <?= htmlspecialchars($b['customer_name']) ?></span>
             </div>
             <span class="badge <?= $b['status'] === 'completed' ? 'badge-active' : 'badge-pending' ?>"><?= t('status_' . $b['status']) ?></span>
         </div>

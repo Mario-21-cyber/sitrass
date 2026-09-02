@@ -11,8 +11,8 @@
 <?php if (empty($schedules)): ?>
     <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;color:var(--border);margin-bottom:0.75rem;"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        <div>Wala pang schedule na naitala.</div>
-        <div class="text-sm">Magdagdag ng schedule para makapag-book na ang customer.</div>
+        <div><?= t('empty_no_schedules') ?></div>
+        <div class="text-sm"><?= t('empty_no_schedules_sub') ?></div>
     </div>
 <?php else: ?>
     <table>

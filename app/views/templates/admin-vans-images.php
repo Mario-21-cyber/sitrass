@@ -1,6 +1,6 @@
 <?php require __DIR__ . '/_admin_header.php'; ?>
 
-<p><a href="/sitrass/public/vans">&larr; Bumalik sa listahan ng Van</a></p>
+<p><a href="/sitrass/public/vans">&larr; <?= t('btn_back') ?></a></p>
 
 <?php if (!empty($error)): ?>
     <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
@@ -17,7 +17,7 @@
 </form>
 
 <?php if (empty($images)): ?>
-    <p>Wala pang larawan ang van na ito.</p>
+    <p><?= t('images_empty') ?></p>
 <?php else: ?>
     <div style="display:flex; flex-wrap:wrap; gap:1rem;">
         <?php foreach ($images as $img): ?>
@@ -25,13 +25,13 @@
                 <img src="<?= htmlspecialchars($img['thumbnail_path']) ?>" alt="Larawan ng van <?= htmlspecialchars($van['plate_number']) ?>" style="width:100%; border-radius:4px; display:block; margin-bottom:0.5rem;">
 
                 <?php if ($img['is_primary']): ?>
-                    <span class="badge badge-active">Primary</span>
+                    <span class="badge badge-active"><?= t('image_primary') ?></span>
                 <?php else: ?>
                     <form method="POST" action="/sitrass/public/vans/setPrimaryImage" style="display:inline;">
                         <?= Csrf::field() ?>
                         <input type="hidden" name="image_id" value="<?= (int)$img['image_id'] ?>">
                         <input type="hidden" name="van_id" value="<?= (int)$van['van_id'] ?>">
-                        <button type="submit" class="btn" style="width:auto; padding:0.2rem 0.6rem; font-size:0.75rem;">Gawing Primary</button>
+                        <button type="submit" class="btn" style="width:auto; padding:0.2rem 0.6rem; font-size:0.75rem;"><?= t('btn_make_primary') ?></button>
                     </form>
                 <?php endif; ?>
 
@@ -39,7 +39,7 @@
                     <?= Csrf::field() ?>
                     <input type="hidden" name="image_id" value="<?= (int)$img['image_id'] ?>">
                     <input type="hidden" name="van_id" value="<?= (int)$van['van_id'] ?>">
-                    <button type="submit" style="width:auto; padding:0.2rem 0.6rem; font-size:0.75rem; background:var(--danger); color:#fff; border:none; border-radius:4px; cursor:pointer;">Burahin</button>
+                    <button type="submit" style="width:auto; padding:0.2rem 0.6rem; font-size:0.75rem; background:var(--danger); color:#fff; border:none; border-radius:4px; cursor:pointer;"><?= t('btn_delete') ?></button>
                 </form>
             </div>
         <?php endforeach; ?>

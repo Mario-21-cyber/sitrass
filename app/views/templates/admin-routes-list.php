@@ -11,7 +11,7 @@
 <?php if (empty($routes)): ?>
     <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;color:var(--border);margin-bottom:0.75rem;"><circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/></svg>
-        <div>Wala pang ruta na naitala.</div>
+        <div><?= t('empty_no_routes') ?></div>
     </div>
 <?php else: ?>
     <table>

@@ -1,29 +1,29 @@
 <?php require __DIR__ . '/_customer_header.php'; ?>
 
-<h2>I-track ang Biyahe</h2>
+<h2><?= t('heading_track_trip') ?></h2>
 
 <div class="card">
-    <p><strong>Reference:</strong> <?= htmlspecialchars($booking['reference_code']) ?></p>
-    <p><strong>Van:</strong> <?= htmlspecialchars($booking['plate_number']) ?></p>
-    <p style="margin:0;"><strong>Driver:</strong> <?= htmlspecialchars($booking['driver_name'] ?? 'Wala pang driver') ?></p>
+    <p><strong><?= t('label_reference') ?>:</strong> <?= htmlspecialchars($booking['reference_code']) ?></p>
+    <p><strong><?= t('label_van') ?>:</strong> <?= htmlspecialchars($booking['plate_number']) ?></p>
+    <p style="margin:0;"><strong><?= t('label_driver') ?>:</strong> <?= htmlspecialchars($booking['driver_name'] ?? t('no_driver_yet')) ?></p>
 </div>
 
 <div class="eta-banner" id="etaBanner" style="display:none;">
     <div>
-        <div class="eta-label">Tinatayang Layo</div>
+        <div class="eta-label"><?= t('eta_distance_label') ?></div>
         <div id="etaDistance" style="font-size:1rem;">—</div>
     </div>
     <div>
-        <div class="eta-label">Tinatayang Oras ng Pagdating (ETA)</div>
+        <div class="eta-label"><?= t('eta_time_label') ?></div>
         <div class="eta-value" id="etaTime">—</div>
     </div>
 </div>
 
 <div id="trackMap" style="height:400px; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:1rem;"></div>
 
-<p id="statusText" class="text-sm text-muted">Hinihintay ang datos ng lokasyon...</p>
+<p id="statusText" class="text-sm text-muted"><?= t('track_waiting_location') ?></p>
 
-<a href="/sitrass/public/customer/myBookings" class="btn-link">Bumalik</a>
+<a href="/sitrass/public/customer/myBookings" class="btn-link"><?= t('btn_back') ?></a>
 
 <script>
 firebase.initializeApp(firebaseConfig);
@@ -60,8 +60,8 @@ function personIconHtml() {
 
 const pickupIcon = L.divIcon({ className: '', html: '<div style="background:#2D6A34; width:12px; height:12px; border-radius:50%; border:2px solid white;"></div>' });
 const dropoffIcon = L.divIcon({ className: '', html: '<div style="background:#C41E24; width:12px; height:12px; border-radius:50%; border:2px solid white;"></div>' });
-L.marker([pickupLat, pickupLng], { icon: pickupIcon }).addTo(map).bindPopup('Pickup Point');
-L.marker([dropoffLat, dropoffLng], { icon: dropoffIcon }).addTo(map).bindPopup('Dropoff Point');
+L.marker([pickupLat, pickupLng], { icon: pickupIcon }).addTo(map).bindPopup(<?= json_encode(t('map_pickup_point')) ?>);
+L.marker([dropoffLat, dropoffLng], { icon: dropoffIcon }).addTo(map).bindPopup(<?= json_encode(t('map_dropoff_point')) ?>);
 
 let vanMarker = null;
 let myMarker = null;
@@ -109,7 +109,7 @@ if (navigator.geolocation) {
             });
 
             if (!myMarker) {
-                myMarker = L.marker(myPos, { icon: L.divIcon({ className: '', html: personIconHtml(), iconSize: [26, 26] }) }).addTo(map).bindPopup('Ikaw');
+                myMarker = L.marker(myPos, { icon: L.divIcon({ className: '', html: personIconHtml(), iconSize: [26, 26] }) }).addTo(map).bindPopup(<?= json_encode(t('map_you')) ?>);
             } else {
                 myMarker.setLatLng(myPos);
             }
@@ -128,7 +128,7 @@ if (driverId) {
         const data = snapshot.val();
 
         if (!data) {
-            statusText.textContent = 'Wala pang lokasyon na natatanggap mula sa driver.';
+            statusText.textContent = <?= json_encode(t('track_waiting_driver_location')) ?>;
             return;
         }
 

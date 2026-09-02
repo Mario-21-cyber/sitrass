@@ -18,7 +18,7 @@ require __DIR__ . '/' . $headerFile;
         <div class="form-section-title"><?= t('profile_picture_title') ?></div>
         <div class="card" style="text-align:center;">
             <?php if ($user['profile_picture']): ?>
-                <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="Profile picture" style="width:100px; height:100px; object-fit:cover; border-radius:100px; margin:0 auto 1rem; display:block; border:3px solid var(--slate-bg);">
+                <img src="<?= htmlspecialchars($user['profile_picture']) ?>" alt="<?= t('profile_picture_title') ?>" style="width:100px; height:100px; object-fit:cover; border-radius:100px; margin:0 auto 1rem; display:block; border:3px solid var(--slate-bg);">
             <?php else: ?>
                 <div style="width:100px; height:100px; border-radius:100px; background:var(--slate-bg); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; color:var(--slate);">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:36px;height:36px;"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
@@ -40,7 +40,7 @@ require __DIR__ . '/' . $headerFile;
             <div class="form-section-title"><?= t('license_section_title') ?></div>
             <div class="card" style="text-align:center;">
                 <?php if ($driver && $driver['license_image']): ?>
-                    <img src="<?= htmlspecialchars($driver['license_image']) ?>" alt="License photo" style="width:100%; max-width:220px; border-radius:8px; margin-bottom:1rem; display:block; margin-left:auto; margin-right:auto;">
+                    <img src="<?= htmlspecialchars($driver['license_image']) ?>" alt="<?= t('license_section_title') ?>" style="width:100%; max-width:220px; border-radius:8px; margin-bottom:1rem; display:block; margin-left:auto; margin-right:auto;">
                 <?php else: ?>
                     <p class="text-sm text-muted"><?= t('license_no_upload') ?></p>
                 <?php endif; ?>
@@ -67,24 +67,24 @@ require __DIR__ . '/' . $headerFile;
         <form method="POST" action="/sitrass/public/profile/update" class="card" id="profileForm">
             <?= Csrf::field() ?>
             <div class="field">
-                <label for="pf_first">First Name<span class="required">*</span></label>
+                <label for="pf_first"><?= t('label_first_name') ?><span class="required">*</span></label>
                 <input type="text" id="pf_first" name="first_name" value="<?= htmlspecialchars($user['first_name']) ?>" required readonly>
             </div>
             <div class="field">
-                <label for="pf_last">Last Name<span class="required">*</span></label>
+                <label for="pf_last"><?= t('label_last_name') ?><span class="required">*</span></label>
                 <input type="text" id="pf_last" name="last_name" value="<?= htmlspecialchars($user['last_name']) ?>" required readonly>
             </div>
             <div class="field">
-                <label for="pf_email">Email (hindi na puwedeng baguhin)</label>
+                <label for="pf_email"><?= t('label_email_readonly') ?></label>
                 <input type="email" id="pf_email" value="<?= htmlspecialchars($user['email']) ?>" disabled>
             </div>
             <div class="field">
-                <label for="pf_phone">Phone<span class="required">*</span></label>
+                <label for="pf_phone"><?= t('label_phone') ?><span class="required">*</span></label>
                 <input type="text" id="pf_phone" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" required readonly>
             </div>
             <div id="profileFormActions" style="display:none; gap:0.5rem;">
-                <button type="submit" class="btn" style="width:auto; padding:0.6rem 1.5rem;">I-save ang Impormasyon</button>
-                <button type="button" class="btn-ghost" onclick="cancelEdit()">Kanselahin</button>
+                <button type="submit" class="btn" style="width:auto; padding:0.6rem 1.5rem;"><?= t('btn_save_information') ?></button>
+                <button type="button" class="btn-ghost" onclick="cancelEdit()"><?= t('btn_cancel') ?></button>
             </div>
         </form>
     </div>

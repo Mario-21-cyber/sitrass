@@ -1,7 +1,7 @@
 <?php require __DIR__ . '/_auth_header.php'; ?>
 
 <div class="brand"><?= t('reset_title') ?></div>
-<div class="brand-sub">Password Reset</div>
+<div class="brand-sub"><?= t('title_password_reset') ?></div>
 
 <?php if (!empty($error)): ?>
     <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>

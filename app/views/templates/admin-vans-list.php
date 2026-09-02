@@ -11,8 +11,8 @@
 <?php if (empty($vans)): ?>
     <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;color:var(--border);margin-bottom:0.75rem;"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
-        <div>Wala pang van na naitala.</div>
-        <div class="text-sm">Magdagdag ng unang van para masimulan ang scheduling.</div>
+        <div><?= t('empty_no_vans') ?></div>
+        <div class="text-sm"><?= t('empty_no_vans_sub') ?></div>
     </div>
 <?php else: ?>
     <table>

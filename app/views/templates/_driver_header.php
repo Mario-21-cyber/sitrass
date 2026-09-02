@@ -21,7 +21,7 @@
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <div class="sidebar" id="sidebar">
             <img src="/sitrass/public/img/logo.png" alt="SITRASS" class="logo">
-            <div class="brand">SITRASS Driver</div>
+            <div class="brand">SITRASS <?= t('role_driver') ?></div>
 
             <div class="nav-section-label"><?= t('nav_section_overview') ?></div>
                         <a class="nav-item<?= navActiveDrv('/driver/dashboard', $currentPath) ?>" href="/sitrass/public/driver/dashboard">
@@ -51,7 +51,7 @@
         </div>
         <div class="main-content">
             <div class="topbar">
-                <button class="menu-toggle" id="menuToggle">☰ Menu</button>
+                <button class="menu-toggle" id="menuToggle">☰ <?= t('menu_label') ?></button>
                 <h2 style="margin:0;"><?= htmlspecialchars($pageHeadingD) ?></h2>
-                <div class="user-info"><?= htmlspecialchars($_SESSION['full_name'] ?? '') ?> (Driver)</div>
+                <div class="user-info"><?= htmlspecialchars($_SESSION['full_name'] ?? '') ?> (<?= t('role_driver') ?>)</div>
             </div>

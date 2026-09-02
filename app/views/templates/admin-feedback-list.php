@@ -3,7 +3,7 @@
 <?php if (empty($items)): ?>
     <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;color:var(--border);margin-bottom:0.75rem;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <div>Wala pang feedback na naitala.</div>
+        <div><?= t('empty_no_feedback') ?></div>
     </div>
 <?php else: ?>
     <?php foreach ($items as $f): ?>
@@ -29,7 +29,7 @@
                         <form method="POST" action="/sitrass/public/feedback/markInReview" style="display:inline; margin-right:0.5rem;">
                             <?= Csrf::field() ?>
                             <input type="hidden" name="feedback_id" value="<?= (int)$f['feedback_id'] ?>">
-                            <button type="submit" class="btn-ghost">I-mark bilang In Review</button>
+                            <button type="submit" class="btn-ghost"><?= t('btn_mark_in_review') ?></button>
                         </form>
                     <?php endif; ?>
 
@@ -39,7 +39,7 @@
                         <div class="field" style="margin-top:0.5rem;">
                             <input type="text" name="response" placeholder="Isulat ang sagot..." required style="max-width:400px;">
                         </div>
-                        <button type="submit" class="btn" style="width:auto; padding:0.4rem 1rem; font-size:0.85rem;">Isumite ang Sagot</button>
+                        <button type="submit" class="btn" style="width:auto; padding:0.4rem 1rem; font-size:0.85rem;"><?= t('btn_submit_response') ?></button>
                     </form>
                 </div>
             <?php endif; ?>

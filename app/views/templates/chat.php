@@ -1,12 +1,12 @@
 <?php require __DIR__ . '/' . $headerFile; ?>
 
-<h2>Chat kay <?= htmlspecialchars($otherPartyName) ?></h2>
+<h2><?= sprintf(t('heading_chat_with'), htmlspecialchars($otherPartyName)) ?></h2>
 
 <div id="chatMessages" class="card" style="height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:0.5rem; padding:1rem;"></div>
 
 <form id="chatForm" style="display:flex; gap:0.5rem; margin-top:1rem;">
-    <input type="text" id="chatInput" placeholder="Isulat ang mensahe..." required style="flex:1; padding:0.7rem 0.8rem; border:1px solid var(--border); border-radius:6px; font-size:1rem;">
-    <button type="submit" class="btn" style="width:auto; padding:0.7rem 1.5rem;">Ipadala</button>
+    <input type="text" id="chatInput" placeholder="<?= t('chat_placeholder') ?>" required style="flex:1; padding:0.7rem 0.8rem; border:1px solid var(--border); border-radius:6px; font-size:1rem;">
+    <button type="submit" class="btn" style="width:auto; padding:0.7rem 1.5rem;"><?= t('btn_send') ?></button>
 </form>
 
 <style>

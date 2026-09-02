@@ -1,10 +1,10 @@
 <?php require __DIR__ . '/_auth_header.php'; ?>
 
-<div class="brand">Invalid o Expired na Link</div>
-<div class="brand-sub">Password Reset</div>
+<div class="brand"><?= t('title_invalid_expired_link') ?></div>
+<div class="brand-sub"><?= t('title_password_reset') ?></div>
 
-<p>Hiling ka ng bagong reset link.</p>
+<p><?= t('reset_request_new_link') ?></p>
 
-<a href="/sitrass/public/auth/forgotPassword" class="btn-link">Bumalik</a>
+<a href="/sitrass/public/auth/forgotPassword" class="btn-link"><?= t('btn_back') ?></a>
 
 <?php require __DIR__ . '/_auth_footer.php'; ?>

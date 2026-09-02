@@ -65,7 +65,7 @@
         </div>
         <div class="main-content">
             <div class="topbar">
-                <button class="menu-toggle" id="menuToggle">☰ Menu</button>
+                <button class="menu-toggle" id="menuToggle">☰ <?= t('menu_label') ?></button>
                 <h2 style="margin:0;"><?= htmlspecialchars($pageHeadingC) ?></h2>
                 <div class="user-info"><?= htmlspecialchars($_SESSION['full_name'] ?? '') ?></div>
             </div>

@@ -3,7 +3,7 @@
 <h2><?= t('rate_list_title') ?></h2>
 
 <?php if (empty($trips)): ?>
-    <div class="empty-state">Wala kang biyaheng naghihintay ng rating sa ngayon.</div>
+    <div class="empty-state"><?= t('empty_no_trip_to_rate') ?></div>
 <?php else: ?>
     <?php foreach ($trips as $t): ?>
         <div class="card list-card">
@@ -11,7 +11,7 @@
                 <span style="font-family:monospace; font-weight:700; color:var(--teal-dark);"><?= htmlspecialchars($t['reference_code']) ?></span><br>
                 <strong><?= htmlspecialchars($t['pickup_name']) ?> &rarr; <?= htmlspecialchars($t['dropoff_name']) ?></strong><br>
                 <span style="font-size:0.85rem;"><?= htmlspecialchars($t['travel_date']) ?> &middot; <?= htmlspecialchars($t['plate_number']) ?>
-                    <?php if ($t['driver_name']): ?> &middot; Driver: <?= htmlspecialchars($t['driver_name']) ?><?php endif; ?>
+                    <?php if ($t['driver_name']): ?> &middot; <?= t('label_driver') ?>: <?= htmlspecialchars($t['driver_name']) ?><?php endif; ?>
                 </span>
             </div>
             <a href="/sitrass/public/customer/rate/<?= (int)$t['booking_id'] ?>" class="btn" style="display:inline-block; width:auto; padding:0.5rem 1.2rem;"><?= t('btn_rate') ?></a>

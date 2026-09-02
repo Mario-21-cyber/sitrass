@@ -26,7 +26,7 @@
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <div class="sidebar" id="sidebar">
             <img src="/sitrass/public/img/logo.png" alt="SITRASS" class="logo">
-            <div class="brand">SITRASS Admin</div>
+            <div class="brand">SITRASS <?= t('role_admin') ?></div>
 
             <div class="nav-section-label"><?= t('nav_section_overview') ?></div>
             <a class="nav-item<?= navActive('/admin/dashboard', $currentPath) ?>" href="/sitrass/public/admin/dashboard">
@@ -100,7 +100,7 @@
         </div>
         <div class="main-content">
             <div class="topbar">
-                <button class="menu-toggle" id="menuToggle">☰ Menu</button>
+                <button class="menu-toggle" id="menuToggle">☰ <?= t('menu_label') ?></button>
                 <h2 style="margin:0;"><?= htmlspecialchars($pageHeading ?? '') ?></h2>
                 <div class="user-info"><?= htmlspecialchars($_SESSION['full_name'] ?? '') ?> (<?= htmlspecialchars($_SESSION['role'] ?? '') ?>)</div>
             </div>

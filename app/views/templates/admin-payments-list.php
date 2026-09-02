@@ -3,8 +3,8 @@
 <?php if (empty($payments)): ?>
     <div class="empty-state">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;color:var(--border);margin-bottom:0.75rem;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <div>Walang pending na payment sa ngayon.</div>
-        <div class="text-sm">Lahat ng payment ay na-verify na.</div>
+        <div><?= t('empty_no_pending_payments') ?></div>
+        <div class="text-sm"><?= t('empty_all_payments_verified') ?></div>
     </div>
 <?php else: ?>
     <table>

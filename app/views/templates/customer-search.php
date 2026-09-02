@@ -39,7 +39,7 @@
 
 <?php if ($results !== null): ?>
     <?php if (empty($results)): ?>
-        <div class="empty-state">Walang nahanap na biyahe na tugma sa iyong hinanap.</div>
+        <div class="empty-state"><?= t('search_empty') ?></div>
     <?php else: ?>
         <?php foreach ($results as $trip): ?>
             <div class="card list-card">
@@ -50,7 +50,7 @@
                     </span><br>
                     <span style="font-size:0.85rem;">
                         <?= htmlspecialchars($trip['plate_number']) ?> - <?= htmlspecialchars($trip['make'] . ' ' . $trip['model']) ?>
-                        &middot; <?= (int)$trip['available_seats'] ?> upuang bakante
+                        &middot; <?= (int)$trip['available_seats'] ?> <?= t('label_available_seats') ?>
                         <?php if ($trip['driver_name']): ?>
                             &middot; Driver: <?= htmlspecialchars($trip['driver_name']) ?>
                         <?php endif; ?>
@@ -60,8 +60,8 @@
                     <div style="font-family:'SF Mono', monospace; font-size:1.2rem; font-weight:700; color:var(--teal-dark);">
                         ₱<?= htmlspecialchars($trip['fare_per_seat']) ?>
                     </div>
-                    <span style="font-size:0.8rem; color:var(--ocean);">per upuan</span><br>
-                    <a href="/sitrass/public/customer/book/<?= (int)$trip['schedule_id'] ?>" class="btn" style="display:inline-block; width:auto; padding:0.4rem 1rem; margin-top:0.5rem;">Mag-book</a>
+                    <span style="font-size:0.8rem; color:var(--ocean);"><?= t('label_per_seat') ?></span><br>
+                    <a href="/sitrass/public/customer/book/<?= (int)$trip['schedule_id'] ?>" class="btn" style="display:inline-block; width:auto; padding:0.4rem 1rem; margin-top:0.5rem;"><?= t('btn_book') ?></a>
                 </div>
             </div>
         <?php endforeach; ?>

@@ -11,7 +11,7 @@
 <?php endif; ?>
 
 <?php if (empty($reservations)): ?>
-    <p>Wala ka pang booking. <a href="/sitrass/public/customer/search">Maghanap ng biyahe</a>.</p>
+    <p><?= t('empty_no_bookings') ?> <a href="/sitrass/public/customer/search"><?= t('link_find_trip') ?></a>.</p>
 <?php else: ?>
     <?php foreach ($reservations as $r): ?>
         <div style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:1.25rem; margin-bottom:1rem;">
