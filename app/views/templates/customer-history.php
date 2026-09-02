@@ -9,7 +9,7 @@
         <div class="card list-card">
             <div>
                 <span style="font-family:monospace; font-weight:700; color:var(--teal-dark);"><?= htmlspecialchars($r['reference_code']) ?></span><br>
-                <span style="font-size:0.85rem;"><?= t('th_date') ?>: <?= htmlspecialchars($r['first_travel_date']) ?> &middot; <?= (int)$r['passenger_count'] ?> <?= t('unit_passengers') ?></span>
+                                <span style="font-size:0.85rem;"><?= t('th_date') ?>: <?= htmlspecialchars($r['first_travel_date'] ?? '—') ?> &middot; <?= (int)$r['passenger_count'] ?> <?= t('unit_passengers') ?></span>
             </div>
             <span class="badge <?= $r['status'] === 'completed' ? 'badge-active' : 'badge-pending' ?>"><?= t('status_' . $r['status']) ?></span>
         </div>
