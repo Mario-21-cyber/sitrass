@@ -71,7 +71,7 @@ public function getForDriver($driverId) {
          JOIN locations o ON o.location_id = b.pickup_location_id
          JOIN locations d ON d.location_id = b.dropoff_location_id
          WHERE b.driver_id = ?
-         ORDER BY b.travel_date ASC, b.pickup_time ASC"
+         ORDER BY b.travel_date DESC, b.pickup_time DESC"
     );
     $stmt->execute([$driverId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);

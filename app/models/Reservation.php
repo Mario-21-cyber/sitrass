@@ -45,9 +45,21 @@ class Reservation extends Model {
         return $code;
     }
 
-    public function getByCustomerId($customerId) {
+        public function getByCustomerId($customerId) {
+        // Kung walang totoong booking record ang isang reservation (dapat
+        // bihira na lang mangyari ito), gamitin na lang ang petsa ng
+        // paggawa ng reservation bilang fallback, para may makita pa ring
+        // makabuluhang petsa sa halip na blangko. Manatiling ORDER BY
+        // created_at DESC para tama ang pagkakasunud-sunod - pinakabago
+        // muna, tulad ng dapat.
         $stmt = $this->db->prepare(
             "SELECT vrs.*,
+                    COALESCE(
+                        (SELECT b.travel_date FROM bookings b
+                           WHERE b.reservation_id = vrs.reservation_id
+                           ORDER BY b.travel_date ASC LIMIT 1),
+                        DATE(vrs.created_at)
+                    ) AS first_travel_date,
                     (SELECT b.booking_id FROM bookings b
                        WHERE b.reservation_id = vrs.reservation_id
                        ORDER BY b.travel_date ASC LIMIT 1) AS first_booking_id,
