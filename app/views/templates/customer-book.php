@@ -15,7 +15,7 @@
 <div style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:1.5rem; margin-bottom:1.5rem;">
     <strong><?= htmlspecialchars($route['origin_name']) ?> &rarr; <?= htmlspecialchars($route['destination_name']) ?></strong><br>
     <span style="color:var(--ocean);"><?= htmlspecialchars($schedule['departure_date']) ?> @ <?= htmlspecialchars($schedule['departure_time']) ?></span><br>
-    <span style="font-size:0.9rem;"><?= (int)$schedule['available_seats'] ?> <?= t('label_available_seats') ?> &middot; ₱<?= htmlspecialchars($schedule['fare_per_seat']) ?> <?= t('label_per_seat') ?></span>
+            <span style="font-size:0.9rem;"><?= (int)$schedule['available_seats'] ?> <?= t('label_available_seats') ?> &middot; ₱<?= htmlspecialchars($schedule['fare_per_seat']) ?> <?= t('label_per_seat') ?></span>
 </div>
 
 <form method="POST" action="/sitrass/public/customer/confirmBooking" style="max-width:400px;">
@@ -24,7 +24,7 @@
 
     <div class="field">
         <label for="bk_pax"><?= t('label_passenger_count') ?></label>
-        <input type="number" id="bk_pax" name="passenger_count" value="1" min="1" max="<?= (int)$schedule['available_seats'] ?>" required>
+                        <input type="number" id="bk_pax" name="passenger_count" value="1" min="1" max="<?= (int)$schedule['available_seats'] ?>" required>
     </div>
 
     <div class="field">

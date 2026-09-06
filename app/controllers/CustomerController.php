@@ -90,7 +90,7 @@ public function confirmBooking() {
         die('Hindi na available ang biyaheng ito.');
     }
 
-    if ($passengerCount < 1 || $passengerCount > $schedule['available_seats']) {
+            if ($passengerCount < 1 || $passengerCount > $schedule['available_seats']) {
         $_SESSION['book_errors'] = ['Hindi valid ang bilang ng pasahero, o kulang na ang natitirang upuan.'];
         header('Location: /sitrass/public/customer/book/' . $scheduleId);
         exit;
@@ -111,7 +111,7 @@ public function confirmBooking() {
     $db->beginTransaction();
 
     try {
-        $scheduleModelTx = new TripSchedule();
+                        $scheduleModelTx = new TripSchedule();
 
         // Atomic na pagbawas - ito ang unang linya ng depensa laban sa overbooking
         $decremented = $scheduleModelTx->decrementSeats($scheduleId, $passengerCount);
@@ -408,7 +408,7 @@ public function cancelBooking() {
         // Ibalik ang upuan sa bawat schedule na naka-link sa reservation na ito
         foreach ($bookings as $b) {
             if ($b['schedule_id']) {
-                $scheduleModel->incrementSeats($b['schedule_id'], $b['seats_booked']);
+                                $scheduleModel->restoreWholeVan($b['schedule_id']);
             }
         }
 
@@ -507,8 +507,8 @@ public function confirmReschedule() {
 
     try {
         // Ibalik ang upuan sa lumang schedule, bawasan ang upuan sa bago
-        $scheduleModel->incrementSeats($booking['schedule_id'], $booking['seats_booked']);
-        $decremented = $scheduleModel->decrementSeats($newScheduleId, $booking['seats_booked']);
+                $scheduleModel->restoreWholeVan($booking['schedule_id']);
+        $decremented = $scheduleModel->bookWholeVan($newScheduleId);
 
         if (!$decremented) {
             $db->rollBack();

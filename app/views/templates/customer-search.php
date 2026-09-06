@@ -50,7 +50,7 @@
                     </span><br>
                     <span style="font-size:0.85rem;">
                         <?= htmlspecialchars($trip['plate_number']) ?> - <?= htmlspecialchars($trip['make'] . ' ' . $trip['model']) ?>
-                        &middot; <?= (int)$trip['available_seats'] ?> <?= t('label_available_seats') ?>
+                                                                        &middot; <?= (int)$trip['available_seats'] ?> <?= t('label_available_seats') ?>
                         <?php if ($trip['driver_name']): ?>
                             &middot; Driver: <?= htmlspecialchars($trip['driver_name']) ?>
                         <?php endif; ?>

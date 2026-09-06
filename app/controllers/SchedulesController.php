@@ -47,7 +47,7 @@ class SchedulesController extends Controller {
             exit;
         }
 
-        $validator = new Validator($_POST);
+                        $validator = new Validator($_POST);
         $validator->required('route_id', 'Ruta')
             ->required('van_id', 'Van')
             ->required('departure_date', 'Petsa ng biyahe')

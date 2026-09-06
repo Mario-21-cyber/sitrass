@@ -61,11 +61,10 @@
             <input type="time" id="s_arrival" name="estimated_arrival" value="<?= htmlspecialchars($old['estimated_arrival'] ?? '') ?>">
         </div>
 
-        <div class="field">
+                        <div class="field">
             <label for="s_seats"><?= t('th_seats') ?></label>
             <input type="number" id="s_seats" name="total_seats" value="<?= htmlspecialchars($old['total_seats'] ?? '15') ?>" required min="1" max="30">
         </div>
-
         <div class="field">
             <label for="s_fare"><?= t('label_fare_per_seat') ?></label>
             <input type="number" step="0.01" id="s_fare" name="fare_per_seat" value="<?= htmlspecialchars($old['fare_per_seat'] ?? '0') ?>" required>
