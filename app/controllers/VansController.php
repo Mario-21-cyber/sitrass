@@ -86,6 +86,100 @@ class VansController extends Controller {
         header('Location: /sitrass/public/vans');
         exit;
     }
+
+    public function updateRentPrice() {
+        if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+            die('Invalid na session.');
+        }
+
+        $vanId = (int)($_POST['van_id'] ?? 0);
+        $rate = (float)($_POST['rent_price'] ?? 0);
+
+        if ($vanId > 0 && $rate >= 0) {
+            $vanModel = new Van();
+            $vanModel->updateRentPrice($vanId, $rate);
+        }
+
+        header('Location: /sitrass/public/vans');
+        exit;
+    }
+
+    // Mga van na irehistro ng driver - naghihintay ng approval
+    public function pendingVans() {
+        $vanModel = new Van();
+        $vans = $vanModel->getAllByStatus('pending');
+
+        $message = $_SESSION['van_action_msg'] ?? null;
+        unset($_SESSION['van_action_msg']);
+
+        View::render('admin-pending-vans', [
+            'pageTitle' => t('nav_pending_vans') . ' - SITRASS Admin',
+            'pageHeading' => t('nav_pending_vans'),
+            'vans' => $vans,
+            'message' => $message,
+        ]);
+    }
+
+    public function approveVan() {
+        if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+            die('Invalid na session.');
+        }
+
+        $vanId = (int)($_POST['van_id'] ?? 0);
+        if ($vanId > 0) {
+            $vanModel = new Van();
+            $vanModel->updateStatus($vanId, 'active');
+            $_SESSION['van_action_msg'] = t('vans_approved_msg');
+        }
+
+        header('Location: /sitrass/public/vans/pendingVans');
+        exit;
+    }
+
+    public function removeVan() {
+        if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+            die('Invalid na session.');
+        }
+
+        $vanId = (int)($_POST['van_id'] ?? 0);
+        if ($vanId > 0) {
+            $vanModel = new Van();
+            $vanModel->softDelete($vanId);
+            $_SESSION['van_action_msg'] = t('vans_removed_msg');
+        }
+
+        $back = ($_POST['from'] ?? '') === 'pending' ? '/sitrass/public/vans/pendingVans' : '/sitrass/public/vans';
+        header('Location: ' . $back);
+        exit;
+    }
+
+    // Save ng inline edit sa Fleet Overview (plate/van/type/seats)
+    public function updateVan() {
+        if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+            die('Invalid na session.');
+        }
+
+        $vanId = (int)($_POST['van_id'] ?? 0);
+        if ($vanId > 0) {
+            $vanModel = new Van();
+            $existing = $vanModel->getById($vanId);
+
+            $plate = trim($_POST['plate_number'] ?? '');
+            if ($existing && $plate !== '' && ($plate === $existing['plate_number'] || !$vanModel->plateExists($plate, $vanId))) {
+                $vanModel->updateAdmin($vanId, [
+                    'plate_number' => $plate,
+                    'make' => trim($_POST['make'] ?? $existing['make']),
+                    'model' => trim($_POST['model'] ?? $existing['model']),
+                    'van_type' => in_array($_POST['van_type'] ?? '', ['standard','premium','tourist']) ? $_POST['van_type'] : $existing['van_type'],
+                    'seating_capacity' => max(1, min(30, (int)($_POST['seating_capacity'] ?? $existing['seating_capacity']))),
+                ]);
+                $_SESSION['van_action_msg'] = t('vans_updated_msg');
+            }
+        }
+
+        header('Location: /sitrass/public/vans');
+        exit;
+    }
     public function images($vanId) {
     $vanId = (int)$vanId;
     $vanModel = new Van();
@@ -159,10 +253,12 @@ public function setPrimaryImage() {
     $imageModel = new VanImage();
     $imageModel->clearPrimary($vanId);
 
-    $stmt = null; // ginagamit lang natin ang db directly dito para sa simpleng update
-    $db = (new Van())->getById($vanId); // tinitiyak lang na valid ang van
-    if ($db) {
-        $conn = new PDO('mysql:host=localhost;dbname=sitrass_db;charset=utf8mb4', 'root', '');
+    // Tinitiyak lang na valid ang van, pagkatapos gamitin ang shared
+    // database connection ng model ( Hindi na direktang PDO - para gumana
+    // ito anuman ang database settings, lokal man o live hosting).
+    $vanModel = new Van();
+    if ($vanModel->getById($vanId)) {
+        $conn = $vanModel->getConnection();
         $stmt = $conn->prepare("UPDATE van_images SET is_primary = 1 WHERE image_id = ? AND van_id = ?");
         $stmt->execute([$imageId, $vanId]);
     }

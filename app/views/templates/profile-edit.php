@@ -7,11 +7,11 @@ require __DIR__ . '/' . $headerFile;
 <div style="max-width:560px; margin:0 auto;">
 
     <?php if (!empty($message)): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
+        <div class="alert alert-success"><?= htmlspecialchars($message ?? '') ?></div>
     <?php endif; ?>
 
     <?php if (!empty($error)): ?>
-        <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+        <div class="alert alert-error"><?= htmlspecialchars($error ?? '') ?></div>
     <?php endif; ?>
 
         <div class="form-section">

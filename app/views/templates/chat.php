@@ -1,6 +1,6 @@
 <?php require __DIR__ . '/' . $headerFile; ?>
 
-<h2><?= sprintf(t('heading_chat_with'), htmlspecialchars($otherPartyName)) ?></h2>
+<h2><?= sprintf(t('heading_chat_with'), htmlspecialchars($otherPartyName ?? '')) ?></h2>
 
 <div id="chatMessages" class="card" style="height:400px; overflow-y:auto; display:flex; flex-direction:column; gap:0.5rem; padding:1rem;"></div>
 

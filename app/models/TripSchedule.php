@@ -4,6 +4,9 @@ class TripSchedule extends Model {
     protected $table = 'trip_schedules';
 
     public function getAll() {
+        // Hindi kasama ang mga schedule na may biyahe nang COMPLETED -
+        // tapos na ang trabaho diyan kahit hindi napuno ang upuan,
+        // kaya wala nang silbi na ipakita pa sa admin.
         $stmt = $this->db->query(
             "SELECT ts.*, r.route_code, r.route_name, v.plate_number, v.make, v.model,
                     CONCAT(u.first_name, ' ', u.last_name) AS driver_name
@@ -12,6 +15,10 @@ class TripSchedule extends Model {
              JOIN vans v ON v.van_id = ts.van_id
              LEFT JOIN drivers d ON d.driver_id = ts.driver_id
              LEFT JOIN users u ON u.user_id = d.user_id
+             WHERE NOT EXISTS (
+                 SELECT 1 FROM bookings b
+                 WHERE b.schedule_id = ts.schedule_id AND b.status = 'completed'
+             )
              ORDER BY ts.departure_date DESC, ts.departure_time DESC"
         );
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -106,8 +113,54 @@ class TripSchedule extends Model {
         );
         $stmt->execute([$reason, $scheduleId]);
     }
+
+    // May bayad nang booking sa schedule na ito? (deposit man o buo)
+    // Kung mayroon, hindi na puwedeng kanselahin ng admin ang schedule.
+    public function hasPaidBooking($scheduleId) {
+        $stmt = $this->db->prepare(
+            "SELECT COUNT(*) FROM bookings b
+             JOIN reservations rs ON rs.reservation_id = b.reservation_id
+             WHERE b.schedule_id = ? AND b.status IN ('pending','accepted','en_route')
+               AND rs.payment_status IN ('paid','partially_paid')"
+        );
+        $stmt->execute([$scheduleId]);
+        return $stmt->fetchColumn() > 0;
+    }
+    // Dati itong SQL VIEW sa database (vw_available_schedules). Sa
+    // InfinityFree free hosting ay wala ang CREATE VIEW privilege, kaya
+    // iniline na lang natin ang definition bilang derived table. Pareho
+    // lang ang ibinabalik - hindi na lang umaasa sa DB privileges.
+    protected function availableSchedulesSql() {
+        return "(SELECT ts.schedule_id, ts.departure_date, ts.departure_time,
+                ts.estimated_arrival, ts.available_seats, ts.total_seats,
+                ts.fare_per_seat, ts.booking_mode,
+                r.route_id, r.route_code, r.route_name, r.distance_km,
+                r.estimated_duration_minutes,
+                origin.location_id AS origin_id, origin.name AS origin_name,
+                dest.location_id AS destination_id, dest.name AS destination_name,
+                v.van_id, v.plate_number, v.make, v.model, v.van_type,
+                v.has_aircon, v.has_wifi, d.driver_id,
+                CONCAT(du.first_name, ' ', du.last_name) AS driver_name,
+                d.rating_average, d.rating_count,
+                (SELECT vi.image_path FROM van_images vi
+                  WHERE vi.van_id = v.van_id AND vi.is_primary = 1 LIMIT 1) AS primary_image
+             FROM trip_schedules ts
+             JOIN routes r ON r.route_id = ts.route_id AND r.is_active = 1
+             JOIN locations origin ON origin.location_id = r.origin_location_id
+             JOIN locations dest ON dest.location_id = r.destination_location_id
+             JOIN vans v ON v.van_id = ts.van_id AND v.status = 'active' AND v.deleted_at IS NULL
+             LEFT JOIN drivers d ON d.driver_id = ts.driver_id
+             LEFT JOIN users du ON du.user_id = d.user_id
+             WHERE ts.status = 'scheduled'
+               AND ts.available_seats > 0
+               AND TIMESTAMP(ts.departure_date, ts.departure_time) > NOW()
+               AND NOT EXISTS(SELECT 1 FROM bookings b
+                 WHERE b.schedule_id = ts.schedule_id
+                   AND b.status IN ('en_route','completed'))) AS vw_available_schedules";
+    }
+
     public function search($origin = null, $destination = null, $date = null) {
-    $sql = "SELECT * FROM vw_available_schedules WHERE 1=1";
+    $sql = "SELECT * FROM " . $this->availableSchedulesSql() . " WHERE 1=1";
     $params = [];
 
     if ($origin) {
@@ -159,7 +212,7 @@ public function incrementSeats($scheduleId, $seatsToRestore) {
 }
 
 public function getByRoute($routeId, $excludeScheduleId = null) {
-    $sql = "SELECT * FROM vw_available_schedules WHERE route_id = ?";
+    $sql = "SELECT * FROM " . $this->availableSchedulesSql() . " WHERE route_id = ?";
     $params = [$routeId];
 
     if ($excludeScheduleId) {

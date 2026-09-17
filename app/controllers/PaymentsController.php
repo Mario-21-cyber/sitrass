@@ -31,10 +31,18 @@ class PaymentsController extends Controller {
         $payment = $paymentModel->getById($paymentId);
         $paymentModel->verify($paymentId, $_SESSION['user_id']);
 
+        // Rental deposit payment? Markahang PAID + CONFIRMED ang rental -
+        // makakakuha na ang customer ng QR para sa pickup.
+        if (!empty($payment['rental_id'])) {
+            $rentalModel = new VanRental();
+            $rentalModel->markPaid($payment['rental_id']);
+        }
+
         $auditModel = new AuditLog();
         $auditModel->log($_SESSION['user_id'], 'payment.verified', 'payment', $paymentId);
 
-        // Kunin ang email ng customer para sa notification
+        // Kunin ang email ng customer para sa notification (reservation payments lang)
+        if (empty($payment['rental_id'])) {
         $db = (new Model())->getConnection();
                 $stmt = $db->prepare(
             "SELECT u.email, u.first_name, u.phone, rs.reference_code, rs.total_amount, rs.balance_due
@@ -68,6 +76,7 @@ class PaymentsController extends Controller {
                     : 'SITRASS: Na-verify ang bayad mo (' . $info['reference_code'] . '). Buo na ang bayad!';
                 Sms::send($info['phone'], $smsText);
             }
+        }
         }
     }
 

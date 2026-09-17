@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle ?? 'SITRASS') ?></title>
     <link rel="stylesheet" href="/sitrass/public/css/style.css">
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('form').forEach(function(f) {
+            f.addEventListener('submit', function() {
+                var btn = f.querySelector('button[type="submit"]');
+                if (btn && !btn.classList.contains('btn-ghost') && !btn.classList.contains('btn-sm')) {
+                    f.classList.add('submitting');
+                }
+            });
+        });
+    });
+    </script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -38,6 +50,10 @@
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                 <?= t('nav_my_bookings') ?>
             </a>
+                        <a class="nav-item<?= navActiveCust('/customer/rentVan', $currentPath) ?>" href="/sitrass/public/customer/rentVan">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8h13v9H1z"/><path d="M14 11h4l3 3v3h-7z"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/></svg>
+                <?= t('nav_rent_van') ?>
+            </a>
             <a class="nav-item<?= navActiveCust('/customer/history', $currentPath) ?>" href="/sitrass/public/customer/history">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>
                 <?= t('nav_history') ?>
@@ -66,6 +82,6 @@
         <div class="main-content">
             <div class="topbar">
                 <button class="menu-toggle" id="menuToggle">☰ <?= t('menu_label') ?></button>
-                <h2 style="margin:0;"><?= htmlspecialchars($pageHeadingC) ?></h2>
-                <div class="user-info"><?= htmlspecialchars($_SESSION['full_name'] ?? '') ?></div>
+                <h2 style="margin:0;"><?= htmlspecialchars($pageHeadingC ?? '') ?></h2>
+                <div class="user-info"><?= htmlspecialchars($_SESSION['full_name'] ?? '') ?> (<?= t('role_customer') ?>)</div>
             </div>

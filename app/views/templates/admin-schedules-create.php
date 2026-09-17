@@ -4,7 +4,7 @@
     <div class="alert alert-error">
         <ul style="margin:0; padding-left: 1.2rem;">
             <?php foreach ($errors as $error): ?>
-                <li><?= htmlspecialchars($error) ?></li>
+                <li><?= htmlspecialchars($error ?? '') ?></li>
             <?php endforeach; ?>
         </ul>
     </div>
@@ -63,7 +63,7 @@
 
                         <div class="field">
             <label for="s_seats"><?= t('th_seats') ?></label>
-            <input type="number" id="s_seats" name="total_seats" value="<?= htmlspecialchars($old['total_seats'] ?? '15') ?>" required min="1" max="30">
+            <input type="number" id="s_seats" name="total_seats" value="<?= htmlspecialchars($old['total_seats'] ?? '14') ?>" required min="1" max="14">
         </div>
         <div class="field">
             <label for="s_fare"><?= t('label_fare_per_seat') ?></label>
@@ -73,9 +73,9 @@
         <div class="field">
             <label for="s_mode"><?= t('label_booking_mode') ?></label>
             <select id="s_mode" name="booking_mode" required>
-                <option value="seat"><?= t('mode_per_seat') ?></option>
-                <option value="exclusive"><?= t('mode_exclusive') ?></option>
+                <option value="seat" selected><?= t('mode_per_seat') ?></option>
             </select>
+            <small class="text-muted" style="display:block; margin-top:0.25rem;"><?= t('mode_seat_only_note') ?></small>
         </div>
 
         <button type="submit" class="btn"><?= t('btn_save_schedule') ?></button>

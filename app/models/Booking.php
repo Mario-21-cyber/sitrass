@@ -223,4 +223,47 @@ public function getActiveBookingForDriver($driverId) {
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     return $row ?: null;
 }
+// ---------------------------------------------------------------------
+// TRAVEL HISTORY NG CUSTOMER - base sa bookings, hindi lang sa status
+// ng reservation. Kasama ang: (1) mga biyahe na completed ng driver,
+// (2) mga na-cancel/rejected, at (3) mga biyaheng lumipas na ang petsa
+// kahit hindi na-update ang reservation status. Ito ang nag-aayos ng
+// "hindi nagse-save ang travel history" - dahil dati, ang mga completed
+// trips na hindi pa na-update ang reservation status ay hindi lumalabas
+// (ang reservation status ay hindi kailanman ginagawang 'completed' kapag
+// tinapos ng driver ang biyahe), kaya laging walang laman ang history.
+// ---------------------------------------------------------------------
+public function getHistoryForCustomer($customerId) {
+    $stmt = $this->db->prepare(
+        "SELECT rs.reference_code, rs.passenger_count, rs.status,
+                agg.first_travel_date, agg.last_travel_date, agg.leg_count,
+                (SELECT b2.pickup_time FROM bookings b2
+                  WHERE b2.reservation_id = rs.reservation_id
+                  ORDER BY b2.travel_date ASC, b2.pickup_time ASC LIMIT 1) AS first_pickup_time,
+                CASE
+                    WHEN agg.cancelled_count = agg.leg_count THEN 'cancelled'
+                    WHEN agg.completed_count > 0 OR agg.last_travel_date < CURDATE() THEN 'completed'
+                    ELSE rs.status
+                END AS history_status
+         FROM reservations rs
+         JOIN (
+             SELECT reservation_id,
+                    MIN(travel_date) AS first_travel_date,
+                    MAX(travel_date) AS last_travel_date,
+                    COUNT(*) AS leg_count,
+                    SUM(status = 'completed') AS completed_count,
+                    SUM(status IN ('cancelled', 'rejected')) AS cancelled_count
+             FROM bookings
+             GROUP BY reservation_id
+         ) agg ON agg.reservation_id = rs.reservation_id
+         WHERE rs.customer_id = ?
+           AND (agg.completed_count > 0
+                OR agg.cancelled_count = agg.leg_count
+                OR agg.last_travel_date < CURDATE())
+         ORDER BY agg.first_travel_date DESC"
+    );
+    $stmt->execute([$customerId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }

@@ -107,22 +107,22 @@ INSERT INTO `payment_methods`
 INSERT INTO `locations`
   (`name`, `location_type`, `category`, `barangay`, `municipality`, `latitude`, `longitude`, `landmark`, `sort_order`) VALUES
 -- Magdiwang
-('Ambulong Port',              'both', 'port',        'Ambulong',   'Magdiwang',     12.50361000, 122.51528000, 'Main seaport serving Magdiwang',              10),
-('Magdiwang Town Proper',      'both', 'town_proper', 'Poblacion',  'Magdiwang',     12.48861000, 122.52306000, 'Municipal hall area',                         11),
-('Mt. Guiting-Guiting Park HQ','both', 'landmark',    'Tampayan',   'Magdiwang',     12.45500000, 122.53500000, 'DENR natural park registration office',       12),
-('Cataja Falls Junction',      'both', 'landmark',    'Tampayan',   'Magdiwang',     12.46500000, 122.51000000, 'Trailhead drop-off point',                    13),
+('Ambulong Port',              'both', 'port',        'Ambulong',   'Magdiwang',     12.49509000, 122.48912000, 'Main seaport serving Magdiwang',              10),
+('Magdiwang Town Proper',      'both', 'town_proper', 'Poblacion',  'Magdiwang',     12.49132000, 122.51468000, 'Municipal hall area',                         11),
+('Mt. Guiting-Guiting Park HQ','both', 'landmark',    'Tampayan',   'Magdiwang',     12.49202000, 122.52893000, 'DENR natural park registration office',       12),
+('Cataja Falls Junction',      'both', 'landmark',    'Tampayan',   'Magdiwang',     12.45906000, 122.53076000, 'Trailhead drop-off point',                    13),
 -- San Fernando
-('Azagra Port',                'both', 'port',        'Azagra',     'San Fernando',  12.32778000, 122.53194000, 'Seaport serving San Fernando',                20),
-('San Fernando Town Proper',   'both', 'town_proper', 'Poblacion',  'San Fernando',  12.31750000, 122.55222000, 'Municipal hall area',                         21),
-('Cresta de Gallo Jump-off',   'both', 'landmark',    'Azagra',     'San Fernando',  12.32000000, 122.53500000, 'Boat transfer point for island tours',        22),
-('Otod',                       'both', 'barangay',    'Otod',       'San Fernando',  12.34000000, 122.58000000, 'Coastal barangay along the circumferential road', 23),
-('Taclobo (San Fernando)',     'both', 'barangay',    'Taclobo',    'San Fernando',  12.33000000, 122.61000000, 'Barangay along the east-south road',          24),
+('Azagra Port',                'both', 'port',        'Azagra',     'San Fernando',  12.27974000, 122.63209000, 'Seaport serving San Fernando',                20),
+('San Fernando Town Proper',   'both', 'town_proper', 'Poblacion',  'San Fernando',  12.31450000, 122.59750000, 'Municipal hall area',                         21),
+('Cresta de Gallo Jump-off',   'both', 'landmark',    'Azagra',     'San Fernando',  12.29200000, 122.64000000, 'Boat transfer point for island tours',        22),
+('Otod',                       'both', 'barangay',    'Otod',       'San Fernando',  12.29837000, 122.65022000, 'Coastal barangay along the circumferential road', 23),
+('Taclobo (San Fernando)',     'both', 'barangay',    'Taclobo',    'San Fernando',  12.31886000, 122.57926000, 'Barangay along the east-south road',          24),
 -- Cajidiocan
-('Cajidiocan Port',            'both', 'port',        'Poblacion',  'Cajidiocan',    12.41778000, 122.68250000, 'Seaport serving Cajidiocan',                  30),
-('Cajidiocan Town Proper',     'both', 'town_proper', 'Poblacion',  'Cajidiocan',    12.41111000, 122.64083000, 'Municipal hall area',                         31),
-('Lumbang Este',               'both', 'barangay',    'Lumbang Este','Cajidiocan',   12.43000000, 122.65000000, 'Northern barangay of Cajidiocan',             32),
+('Cajidiocan Port',            'both', 'port',        'Poblacion',  'Cajidiocan',    12.37120000, 122.68889000, 'Seaport serving Cajidiocan',                  30),
+('Cajidiocan Town Proper',     'both', 'town_proper', 'Poblacion',  'Cajidiocan',    12.36846000, 122.68617000, 'Municipal hall area',                         31),
+('Lumbang Este',               'both', 'barangay',    'Lumbang Este','Cajidiocan',   12.41703000, 122.66821000, 'Northern barangay of Cajidiocan',             32),
 ('Danao Norte',                'both', 'barangay',    'Danao Norte','Cajidiocan',    12.44500000, 122.63000000, 'Barangay along the north-east road',          33),
-('Sugod',                      'both', 'barangay',    'Sugod',      'Cajidiocan',    12.39000000, 122.62000000, 'Southern barangay of Cajidiocan',             34);
+('Sugod',                      'both', 'barangay',    'Sugod',      'Cajidiocan',    12.37887000, 122.68461000, 'Southern barangay of Cajidiocan',             34);
 
 -- ---------------------------------------------------------------------
 -- Routes -- inter-municipal legs on the circumferential road.

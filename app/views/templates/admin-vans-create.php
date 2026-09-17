@@ -4,7 +4,7 @@
     <div class="alert alert-error">
         <ul style="margin:0; padding-left: 1.2rem;">
             <?php foreach ($errors as $error): ?>
-                <li><?= htmlspecialchars($error) ?></li>
+                <li><?= htmlspecialchars($error ?? '') ?></li>
             <?php endforeach; ?>
         </ul>
     </div>

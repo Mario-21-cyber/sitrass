@@ -61,13 +61,18 @@ public function approve() {
         $auditModel = new AuditLog();
         $auditModel->log($_SESSION['user_id'], 'user.approved', 'user', $userId);
 
+        // Gawing awtomatiko ang login link batay sa host kung saan tumatakbo
+        // ang app - para gumana ito lokal at sa live hosting.
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+        $loginUrl = $scheme . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '/sitrass/public/auth/login';
+
         Mailer::send(
             $user['email'],
             $user['first_name'] . ' ' . $user['last_name'],
             'Na-approve na ang SITRASS Account Mo',
             '<p>Kumusta, ' . htmlspecialchars($user['first_name']) . '!</p>
              <p>Na-approve na ang iyong SITRASS account. Puwede ka nang mag-login gamit ang email at password mo.</p>
-             <p><a href="http://localhost/sitrass/public/auth/login">I-click dito para mag-login</a></p>'
+             <p><a href="' . htmlspecialchars($loginUrl) . '">I-click dito para mag-login</a></p>'
         );
 
         $settingModel = new SystemSetting();

@@ -4,12 +4,12 @@
 <div class="brand-sub"><?= t('title_password_reset') ?></div>
 
 <?php if (!empty($error)): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+    <div class="alert alert-error"><?= htmlspecialchars($error ?? '') ?></div>
 <?php endif; ?>
 
 <form method="POST" action="/sitrass/public/auth/updatePassword">
     <?= Csrf::field() ?>
-    <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+    <input type="hidden" name="token" value="<?= htmlspecialchars($token ?? '') ?>">
     <div class="field">
         <label for="new_password"><?= t('reset_new_password') ?></label>
         <input type="password" id="new_password" name="password" required>

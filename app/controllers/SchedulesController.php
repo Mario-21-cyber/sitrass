@@ -71,6 +71,23 @@ class SchedulesController extends Controller {
             exit;
         }
 
+        // 14 seats lang ang cap kada schedule ( Requirement)
+        if ((int)($_POST['total_seats'] ?? 0) > 14) {
+            $_SESSION['schedule_errors'] = ['Hanggang 14 seats lang ang maaaring i-set kada schedule.'];
+            $_SESSION['schedule_old'] = $_POST;
+            header('Location: /sitrass/public/schedules/create');
+            exit;
+        }
+
+        // Per-seat na lang ang booking mode - ang whole-van rental ay
+        // hiwalay nang feature (Rent a Van sa customer side).
+        if (($_POST['booking_mode'] ?? '') !== 'seat') {
+            $_SESSION['schedule_errors'] = ['Per-seat na lang ang booking mode sa mga schedule.'];
+            $_SESSION['schedule_old'] = $_POST;
+            header('Location: /sitrass/public/schedules/create');
+            exit;
+        }
+
                 $scheduleModel = new TripSchedule();
 
         // Kunin ang tantiyang tagal ng biyahe batay sa napiling ruta - dito
@@ -112,6 +129,15 @@ class SchedulesController extends Controller {
 
         if ($scheduleId > 0) {
             $scheduleModel = new TripSchedule();
+
+            // May bayad nang booking dito? Bawal i-cancel ng admin -
+            // may pera nang kasama ang biyaheng ito.
+            if ($scheduleModel->hasPaidBooking($scheduleId)) {
+                $_SESSION['schedule_cancel_error'] = t('error_schedule_paid_booking');
+                header('Location: /sitrass/public/schedules');
+                exit;
+            }
+
             $scheduleModel->cancel($scheduleId, $reason);
         }
 

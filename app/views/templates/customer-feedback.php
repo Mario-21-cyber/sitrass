@@ -1,16 +1,14 @@
 <?php require __DIR__ . '/_customer_header.php'; ?>
 
-<h2>Ipadala ang Iyong Feedback</h2>
-
 <?php if (!empty($message)): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
+    <div class="alert alert-success"><?= htmlspecialchars($message ?? '') ?></div>
 <?php endif; ?>
 
 <form method="POST" action="/sitrass/public/customer/submitFeedback" class="card" style="max-width:500px;">
     <?= Csrf::field() ?>
 
     <div class="field">
-        <label for="fb_category">Kategorya</label>
+        <label for="fb_category"><?= t('label_category') ?></label>
         <select id="fb_category" name="category" required>
             <option value="bug"><?= t('feedback_option_bug') ?></option>
             <option value="suggestion"><?= t('feedback_option_suggestion') ?></option>

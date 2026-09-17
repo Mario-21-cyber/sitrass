@@ -4,7 +4,7 @@
 <div class="brand-sub"><?= t('login_title') ?></div>
 
 <?php if (!empty($error)): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+    <div class="alert alert-error"><?= htmlspecialchars($error ?? '') ?></div>
 <?php endif; ?>
 
 <form method="POST" action="/sitrass/public/auth/authenticate">

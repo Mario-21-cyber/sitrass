@@ -15,6 +15,18 @@ class Route extends Model {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getById($routeId) {
+        $stmt = $this->db->prepare(
+            "SELECT r.*, o.name AS origin_name, d.name AS destination_name
+             FROM routes r
+             JOIN locations o ON o.location_id = r.origin_location_id
+             JOIN locations d ON d.location_id = r.destination_location_id
+             WHERE r.route_id = ?"
+        );
+        $stmt->execute([$routeId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function create($data) {
         $stmt = $this->db->prepare(
             "INSERT INTO routes (route_code, route_name, origin_location_id, destination_location_id,

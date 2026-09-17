@@ -4,7 +4,7 @@
 <div class="brand-sub"><?= t('forgot_subtitle') ?></div>
 
 <?php if (!empty($message)): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
+    <div class="alert alert-success"><?= htmlspecialchars($message ?? '') ?></div>
 <?php endif; ?>
 
 

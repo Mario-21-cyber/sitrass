@@ -183,16 +183,33 @@ public function loggedin() {
     $bookingModel = new Booking();
     $activeBooking = $customerId ? $bookingModel->getActiveBookingForCustomer($customerId) : null;
 
-    $unratedBooking = null;
+    // Aktibong VAN RENTAL - ipapakita rin sa dashboard (katulad ng shared).
+    $activeRental = null;
     if (!$activeBooking && $customerId) {
+        $activeRental = (new VanRental())->getActiveForCustomer($customerId);
+    }
+
+    $unratedBooking = null;
+    if (!$activeBooking && !$activeRental && $customerId) {
         $unrated = $bookingModel->getCompletedUnratedForCustomer($customerId);
         $unratedBooking = !empty($unrated) ? $unrated[0] : null;
     }
 
+    // Kapag wala pang unrated na shared booking, kunin ang tapos nang van
+    // rental na hindi pa na-rate - ipapakita sa dashboard ang "Pay Balance"
+    // o "Rate" na card (katulad ng shared booking flow).
+    $unratedRental = null;
+    if (!$activeBooking && !$activeRental && !$unratedBooking && $customerId) {
+        $unratedRentals = (new VanRental())->getCompletedUnratedForCustomer($customerId);
+        $unratedRental = !empty($unratedRentals) ? $unratedRentals[0] : null;
+    }
+
     View::render('customer-landing', [
-        'pageTitle' => t('customer_dashboard_title'),
+        'pageTitle' => t('nav_dashboard'),
         'activeBooking' => $activeBooking,
+        'activeRental' => $activeRental,
         'unratedBooking' => $unratedBooking,
+        'unratedRental' => $unratedRental,
     ]);
 }
 public function forgotPassword() {

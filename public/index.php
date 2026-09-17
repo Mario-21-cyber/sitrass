@@ -2,9 +2,18 @@
 
 session_start();
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Sa production (live hosting), huwag ipakita ang mga error sa screen -
+// nakakaapekto ito sa UX at security. Sa local development (XAMPP),
+// ipapakita pa rin para sa debugging.
+if (($_SERVER['HTTP_HOST'] ?? '') === 'localhost' || strpos($_SERVER['HTTP_HOST'] ?? '', '127.0.0.1') !== false) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+} else {
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+}
 
 // Direktang i-require ang Lang.php dahil ang function na t() ay hindi
 // class - hindi ito mahahanap ng autoloader (na batay lang sa class name).

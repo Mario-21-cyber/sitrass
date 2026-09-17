@@ -1,7 +1,11 @@
 <?php require __DIR__ . '/_admin_header.php'; ?>
 
-<div class="section-heading">
-    <h3 style="margin:0;"><?= t('schedules_page_title') ?></h3>
+<?php if (!empty($_SESSION['schedule_cancel_error'])): ?>
+    <div class="alert alert-error"><?= htmlspecialchars($_SESSION['schedule_cancel_error']) ?></div>
+    <?php unset($_SESSION['schedule_cancel_error']); ?>
+<?php endif; ?>
+
+<div class="section-heading" style="justify-content:flex-end;">
     <a href="/sitrass/public/schedules/create" class="btn" style="width:auto; padding:0.6rem 1.2rem;">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         <?= t('btn_add_schedule') ?>

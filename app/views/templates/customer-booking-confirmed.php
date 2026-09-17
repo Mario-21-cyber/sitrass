@@ -10,7 +10,7 @@
 <div style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:1.5rem;">
     <p><strong><?= t('label_passenger_count') ?>:</strong> <?= (int)$reservation['passenger_count'] ?></p>
     <p><strong><?= t('label_total_amount') ?>:</strong> ₱<?= htmlspecialchars($reservation['total_amount']) ?></p>
-    <p><strong>Kailangang Deposit (<?= htmlspecialchars(rtrim(rtrim(number_format($reservation['deposit_percentage'], 2), '0'), '.')) ?>%):</strong> ₱<?= htmlspecialchars($reservation['deposit_required']) ?></p>
+    <p><strong>Kailangang Deposit (<?= htmlspecialchars(rtrim(rtrim(number_format((float)($reservation['deposit_percentage'] ?? 30.00), 2), '0'), '.')) ?>%):</strong> ₱<?= htmlspecialchars($reservation['deposit_required']) ?></p>
     <p><strong><?= t('label_status') ?>:</strong> <span class="badge badge-pending"><?= t('status_' . $reservation['status']) ?></span></p>
 </div>
 

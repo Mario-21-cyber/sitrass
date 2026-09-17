@@ -1,6 +1,6 @@
 <?php require __DIR__ . '/_admin_header.php'; ?>
 
-<div class="filter-toolbar">
+<div class="filter-toolbar" style="display:flex; justify-content:center; flex-wrap:wrap; gap:0.5rem;">
     <a href="/sitrass/public/admin/users" class="<?= !$roleFilter ? 'btn' : 'btn-ghost' ?>" style="width:auto; text-decoration:none; padding:0.5rem 1rem;"><?= t('filter_all_roles') ?></a>
     <a href="/sitrass/public/admin/users?role=customer" class="<?= $roleFilter === 'customer' ? 'btn' : 'btn-ghost' ?>" style="width:auto; text-decoration:none; padding:0.5rem 1rem;"><?= t('filter_customers') ?></a>
     <a href="/sitrass/public/admin/users?role=driver" class="<?= $roleFilter === 'driver' ? 'btn' : 'btn-ghost' ?>" style="width:auto; text-decoration:none; padding:0.5rem 1rem;"><?= t('filter_drivers') ?></a>

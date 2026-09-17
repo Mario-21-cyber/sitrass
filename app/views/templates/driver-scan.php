@@ -45,8 +45,11 @@
         <canvas id="qrCanvas" style="display:none;"></canvas>
         <div style="position:absolute; inset:0; border:3px solid var(--amber-light); border-radius:var(--radius); pointer-events:none; opacity:0.6;"></div>
     </div>
-    <p id="cameraStatus" class="text-sm text-muted" style="margin-bottom:0.75rem;"></p>
-    <button type="button" id="cameraToggleBtn" class="btn" onclick="toggleCamera()"><?= t('qr_camera_start') ?></button>
+    <p id="cameraStatus" class="text-sm text-muted" style="text-align:center; margin-bottom:0.75rem;"></p>
+    <button type="button" id="cameraToggleBtn" class="btn" onclick="toggleCamera()" style="width:100%; display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.6rem 1rem;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span><?= t('qr_camera_start') ?></span>
+    </button>
 
     <form id="cameraForm" method="POST" action="/sitrass/public/driver/verifyQr" style="display:none;">
         <?= Csrf::field() ?>
@@ -121,7 +124,8 @@ function startCameraStream() {
             video.setAttribute('playsinline', true);
             video.play();
             container.style.display = 'block';
-            toggleBtn.textContent = <?= json_encode(t('qr_camera_stop')) ?>;
+            var sp = toggleBtn.querySelector('span');
+            if (sp) sp.textContent = <?= json_encode(t('qr_camera_stop')) ?>;
             statusEl.textContent = <?= json_encode(t('qr_camera_scanning')) ?>;
             scanLoopId = requestAnimationFrame(scanFrame);
         })
@@ -141,7 +145,8 @@ function stopCameraStream() {
         cameraStream = null;
     }
     document.getElementById('cameraContainer').style.display = 'none';
-    document.getElementById('cameraToggleBtn').textContent = <?= json_encode(t('qr_camera_start')) ?>;
+    var sp = document.getElementById('cameraToggleBtn').querySelector('span');
+    if (sp) sp.textContent = <?= json_encode(t('qr_camera_start')) ?>;
     document.getElementById('cameraStatus').textContent = '';
 }
 

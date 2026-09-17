@@ -6,14 +6,15 @@ class Rating extends Model {
     public function create($data) {
         $stmt = $this->db->prepare(
             "INSERT INTO ratings
-                (booking_id, customer_id, driver_id, van_id, overall_rating,
+                (booking_id, rental_id, customer_id, driver_id, van_id, overall_rating,
                  punctuality_rating, cleanliness_rating, driving_rating, comment)
              VALUES
-                (:booking_id, :customer_id, :driver_id, :van_id, :overall_rating,
+                (:booking_id, :rental_id, :customer_id, :driver_id, :van_id, :overall_rating,
                  :punctuality_rating, :cleanliness_rating, :driving_rating, :comment)"
         );
         $stmt->execute([
-            'booking_id' => $data['booking_id'],
+            'booking_id' => $data['booking_id'] ?? null,
+            'rental_id' => $data['rental_id'] ?? null,
             'customer_id' => $data['customer_id'],
             'driver_id' => $data['driver_id'],
             'van_id' => $data['van_id'],
@@ -84,4 +85,86 @@ class Rating extends Model {
             $this->recalculateDriverRating($driverId);
         }
     }
+public function getByBooking($bookingId) {
+    $stmt = $this->db->prepare("SELECT * FROM ratings WHERE booking_id = ? LIMIT 1");
+    $stmt->execute([$bookingId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+}
+
+// Rating ng isang van rental (katulad ng getByBooking)
+public function getByRental($rentalId) {
+    $stmt = $this->db->prepare("SELECT * FROM ratings WHERE rental_id = ? LIMIT 1");
+    $stmt->execute([$rentalId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+}
+
+public function update($ratingId, $data) {
+    $stmt = $this->db->prepare(
+        "UPDATE ratings
+         SET overall_rating = ?, punctuality_rating = ?, cleanliness_rating = ?, driving_rating = ?, comment = ?
+         WHERE rating_id = ?"
+    );
+    $stmt->execute([
+        $data['overall_rating'],
+        $data['punctuality_rating'] ?: null,
+        $data['cleanliness_rating'] ?: null,
+        $data['driving_rating'] ?: null,
+        $data['comment'] ?: null,
+        $ratingId,
+    ]);
+
+    // I-recalculate ang driver average dahil nagbago ang rating
+    $this->recalculateDriverRating($data['driver_id']);
+}
+
+// Base query para sa history ng mga rating ng customer - kasama ang
+// detalye ng biyahe (ref code, ruta, driver, plate) sa bawat rating.
+// Kasama na rito ang mga RENTAL rating (booking_id ay nullable, may
+// rental_id) - ang ruta ng rental ang ipinapakita para sa mga ito.
+protected function historySql() {
+    return "(SELECT r.*,
+                    COALESCE(rs.reference_code, vr.reference_code) AS reference_code,
+                    b.travel_date,
+                    COALESCE(o.name, rr.origin_name, pl.name) AS pickup_name,
+                    COALESCE(dl.name, rr.destination_name) AS dropoff_name,
+                    CONCAT(du.first_name, ' ', du.last_name) AS driver_name,
+                    v.plate_number
+             FROM ratings r
+             LEFT JOIN bookings b ON b.booking_id = r.booking_id
+             LEFT JOIN reservations rs ON rs.reservation_id = b.reservation_id
+             LEFT JOIN locations o ON o.location_id = b.pickup_location_id
+             LEFT JOIN locations dl ON dl.location_id = b.dropoff_location_id
+             LEFT JOIN van_rentals vr ON vr.rental_id = r.rental_id
+             LEFT JOIN (
+                 SELECT ro.route_id,
+                        o3.name AS origin_name,
+                        d3.name AS destination_name
+                 FROM routes ro
+                 JOIN locations o3 ON o3.location_id = ro.origin_location_id
+                 JOIN locations d3 ON d3.location_id = ro.destination_location_id
+             ) rr ON rr.route_id = vr.route_id
+             LEFT JOIN locations pl ON pl.location_id = vr.pickup_location_id
+             LEFT JOIN drivers dd ON dd.driver_id = r.driver_id
+             LEFT JOIN users du ON du.user_id = dd.user_id
+             LEFT JOIN vans v ON v.van_id = r.van_id) AS rh";
+}
+
+// Lahat ng rating ng customer - pinakabago muna (para sa Rate History)
+public function getHistoryForCustomer($customerId) {
+    $stmt = $this->db->prepare(
+        "SELECT rh.* FROM " . $this->historySql() . " WHERE rh.customer_id = ? ORDER BY rh.created_at DESC, rh.rating_id DESC"
+    );
+    $stmt->execute([$customerId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Pinakabagong rating ng customer - iisa lang (para sa Itaas ng Rate page)
+public function getLatestForCustomer($customerId) {
+    $stmt = $this->db->prepare(
+        "SELECT rh.* FROM " . $this->historySql() . " WHERE rh.customer_id = ? ORDER BY rh.created_at DESC, rh.rating_id DESC LIMIT 1"
+    );
+    $stmt->execute([$customerId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+}
+
 }

@@ -3,7 +3,7 @@
 <p><a href="/sitrass/public/vans">&larr; <?= t('btn_back') ?></a></p>
 
 <?php if (!empty($error)): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+    <div class="alert alert-error"><?= htmlspecialchars($error ?? '') ?></div>
 <?php endif; ?>
 
 <form method="POST" action="/sitrass/public/vans/uploadImage" enctype="multipart/form-data" style="margin-bottom:2rem;">

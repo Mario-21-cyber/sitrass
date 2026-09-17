@@ -41,8 +41,23 @@ class DriverController extends Controller {
             unset($_SESSION['check_payment_reservation_id']);
         }
 
+        // Katulad nito para sa RENTAL: pagkatapos i-click ang End Rental,
+        // may popup kung may pending na F2F balance payment ang rental.
+        $rentalPaymentToVerify = null;
+        if (!empty($_SESSION['check_payment_rental_id'])) {
+            $paymentModel = new Payment();
+            $rentalPaymentToVerify = $paymentModel->getPendingCashBalanceForRental($_SESSION['check_payment_rental_id']);
+            unset($_SESSION['check_payment_rental_id']);
+        }
+
+        // Persistent list ng lahat ng pending F2F balance payments para sa
+        // mga rental ng driver na ito - para makita ng driver kahit hindi
+        // agad pagkatapos ng endRental (katulad ng shared booking payments page).
+        $paymentModel2 = new Payment();
+        $rentalPaymentsToVerify = $paymentModel2->getPendingCashBalanceForRentalForDriver($this->driverRecord['driver_id']);
+
                 View::render('driver-dashboard', [
-            'pageTitle' => t('title_driver_dashboard'),
+            'pageTitle' => t('nav_dashboard'),
             'bookings' => $pendingBookings,
             'message' => $message,
             'error' => $error,
@@ -50,6 +65,11 @@ class DriverController extends Controller {
             'driverIdForGps' => $this->driverRecord['driver_id'],
             'paymentToVerify' => $paymentToVerify,
             'boardingPending' => $_SESSION['boarding_pending'] ?? null,
+            'rentalPickupPending' => $_SESSION['rental_pickup_pending'] ?? null,
+            'rentalPickups' => (new VanRental())->getPickupsForDriver($this->driverRecord['driver_id']),
+            'activeRental' => (new VanRental())->getActiveForDriver($this->driverRecord['driver_id']),
+            'rentalPaymentToVerify' => $rentalPaymentToVerify,
+            'rentalPaymentsToVerify' => $rentalPaymentsToVerify,
         ]);
     }
 
@@ -60,9 +80,14 @@ class DriverController extends Controller {
             return in_array($b['status'], ['completed', 'cancelled', 'rejected']);
         }));
 
+        // Kasama rin sa kasaysayan ang mga rental ng mga van mo - completed,
+        // cancelled, o lumipas na ang rental period.
+        $rentals = (new VanRental())->getHistoryForDriver($this->driverRecord['driver_id']);
+
         View::render('driver-history', [
             'pageTitle' => t('history_page_title') . ' - SITRASS',
             'bookings' => $completedBookings,
+            'rentals' => $rentals,
         ]);
     }
 
@@ -165,6 +190,11 @@ class DriverController extends Controller {
                     $stmt = $db->prepare("UPDATE reservations SET status = 'completed' WHERE reservation_id = ?");
                     $stmt->execute([$booking['reservation_id']]);
                 }
+
+                // Linisin ang live tracking sa Firebase - dapat mawala na ang
+                // mga GPS marker sa mapa ng customer at driver kapag tapos na.
+                $this->clearFirebaseLocation('driver_locations/' . $this->driverRecord['driver_id']);
+                $this->clearFirebaseLocation('customer_locations/' . $bookingId);
             }
         } else {
             $_SESSION['driver_error'] = 'Hindi na-process ang aksyon.';
@@ -379,6 +409,24 @@ public function verifyPayment() {
         die('Payment not found.');
     }
 
+    // RENTAL payment? I-verify na ang van ng rental ay sa driver na ito,
+    // tapos i-verify ang bayad (rental-safe ang Payment::verify) at
+    // i-update ang payment_status ng rental.
+    if (!empty($payment['rental_id'])) {
+        $rentalModel = new VanRental();
+        $rental = $rentalModel->getById((int)$payment['rental_id']);
+        if (!$rental || $rental['driver_id'] != $this->driverRecord['driver_id']) {
+            die('Wala kang access sa payment na ito.');
+        }
+
+        $paymentModel->verify($paymentId, $_SESSION['user_id']);
+        $rentalModel->markPaid((int)$payment['rental_id']);
+
+        $_SESSION['driver_message'] = 'Na-verify ang bayad.';
+        header('Location: /sitrass/public/driver/dashboard');
+        exit;
+    }
+
     // I-verify na ang payment na ito ay talagang kabilang sa isang booking na naka-assign sa driver na ito
     $db = (new Model())->getConnection();
     $stmt = $db->prepare("SELECT COUNT(*) FROM bookings WHERE reservation_id = ? AND driver_id = ?");
@@ -404,6 +452,20 @@ public function rejectPayment() {
     $payment = $paymentModel->getById($paymentId);
     if (!$payment) {
         die('Payment not found.');
+    }
+
+    // RENTAL payment? I-verify na ang van ng rental ay sa driver na ito.
+    if (!empty($payment['rental_id'])) {
+        $rentalModel = new VanRental();
+        $rental = $rentalModel->getById((int)$payment['rental_id']);
+        if (!$rental || $rental['driver_id'] != $this->driverRecord['driver_id']) {
+            die('Wala kang access sa payment na ito.');
+        }
+
+        $paymentModel->reject($paymentId, 'Tinanggihan ng driver');
+        $_SESSION['driver_message'] = 'Tinanggihan ang bayad.';
+        header('Location: /sitrass/public/driver/dashboard');
+        exit;
     }
 
     $db = (new Model())->getConnection();
@@ -438,5 +500,278 @@ public function trackTrip($bookingId) {
         'booking' => $booking,
         'driverId' => $this->driverRecord['driver_id'],
     ]);
+}
+
+// Sinusuri ng tracking pages kada ~20s kung tapos na ang biyahe - kapag
+// hindi na en_route, maglilinis ang pahina at mawawala ang mga marker.
+public function tripStatus($bookingId) {
+    $bookingModel = new Booking();
+    $booking = $bookingModel->getById((int)$bookingId);
+
+    header('Content-Type: application/json');
+    if (!$booking || $booking['driver_id'] != $this->driverRecord['driver_id']) {
+        echo json_encode(['status' => null]);
+        exit;
+    }
+    echo json_encode(['status' => $booking['status']]);
+    exit;
+}
+
+// =====================================================================
+// MGA VAN KO (Driver) - pag-register at pag-manage ng sariling vans.
+// Bagong van = pending muna hanggang i-approve ng admin (Pending Vans).
+// =====================================================================
+public function myVans() {
+    $vanModel = new Van();
+    $vans = $vanModel->getByDriver($this->driverRecord['driver_id']);
+
+    $errors = $_SESSION['myvan_errors'] ?? [];
+    $success = $_SESSION['myvan_success'] ?? null;
+    $old = $_SESSION['myvan_old'] ?? [];
+    unset($_SESSION['myvan_errors'], $_SESSION['myvan_success'], $_SESSION['myvan_old']);
+
+    View::render('driver-my-vans', [
+        'pageTitle' => t('nav_my_vans') . ' - SITRASS Driver',
+        'vans' => $vans,
+        'errors' => $errors,
+        'success' => $success,
+        'old' => $old,
+    ]);
+}
+
+public function storeMyVan() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $validator = new Validator($_POST);
+    $validator->required('plate_number', 'Plate number')
+        ->required('make', 'Make')
+        ->required('model', 'Model')
+        ->required('van_type', 'Van type')
+        ->required('seating_capacity', 'Seating capacity');
+
+    $vanModel = new Van();
+    if ($validator->passes() && $vanModel->plateExists(trim($_POST['plate_number']))) {
+        $_SESSION['myvan_errors'] = [t('myvans_plate_taken')];
+        $_SESSION['myvan_old'] = $_POST;
+        header('Location: /sitrass/public/driver/myVans');
+        exit;
+    }
+
+    if (!$validator->passes()) {
+        $_SESSION['myvan_errors'] = $validator->getErrors();
+        $_SESSION['myvan_old'] = $_POST;
+        header('Location: /sitrass/public/driver/myVans');
+        exit;
+    }
+
+    $vanModel->createForDriver($_POST, $this->driverRecord['driver_id']);
+
+    $_SESSION['myvan_success'] = t('myvans_added');
+    header('Location: /sitrass/public/driver/myVans');
+    exit;
+}
+
+public function updateMyVan() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $vanId = (int)($_POST['van_id'] ?? 0);
+    $vanModel = new Van();
+    $van = $vanModel->getById($vanId);
+
+    // Ownership guard: sariling van lang ng driver ang pwedeng i-edit
+    if (!$van || $van['driver_id'] != $this->driverRecord['driver_id']) {
+        die('Hindi mo ito van.');
+    }
+
+    $validator = new Validator($_POST);
+    $validator->required('plate_number', 'Plate number')
+        ->required('make', 'Make')
+        ->required('model', 'Model')
+        ->required('van_type', 'Van type')
+        ->required('seating_capacity', 'Seating capacity');
+
+    if ($validator->passes() && !$vanModel->plateExists(trim($_POST['plate_number']), $vanId)) {
+        $vanModel->updateByOwner($vanId, $this->driverRecord['driver_id'], $_POST);
+        $_SESSION['myvan_success'] = t('myvans_updated');
+    } else {
+        $_SESSION['myvan_errors'] = $validator->passes() ? [t('myvans_plate_taken')] : $validator->getErrors();
+    }
+
+    header('Location: /sitrass/public/driver/myVans');
+    exit;
+}
+
+public function uploadMyVanImage() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $vanId = (int)($_POST['van_id'] ?? 0);
+    $vanModel = new Van();
+    $van = $vanModel->getById($vanId);
+
+    // Ownership guard
+    if (!$van || $van['driver_id'] != $this->driverRecord['driver_id']) {
+        die('Hindi mo ito van.');
+    }
+
+    $result = ImageUpload::handle($_FILES['image'] ?? null, 'uploads/vans', 'van' . $vanId);
+
+    if (!$result['success']) {
+        $_SESSION['myvan_errors'] = [$result['error']];
+        header('Location: /sitrass/public/driver/myVans');
+        exit;
+    }
+
+    $imageModel = new VanImage();
+    $isPrimary = $imageModel->countByVanId($vanId) === 0;
+    if ($isPrimary) {
+        $imageModel->clearPrimary($vanId);
+    }
+    $imageModel->create($vanId, $result['path'], $result['thumbnail'], $isPrimary, $_SESSION['user_id']);
+
+    $_SESSION['myvan_success'] = t('myvans_photos') . ' ✓';
+    header('Location: /sitrass/public/driver/myVans');
+    exit;
+}
+
+// Pickup verification ng rental - manual reference code o QR scan content
+// (RNT-...) mula sa customer. KATULAD NG SHARED BOOKING: hindi agad
+// ina-activate - ipapakita muna sa driver ang detalye ng customer at
+// kailangang kumpirmahin bago tuluyang maging 'active' ang rental.
+public function verifyRentalPickup() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $ref = strtoupper(trim($_POST['reference_code'] ?? ''));
+    $rentalModel = new VanRental();
+    $rental = $rentalModel->getByReference($ref);
+
+    $failBack = function($msg) {
+        $_SESSION['driver_error'] = $msg;
+        header('Location: /sitrass/public/driver/dashboard');
+        exit;
+    };
+
+    if (!$rental) {
+        $failBack('Hindi valid ang reference code na ito.');
+    }
+
+    // Guard: ang van ng rental ay sa iyo
+    if ($rental['driver_id'] != $this->driverRecord['driver_id']) {
+        $failBack('Ang van ng rental na ito ay hindi naka-assign sa iyo.');
+    }
+
+    // Guard: bayad na at naka-confirm pa lang (hindi pa na-pick up)
+    if ($rental['status'] !== 'confirmed') {
+        $failBack('Hindi na puwedeng i-verify ang rental na ito (malamang na-verify na noon).');
+    }
+
+    // Magkano na ang na-verify na bayad (para sa balance sa confirmation)
+    $paymentModel = new Payment();
+    $verifiedTotal = (float)array_sum(array_column($paymentModel->getVerifiedForRental($rental['rental_id']), 'amount'));
+
+    // Hindi pa natin ina-activate - kailangan munang makita ng driver ang
+    // detalye ng customer at kumpirmahin, katulad ng boarding confirmation.
+    $_SESSION['rental_pickup_pending'] = [
+        'rental_id' => (int)$rental['rental_id'],
+        'reference_code' => $rental['reference_code'] ?? $ref,
+        'customer_name' => $rental['customer_name'],
+        'customer_phone' => $rental['customer_phone'],
+        'dates' => $rental['start_date'] . ' → ' . $rental['end_date'],
+        'days' => (int)$rental['days'],
+        'payment_status' => $rental['payment_status'],
+        'balance_due' => max(0, round((float)$rental['total_price'] - $verifiedTotal, 2)),
+    ];
+
+    header('Location: /sitrass/public/driver/dashboard');
+    exit;
+}
+
+// Kumpirmasyon ng pickup (katulad ng verifyBoardingConfirm)
+public function verifyRentalPickupConfirm() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $pending = $_SESSION['rental_pickup_pending'] ?? null;
+    $rentalId = (int)($_POST['rental_id'] ?? 0);
+    unset($_SESSION['rental_pickup_pending']);
+
+    if (!$pending || (int)$pending['rental_id'] !== $rentalId) {
+        $_SESSION['driver_error'] = 'Nag-expire na ang confirmation na ito. Subukan ulit i-verify.';
+        header('Location: /sitrass/public/driver/dashboard');
+        exit;
+    }
+
+    $rentalModel = new VanRental();
+    $rentalModel->markActive($rentalId);
+
+    $_SESSION['driver_message'] = t('rent_pickup_confirmed') . ' (' . $pending['reference_code'] . ')';
+    header('Location: /sitrass/public/driver/dashboard');
+    exit;
+}
+
+// Kanselasyon ng pickup confirmation (katulad ng verifyBoardingCancel)
+public function verifyRentalPickupCancel() {
+    unset($_SESSION['rental_pickup_pending']);
+    header('Location: /sitrass/public/driver/dashboard');
+    exit;
+}
+
+// Pagtatapos ng van rental - katulad ng endTrip ng shared booking:
+// maging 'completed' ang rental at linisin ang live tracking sa Firebase.
+public function endRental() {
+    if (!Csrf::verify($_POST['csrf_token'] ?? '')) {
+        die('Invalid na session.');
+    }
+
+    $rentalId = (int)($_POST['rental_id'] ?? 0);
+    $rentalModel = new VanRental();
+    $rental = $rentalModel->getById($rentalId);
+
+    // Guard: ang van ng rental ay sa iyo at aktibo pa ang rental
+    if (!$rental || $rental['driver_id'] != $this->driverRecord['driver_id'] || $rental['status'] !== 'active') {
+        $_SESSION['driver_error'] = 'Hindi valid ang rental na ito.';
+        header('Location: /sitrass/public/driver/dashboard');
+        exit;
+    }
+
+    if ($rentalModel->markCompleted($rentalId)) {
+        $_SESSION['driver_message'] = t('rent_ended');
+
+        // Katulad ng endTrip: kapag may pending na F2F balance payment ang
+        // rental, may popup sa susunod na dashboard load para i-verify ito.
+        $_SESSION['check_payment_rental_id'] = $rentalId;
+
+        // Linisin ang live tracking sa Firebase - dapat mawala na ang GPS
+        // marker sa mapa kapag tapos na ang rental (katulad ng endTrip).
+        $this->clearFirebaseLocation('driver_locations/' . $this->driverRecord['driver_id']);
+    } else {
+        $_SESSION['driver_error'] = 'Hindi na-process ang aksyon.';
+    }
+
+    header('Location: /sitrass/public/driver/dashboard');
+    exit;
+}
+
+// Best-effort na pag-alis ng location node sa Firebase Realtime Database
+// (pinapayagan ng security rules ang pagsulat sa mga path na ito).
+private function clearFirebaseLocation($path) {
+    $url = 'https://sitrass-default-rtdb.firebaseio.com/' . $path . '.json';
+    $ch = curl_init($url);
+    if (!$ch) return;
+    curl_setopt_array($ch, [
+        CURLOPT_CUSTOMREQUEST => 'DELETE',
+        CURLOPT_TIMEOUT => 5,
+        CURLOPT_RETURNTRANSFER => true,
+    ]);
+    curl_exec($ch);
+    curl_close($ch);
 }
 }

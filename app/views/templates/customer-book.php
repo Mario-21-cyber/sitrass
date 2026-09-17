@@ -6,7 +6,7 @@
     <div class="alert alert-error">
         <ul style="margin:0; padding-left: 1.2rem;">
             <?php foreach ($errors as $error): ?>
-                <li><?= htmlspecialchars($error) ?></li>
+                <li><?= htmlspecialchars($error ?? '') ?></li>
             <?php endforeach; ?>
         </ul>
     </div>
@@ -24,7 +24,7 @@
 
     <div class="field">
         <label for="bk_pax"><?= t('label_passenger_count') ?></label>
-                        <input type="number" id="bk_pax" name="passenger_count" value="1" min="1" max="<?= (int)$schedule['available_seats'] ?>" required>
+                        <input type="number" id="bk_pax" name="passenger_count" value="1" min="1" max="<?= min(14, (int)$schedule['available_seats']) ?>" required>
     </div>
 
     <div class="field">
@@ -37,7 +37,7 @@
     </div>
 
     <p style="font-size:0.85rem; color:var(--ocean);">
-        Kailangan ng <?= htmlspecialchars($depositPercentage) ?>% deposit sa loob ng 2 oras para makumpirma ang reservation.
+        Kailangan ng <?= htmlspecialchars($depositPercentage ?? '') ?>% deposit sa loob ng 2 oras para makumpirma ang reservation.
     </p>
 
     <button type="submit" class="btn"><?= t('booking_confirm_title') ?></button>

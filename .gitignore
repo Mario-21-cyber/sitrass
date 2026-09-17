@@ -1,3 +1,5 @@
 config/mail.php
 config/sms.php
 public/uploads/
+config/database.local.php
+sitrass-infinityfree.zip

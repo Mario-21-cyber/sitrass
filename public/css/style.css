@@ -150,66 +150,172 @@ a:hover {
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
   width: 100%;
-  padding: 0.7rem 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  padding: 0.7rem 0.85rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-input);
   font-size: 1rem;
-  background: var(--sand);
+  background: var(--white);
   font-family: inherit;
   color: var(--ink);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .field input:focus,
-.field select:focus {
-  outline: 2px solid var(--ocean);
-  outline-offset: 1px;
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px rgba(196, 30, 36, 0.1);
   background: var(--white);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--slate);
+  opacity: 0.7;
+}
+
+.field select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%2364708a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  padding-right: 2.2rem;
+}
+
+.field textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
 }
 
 .btn {
   display: inline-block;
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.75rem 1.2rem;
   background: var(--amber);
   color: var(--white) !important;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-input);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   text-align: center;
   text-decoration: none !important;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 2px rgba(196, 30, 36, 0.15);
 }
 
 .btn:hover {
   background: #a91820;
+  box-shadow: 0 2px 8px rgba(196, 30, 36, 0.25);
 }
 
 .btn:active {
   transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(196, 30, 36, 0.1);
 }
 
 .btn-secondary {
   background: transparent;
   color: var(--teal-dark) !important;
   border: 1px solid var(--border);
+  box-shadow: none;
 }
 
 .btn-secondary:hover {
-  background: var(--sand);
+  background: var(--slate-bg);
+  border-color: var(--slate);
+  box-shadow: none;
 }
 
 .btn-danger {
   color: var(--white) !important;
   background: var(--danger);
+  box-shadow: 0 1px 2px rgba(196, 30, 36, 0.15);
 }
 
 .btn-danger:hover {
-  background: #ec5757;
+  background: #a91820;
+  box-shadow: 0 2px 8px rgba(196, 30, 36, 0.25);
 }
+
+/* --- Compact button (para sa inline actions sa cards/tables) --- */
+.btn-sm {
+  display: inline-block;
+  width: auto;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none !important;
+  text-align: center;
+  transition: all 0.15s ease;
+  margin-right: 0.35rem;
+}
+.btn-sm:last-child { margin-right: 0; }
+
+/* Primary small button (orange) */
+a.btn-sm, .btn-sm.btn-primary {
+  background: var(--amber);
+  color: var(--white) !important;
+  box-shadow: 0 1px 2px rgba(196, 30, 36, 0.12);
+}
+a.btn-sm:hover, .btn-sm.btn-primary:hover {
+  background: #a91820;
+  box-shadow: 0 2px 6px rgba(196, 30, 36, 0.2);
+}
+
+/* Outline small button (para sa secondary actions: Chat, Reschedule, Edit) */
+.btn-sm.btn-outline, a.btn-sm.btn-outline {
+  background: var(--white);
+  color: var(--teal-dark) !important;
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+.btn-sm.btn-outline:hover, a.btn-sm.btn-outline:hover {
+  background: var(--slate-bg);
+  border-color: var(--slate);
+}
+
+/* Danger small button (Cancel) */
+.btn-sm.btn-danger {
+  background: var(--danger);
+  color: var(--white) !important;
+  box-shadow: 0 1px 2px rgba(196, 30, 36, 0.12);
+}
+.btn-sm.btn-danger:hover {
+  background: #a91820;
+  box-shadow: 0 2px 6px rgba(196, 30, 36, 0.2);
+}
+
+/* Ghost small button (transparent) */
+.btn-sm.btn-ghost {
+  background: transparent;
+  color: var(--ocean) !important;
+  border: none;
+  box-shadow: none;
+}
+.btn-sm.btn-ghost:hover {
+  background: var(--slate-bg);
+}
+
+/* Action row: consistent spacing para sa grupo ng buttons */
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.action-row .btn-sm { margin-right: 0; }
 
 .btn-link {
   display: block;
@@ -1024,6 +1130,48 @@ tbody tr:hover {
   box-shadow: var(--shadow-sm);
 }
 
+/* --- Tabs ng My Bookings (Shared Trips / Van Rentals) - mukhang button --- */
+.tabs {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--slate-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 5px;
+  margin-bottom: var(--space-5);
+  max-width: 420px;
+}
+.tab-link {
+  flex: 1;
+  text-align: center;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--slate);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.tab-link:hover {
+  border-color: var(--teal-dark);
+  color: var(--teal-dark);
+  background: var(--white);
+}
+.tab-link.active {
+  background: var(--teal-dark);
+  color: var(--white);
+  border-color: var(--teal-dark);
+  box-shadow: var(--shadow-sm);
+}
+
 /* --- Floating confirmation modal (ginagamit sa QR scan confirmation) --- */
 .modal-overlay {
   position: fixed;
@@ -1111,3 +1259,612 @@ tbody tr:hover {
   width: 18px;
   height: 18px;
 }
+
+/* --- Register page: Customer/Driver tab switcher na may smooth transition --- */
+.reg-tabs {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--slate-bg);
+  border-radius: 100px;
+  padding: 4px;
+  margin-bottom: var(--space-5);
+}
+.reg-tab-btn {
+  flex: 1;
+  text-align: center;
+  padding: 0.6rem 1rem;
+  border-radius: 100px;
+  border: none;
+  background: transparent;
+  color: var(--slate);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.reg-tab-btn.active {
+  background: var(--teal-dark);
+  color: var(--white);
+  box-shadow: var(--shadow-sm);
+}
+.reg-form-panel {
+  animation: regFadeIn 0.25s ease;
+}
+@keyframes regFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* --- TOGGLE SWITCH STYLES (unused - template uses .reg-tabs/.reg-tab-btn) --- */
+.reg-toggle-container {
+  display: none;
+}
+.reg-toggle-slider {
+  display: none;
+}
+.reg-toggle-btn {
+  display: none;
+}
+
+/* --- FORM TRANSITION ANIMATION (inline style ang gamit ng template, hindi .active class) --- */
+@keyframes formFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =====================================================
+   COMPREHENSIVE RESPONSIVE / MOBILE UI OVERHAUL
+   Makikita sa lahat ng screen sizes — lalo na sa cellphone.
+   Additive ito — hindi binabago ang desktop styles sa itaas.
+   ===================================================== */
+
+/* --- Tablet (768px at mas maliit) --- */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1.5rem 1.25rem;
+  }
+  .topbar {
+    gap: 0.5rem;
+  }
+  .topbar h2 {
+    font-size: 1.15rem;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .topbar .user-info {
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  .stat-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.75rem;
+  }
+  .stat-card {
+    padding: 1rem;
+  }
+  .stat-card .stat-value {
+    font-size: 1.35rem;
+  }
+}
+
+/* --- Mobile (480px at mas maliit — cellphones) --- */
+@media (max-width: 480px) {
+  body {
+    font-size: 15px;
+  }
+  .auth-card {
+    padding: 1.5rem 1.25rem;
+    margin: 0.5rem;
+    max-width: 100%;
+  }
+  .auth-card .brand {
+    font-size: 1.3rem;
+  }
+  .btn,
+  .btn-danger {
+    width: auto;
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .auth-card .btn[type="submit"],
+  .auth-card form .btn:last-child {
+    width: 100%;
+  }
+  .card {
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 0.75rem;
+  }
+  .stat-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .stat-card {
+    padding: 0.85rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .stat-card .stat-top-row {
+    margin-bottom: 0;
+    flex: 1;
+  }
+  .stat-card .stat-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .stat-card .stat-value {
+    font-size: 1.2rem;
+  }
+  h2 {
+    font-size: 1.15rem;
+  }
+  h3 {
+    font-size: 1rem;
+  }
+  .page-wrap {
+    padding: 0.75rem 0.5rem 2rem;
+  }
+  .main-content {
+    padding: 1rem 0.75rem;
+  }
+  .topbar {
+    margin: -1rem -0.75rem 1rem -0.75rem;
+    padding: 0.75rem;
+  }
+  .topbar h2 {
+    font-size: 1rem;
+  }
+  .topbar .user-info {
+    font-size: 0.75rem;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sidebar {
+    width: 220px;
+  }
+  .field {
+    margin-bottom: 0.85rem;
+  }
+  .field label {
+    font-size: 0.8rem;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.95rem;
+  }
+  .filter-toolbar {
+    flex-direction: column;
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  .filter-toolbar .field {
+    min-width: 100%;
+    width: 100%;
+  }
+  .filter-toolbar .btn,
+  .filter-toolbar .btn-ghost {
+    width: 100%;
+    text-align: center;
+  }
+  table {
+    font-size: 0.82rem;
+  }
+  th,
+  td {
+    padding: 0.5rem 0.6rem;
+  }
+  .list-card {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .list-card .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .list-card .actions .btn,
+  .list-card .actions a,
+  .list-card .actions button {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.7rem;
+    margin-right: 0;
+  }
+  .modal-overlay {
+    padding: 0;
+    align-items: stretch;
+  }
+  .modal-box {
+    max-width: 100%;
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    padding: 1.25rem 1rem;
+    overflow-y: auto;
+  }
+  .modal-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .modal-actions form,
+  .modal-actions .btn,
+  .modal-actions button {
+    width: 100%;
+  }
+  .ticket-stub {
+    padding: 1rem 1.25rem;
+  }
+  .ticket-stub .stub-code {
+    font-size: 1.2rem;
+  }
+  .eta-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.3rem;
+    padding: 0.75rem;
+  }
+  .eta-banner .eta-value {
+    font-size: 1.1rem;
+  }
+  .section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .qr-tabs,
+  .reg-tabs {
+    max-width: 100%;
+  }
+  .form-section {
+    margin-bottom: 1rem;
+  }
+  .form-section-title {
+    font-size: 0.72rem;
+  }
+  .alert {
+    padding: 0.7rem 0.85rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.85rem;
+  }
+  .chat-container {
+    height: calc(100vh - 160px) !important;
+  }
+  img[src*="api.qrserver.com"],
+  img[src*="chart.googleapis.com"] {
+    max-width: 220px;
+    width: 100%;
+    height: auto;
+  }
+  #dashMap,
+  div[id="dashMap"] {
+    height: 320px !important;
+  }
+  #trackMap,
+  div[id="trackMap"],
+  #rentTrackMap,
+  div[id="rentTrackMap"] {
+    height: 350px !important;
+  }
+}
+
+/* --- Very small phones (360px) --- */
+@media (max-width: 360px) {
+  body {
+    font-size: 14px;
+  }
+  .auth-card {
+    padding: 1.25rem 1rem;
+    margin: 0;
+  }
+  .topbar h2 {
+    font-size: 0.9rem;
+  }
+  .sidebar {
+    width: 200px;
+  }
+}
+
+/* --- Touch-friendly: 44px tap targets --- */
+@media (hover: none) and (pointer: coarse) {
+  .sidebar a.nav-item,
+  .btn,
+  .btn-ghost,
+  .btn-danger,
+  .btn-secondary,
+  .list-card .actions a,
+  .list-card .actions button,
+  .pwd-toggle-btn {
+    min-height: 44px;
+  }
+}
+
+/* --- Print-friendly --- */
+@media print {
+  .sidebar,
+  .topbar,
+  .menu-toggle,
+  .sidebar-overlay,
+  .nav-links,
+  .btn,
+  .btn-ghost,
+  .btn-danger {
+    display: none !important;
+  }
+  .main-content {
+    padding: 0;
+  }
+  .card,
+  .ticket-stub {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}
+
+/* =====================================================================
+   INTERACTIVE UI/UX ENHANCEMENTS — buong system
+   Micro-interactions, smooth transitions, hover states, loading states
+   ===================================================================== */
+
+/* --- Smooth page transitions --- */
+.auth-card, .card, .stat-card, .list-card, .modal-box {
+  animation: fadeInUp 0.3s ease;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Auth card: subtle hover lift --- */
+.auth-card {
+  transition: box-shadow 0.2s ease;
+}
+.auth-card:hover {
+  box-shadow: 0 8px 32px rgba(27, 42, 107, 0.15);
+}
+
+/* --- Login/Register: input focus glow animation --- */
+.field input:focus, .field select:focus, .field textarea:focus {
+  animation: inputGlow 0.2s ease;
+}
+@keyframes inputGlow {
+  from { box-shadow: 0 0 0 0 rgba(196, 30, 36, 0); }
+  to   { box-shadow: 0 0 0 3px rgba(196, 30, 36, 0.1); }
+}
+
+/* --- Button: loading state (JS adds .btn-loading) --- */
+.btn.btn-loading, .btn-sm.btn-loading {
+  pointer-events: none;
+  opacity: 0.7;
+  position: relative;
+}
+.btn.btn-loading::after, .btn-sm.btn-loading::after {
+  content: "";
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btnSpin 0.6s linear infinite;
+  margin-left: 0.5rem;
+  vertical-align: -2px;
+}
+@keyframes btnSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Submit button: auto loading on form submit --- */
+form[data-loading] button[type="submit"],
+form.submitting button[type="submit"] {
+  pointer-events: none;
+  opacity: 0.7;
+}
+form.submitting button[type="submit"]::after {
+  content: "";
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: btnSpin 0.6s linear infinite;
+  margin-left: 0.5rem;
+  vertical-align: -2px;
+}
+
+/* --- Card hover: subtle lift on all cards --- */
+.card:hover, .stat-card:hover {
+  box-shadow: 0 6px 20px rgba(27, 42, 107, 0.12);
+  transition: box-shadow 0.2s ease;
+}
+
+/* --- List card: left border accent on hover --- */
+.list-card {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-left: 3px solid transparent;
+}
+.list-card:hover {
+  border-left-color: var(--amber);
+  box-shadow: 0 4px 16px rgba(27, 42, 107, 0.1);
+}
+
+/* --- Badge: subtle pulse for pending status --- */
+.badge-pending {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* --- Sidebar nav: smooth hover slide --- */
+.sidebar a, .nav-item {
+  transition: background 0.15s ease, padding-left 0.15s ease;
+}
+.sidebar a:hover, .nav-item:hover {
+  padding-left: 1rem;
+}
+
+/* --- Active nav item: left accent bar --- */
+.sidebar a.active, .nav-item.active {
+  border-left: 3px solid var(--amber-light);
+  padding-left: calc(0.75rem - 3px);
+  background: rgba(255,255,255,0.08);
+}
+
+/* --- Table rows: hover highlight --- */
+table tbody tr {
+  transition: background 0.1s ease;
+}
+table tbody tr:hover {
+  background: var(--slate-bg) !important;
+}
+
+/* --- Alert: slide-in animation --- */
+.alert {
+  animation: alertSlideIn 0.25s ease;
+}
+@keyframes alertSlideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* --- Modal: scale-in animation --- */
+.modal-box {
+  animation: modalScaleIn 0.2s ease;
+}
+@keyframes modalScaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* --- Empty state: fade-in --- */
+.empty-state {
+  animation: fadeInUp 0.4s ease;
+}
+
+/* --- Tabs: active indicator slide --- */
+.tab-link, .reg-tab-btn, .qr-tab {
+  transition: all 0.2s ease;
+  position: relative;
+}
+.tab-link.active, .qr-tab.active {
+  transform: translateY(-1px);
+}
+
+/* --- Stat card: icon bounce on hover --- */
+.stat-card:hover .stat-icon {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* --- Form section: clean divider --- */
+.form-section {
+  animation: fadeInUp 0.3s ease;
+}
+.form-section + .form-section {
+  margin-top: 1.5rem;
+}
+
+/* --- Password toggle: press effect --- */
+.pwd-toggle-btn:active {
+  transform: translateY(-50%) scale(0.9);
+}
+
+/* --- Link button: hover underline animation --- */
+.btn-link {
+  transition: color 0.15s ease;
+  position: relative;
+}
+.btn-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px; left: 50%;
+  width: 0; height: 1px;
+  background: var(--ocean);
+  transition: width 0.2s ease, left 0.2s ease;
+}
+.btn-link:hover::after {
+  width: 100%; left: 0;
+}
+.btn-link:hover {
+  text-decoration: none;
+}
+
+/* --- Scrollbar styling (webkit) --- */
+::-webkit-scrollbar {
+  width: 8px; height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--slate-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--slate);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--teal-dark);
+}
+
+/* --- Selection color --- */
+::selection {
+  background: rgba(196, 30, 36, 0.15);
+  color: var(--teal-dark);
+}
+
+/* --- Tooltip on title attr (CSS-only) --- */
+[data-tooltip] {
+  position: relative;
+}
+[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%; left: 50%;
+  transform: translateX(-50%);
+  background: var(--teal-dark);
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+  margin-bottom: 4px;
+}
+[data-tooltip]:hover::before {
+  opacity: 1;
+}
+
+/* --- Mobile: smoother tap feedback --- */
+@media (hover: none) {
+  .card:hover, .stat-card:hover, .list-card:hover {
+    box-shadow: var(--shadow-sm);
+    transform: none;
+  }
+  .list-card:hover {
+    border-left-color: transparent;
+  }
+}
+

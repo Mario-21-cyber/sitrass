@@ -3,7 +3,7 @@
 <h2><?= t('heading_reschedule_trip') ?></h2>
 
 <?php if (!empty($error)): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+    <div class="alert alert-error"><?= htmlspecialchars($error ?? '') ?></div>
 <?php endif; ?>
 
 <div style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:1.5rem; margin-bottom:1.5rem;">

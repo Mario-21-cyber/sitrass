@@ -1,7 +1,5 @@
 <?php require __DIR__ . '/_customer_header.php'; ?>
 
-<h2><?= t('nav_search') ?></h2>
-
 <form method="GET" action="/sitrass/public/customer/search" style="background:var(--white); border:1px solid var(--border); border-radius:8px; padding:1.5rem; margin-bottom:1.5rem;">
     <div style="display:flex; gap:1rem; flex-wrap:wrap;">
         <div class="field" style="flex:1; min-width:200px;">
@@ -30,7 +28,7 @@
 
         <div class="field" style="flex:1; min-width:150px;">
             <label><?= t('label_date') ?></label>
-            <input type="date" name="date" value="<?= htmlspecialchars($selectedDate) ?>" min="<?= date('Y-m-d') ?>">
+            <input type="date" name="date" value="<?= htmlspecialchars($selectedDate ?? '') ?>" min="<?= date('Y-m-d') ?>">
         </div>
     </div>
 

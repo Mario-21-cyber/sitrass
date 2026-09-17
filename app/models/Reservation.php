@@ -45,6 +45,28 @@ class Reservation extends Model {
         return $code;
     }
 
+    // Dati itong SQL VIEW (vw_reservation_summary). Sa InfinityFree free
+    // hosting ay bawal ang CREATE VIEW, kaya iniline na lang dito bilang
+    // derived table na may alias na "vrs" - pareho ang ibinabalik.
+    protected function reservationSummarySql() {
+        return "(SELECT rs.reservation_id, rs.reference_code, rs.customer_id,
+                CONCAT(cu.first_name, ' ', cu.last_name) AS customer_name,
+                cu.email AS customer_email, cu.phone AS customer_phone,
+                rs.booking_type, rs.passenger_count, rs.is_round_trip,
+                rs.total_amount, rs.deposit_percentage, rs.deposit_required,
+                rs.amount_paid, rs.balance_due,
+                rs.status, rs.payment_status, rs.created_at,
+                (SELECT MIN(b.travel_date) FROM bookings b WHERE b.reservation_id = rs.reservation_id) AS first_travel_date,
+                (SELECT COUNT(*) FROM bookings b WHERE b.reservation_id = rs.reservation_id) AS leg_count,
+                (SELECT COALESCE(SUM(p.amount), 0) FROM payments p
+                  WHERE p.reservation_id = rs.reservation_id AND p.status = 'verified') AS verified_payments_total,
+                (SELECT COUNT(*) FROM payments p
+                  WHERE p.reservation_id = rs.reservation_id AND p.status = 'pending') AS pending_payment_count
+             FROM reservations rs
+             JOIN customers c ON c.customer_id = rs.customer_id
+             JOIN users cu ON cu.user_id = c.user_id) AS vrs";
+    }
+
         public function getByCustomerId($customerId) {
         // Kung walang totoong booking record ang isang reservation (dapat
         // bihira na lang mangyari ito), gamitin na lang ang petsa ng
@@ -66,7 +88,7 @@ class Reservation extends Model {
                     (SELECT b.status FROM bookings b
                        WHERE b.reservation_id = vrs.reservation_id
                        ORDER BY b.travel_date ASC LIMIT 1) AS first_booking_status
-             FROM vw_reservation_summary vrs
+             FROM " . $this->reservationSummarySql() . "
              WHERE vrs.customer_id = ?
              ORDER BY vrs.created_at DESC"
         );
@@ -76,7 +98,7 @@ class Reservation extends Model {
 
     public function getByReferenceCode($code, $customerId) {
         $stmt = $this->db->prepare(
-            "SELECT * FROM vw_reservation_summary WHERE reference_code = ? AND customer_id = ?"
+            "SELECT * FROM " . $this->reservationSummarySql() . " WHERE reference_code = ? AND customer_id = ?"
         );
         $stmt->execute([$code, $customerId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

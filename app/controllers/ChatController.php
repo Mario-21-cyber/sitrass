@@ -78,4 +78,66 @@ class ChatController extends Controller {
         $stmt->execute([$userId]);
         return $stmt->fetchColumn() ?: null;
     }
+
+    // ---------------------------------------------------------------------
+    // CHAT PARA SA VAN RENTAL - katulad ng open() ng shared booking, pero
+    // ang chat room ay naka-key sa rental (Firebase path: chats/rental_{id}).
+    // Walang kailangang schema change - Firebase lang ang gamit ng chat UI.
+    // ---------------------------------------------------------------------
+    public function openRental($rentalId) {
+        $rentalId = (int)$rentalId;
+        $rentalModel = new VanRental();
+        $rental = $rentalModel->getById($rentalId);
+
+        if (!$rental) {
+            die('Rental not found.');
+        }
+
+        // I-verify na kabilang ang naka-login na user sa rental na ito -
+        // customer ng rental, o ang may-ari ng van (driver).
+        $isAuthorized = false;
+        $otherPartyName = '';
+        $db = (new Model())->getConnection();
+
+        if ($_SESSION['role'] === 'customer') {
+            $customerId = $this->getCustomerIdForUser($_SESSION['user_id']);
+            if ($rental['customer_id'] == $customerId) {
+                $isAuthorized = true;
+                $stmt = $db->prepare(
+                    "SELECT CONCAT(u.first_name, ' ', u.last_name) FROM drivers d JOIN users u ON u.user_id = d.user_id WHERE d.driver_id = ?"
+                );
+                $stmt->execute([$rental['driver_id']]);
+                $otherPartyName = $stmt->fetchColumn() ?: 'Driver';
+            }
+        } elseif ($_SESSION['role'] === 'driver') {
+            $driverModel = new Driver();
+            $driver = $driverModel->getByUserId($_SESSION['user_id']);
+            if ($driver && $rental['driver_id'] == $driver['driver_id']) {
+                $isAuthorized = true;
+                $stmt = $db->prepare(
+                    "SELECT CONCAT(u.first_name, ' ', u.last_name) FROM customers c JOIN users u ON u.user_id = c.user_id WHERE c.customer_id = ?"
+                );
+                $stmt->execute([$rental['customer_id']]);
+                $otherPartyName = $stmt->fetchColumn() ?: 'Customer';
+            }
+        }
+
+        if (!$isAuthorized) {
+            die('Wala kang access sa chat na ito.');
+        }
+
+        $headerFile = $_SESSION['role'] === 'driver' ? '_driver_header.php' : '_customer_header.php';
+        $footerFile = $_SESSION['role'] === 'driver' ? '_driver_footer.php' : '_customer_footer.php';
+
+        View::render('chat', [
+            'pageTitle' => 'Chat - SITRASS',
+            // Firebase chat room key - hiwalay sa mga booking chats
+            'bookingId' => 'rental_' . $rentalId,
+            'otherPartyName' => $otherPartyName,
+            'myName' => $_SESSION['full_name'],
+            'myRole' => $_SESSION['role'],
+            'headerFile' => $headerFile,
+            'footerFile' => $footerFile,
+        ]);
+    }
 }

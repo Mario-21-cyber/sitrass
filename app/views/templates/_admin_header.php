@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle ?? 'SITRASS Admin') ?></title>
     <link rel="stylesheet" href="/sitrass/public/css/style.css">
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('form').forEach(function(f) {
+            f.addEventListener('submit', function() {
+                var btn = f.querySelector('button[type="submit"]');
+                if (btn && !btn.classList.contains('btn-ghost') && !btn.classList.contains('btn-sm')) {
+                    f.classList.add('submitting');
+                }
+            });
+        });
+    });
+    </script>
 </head>
 <body>
 <?php
@@ -43,9 +55,13 @@
             </a>
 
             <div class="nav-section-label"><?= t('nav_section_operations') ?></div>
-            <a class="nav-item<?= navActive('/vans', $currentPath) ?>" href="/sitrass/public/vans">
+            <a class="nav-item<?= navActive('/vans', $currentPath, true) ?>" href="/sitrass/public/vans">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
                 <?= t('nav_vans') ?>
+            </a>
+            <a class="nav-item<?= navActive('/vans/pendingVans', $currentPath) ?>" href="/sitrass/public/vans/pendingVans">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <?= t('nav_pending_vans') ?>
             </a>
             <a class="nav-item<?= navActive('/locations', $currentPath) ?>" href="/sitrass/public/locations">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>

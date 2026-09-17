@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle ?? 'SITRASS') ?></title>
     <link rel="stylesheet" href="/sitrass/public/css/style.css">
+    <script>
+    // Auto-loading state sa lahat ng form submit — para sa button spinner
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('form').forEach(function(f) {
+            f.addEventListener('submit', function() {
+                var btn = f.querySelector('button[type="submit"]');
+                if (btn && !btn.classList.contains('btn-ghost')) {
+                    f.classList.add('submitting');
+                }
+            });
+        });
+    });
+    </script>
 </head>
 <body>
     <div style="position:fixed; top:1rem; right:1rem; z-index:10; background:var(--white); border:1px solid var(--border); border-radius:100px; padding:0.3rem; box-shadow:var(--shadow-sm); display:flex; gap:0.2rem;">

@@ -222,6 +222,7 @@ CREATE TABLE `vans` (
   `year_model`           SMALLINT UNSIGNED DEFAULT NULL,
   `color`                VARCHAR(30)  DEFAULT NULL,
   `van_type`             ENUM('standard','premium','tourist') NOT NULL DEFAULT 'standard',
+  `driver_id`            BIGINT UNSIGNED DEFAULT NULL COMMENT 'Owning driver (My Vans / pending approval)',
   `seating_capacity`     TINYINT UNSIGNED NOT NULL,
   `luggage_capacity`     TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `has_aircon`           TINYINT(1)   NOT NULL DEFAULT 1,
@@ -230,7 +231,7 @@ CREATE TABLE `vans` (
   `base_fare`            DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Flat fare component (PHP)',
   `fare_per_km`          DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   `whole_van_day_rate`   DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT 'Rental / exclusive hire rate',
-  `status`               ENUM('active','maintenance','inactive','retired') NOT NULL DEFAULT 'active',
+  `status`               ENUM('pending','active','maintenance','inactive','retired') NOT NULL DEFAULT 'active',
   `or_cr_number`         VARCHAR(50)  DEFAULT NULL,
   `registration_expiry`  DATE         DEFAULT NULL,
   `insurance_expiry`     DATE         DEFAULT NULL,
@@ -242,7 +243,39 @@ CREATE TABLE `vans` (
   UNIQUE KEY `uq_vans_plate` (`plate_number`),
   KEY `idx_vans_status_type` (`status`, `van_type`),
   KEY `idx_vans_deleted`     (`deleted_at`),
+  KEY `idx_vans_driver`      (`driver_id`),
+  CONSTRAINT `fk_vans_driver` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`driver_id`) ON DELETE SET NULL,
   CONSTRAINT `chk_vans_capacity` CHECK (`seating_capacity` BETWEEN 1 AND 30)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------
+-- Van rentals - buong van na inuupahan ng customer (Rent a Van feature)
+-- May reference code + payment status + ruta, katulad ng shared booking.
+-- ---------------------------------------------------------------------
+CREATE TABLE `van_rentals` (
+  `rental_id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `reference_code`     VARCHAR(24) DEFAULT NULL,
+  `van_id`             BIGINT UNSIGNED NOT NULL,
+  `route_id`           BIGINT UNSIGNED DEFAULT NULL,
+  `customer_id`        BIGINT UNSIGNED NOT NULL,
+  `start_date`         DATE NOT NULL,
+  `end_date`           DATE NOT NULL,
+  `pickup_location_id` BIGINT UNSIGNED DEFAULT NULL COMMENT 'Suggested meeting point',
+  `days`               SMALLINT UNSIGNED NOT NULL DEFAULT 1,
+  `price_per_day`      DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `total_price`        DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `deposit_required`   DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  `status`             ENUM('pending','confirmed','active','completed','cancelled') NOT NULL DEFAULT 'pending',
+  `payment_status`     ENUM('pending','partially_paid','paid') NOT NULL DEFAULT 'pending',
+  `notes`              TEXT DEFAULT NULL,
+  `created_at`         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`rental_id`),
+  UNIQUE KEY `uq_rentals_ref`  (`reference_code`),
+  KEY `idx_rentals_van`      (`van_id`, `start_date`, `end_date`),
+  KEY `idx_rentals_customer` (`customer_id`, `status`),
+  KEY `idx_rentals_route`    (`route_id`),
+  CONSTRAINT `fk_rentals_van`      FOREIGN KEY (`van_id`)      REFERENCES `vans` (`van_id`)      ON DELETE CASCADE,
+  CONSTRAINT `fk_rentals_customer` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Deferred FK: drivers.assigned_van_id -> vans (vans is created after drivers)

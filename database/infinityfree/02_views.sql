@@ -1,0 +1,19 @@
+-- =====================================================================
+-- SITRASS -- 02_views.sql (INFINITYFREE VERSION - WALA NANG GAGAWIN ITO)
+-- =====================================================================
+-- Sa InfinityFree free hosting, wala ang CREATE VIEW privilege (error
+-- #1142). Kaya HINDI NA KAILANGAN NG APP ANG MGA SQL VIEWS:
+--
+--   * vw_available_schedules, vw_daily_revenue, vw_reservation_summary
+--     - iniline na bilang derived tables sa:
+--         app/models/TripSchedule.php  (availableSchedulesSql)
+--         app/models/Payment.php       (getDailyRevenue)
+--         app/models/Reservation.php   (reservationSummarySql)
+--   * pickup_locations, destinations, vw_user_accounts, vw_active_trips
+--     - hindi naman ginagamit ng PHP code.
+--
+-- PWEDE MONG LAKTAWAN ANG FILE NA ITO, o i-import man - walang gagawin.
+-- Ang orihinal na 02_views.sql (na may views) ay para sa local XAMPP lang.
+-- =====================================================================
+-- Sadyang walang SQL statement sa file na ito.
+-- =====================================================================

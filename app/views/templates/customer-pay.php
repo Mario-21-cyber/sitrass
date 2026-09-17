@@ -3,7 +3,7 @@
 <h2><?= t('pay_page_title') ?></h2>
 
 <?php if (!empty($error)): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+    <div class="alert alert-error"><?= htmlspecialchars($error ?? '') ?></div>
 <?php endif; ?>
 
 <div class="card">
@@ -37,6 +37,7 @@
             <?php foreach ($methods as $m): ?>
                 <option value="<?= (int)$m['method_id'] ?>"
                     data-requires-proof="<?= $m['requires_proof'] ?>"
+                    data-is-online="<?= (int)$m['is_online'] ?>"
                     <?= $preferredMethodId == $m['method_id'] ? 'selected' : '' ?>>
                     <?= htmlspecialchars($m['method_name']) ?>
                 </option>
@@ -46,10 +47,10 @@
 
         <div class="field">
         <label for="pay_amount"><?= t('label_amount_to_pay') ?></label>
-        <input type="number" step="0.01" id="pay_amount" name="amount" value="<?= htmlspecialchars($amountToPay) ?>" required>
+        <input type="number" step="0.01" id="pay_amount" name="amount" value="<?= htmlspecialchars($amountToPay ?? '') ?>" required>
     </div>
 
-    <div class="field">
+    <div class="field" id="ref_field">
         <label for="pay_ref"><?= t('label_ref_number_gcash') ?></label>
         <input type="text" id="pay_ref" name="reference_number">
     </div>
@@ -67,8 +68,15 @@ function updateMethodDisplay() {
     const select = document.getElementById('method_id');
     const selectedOption = select.options[select.selectedIndex];
     const requiresProof = selectedOption.getAttribute('data-requires-proof') === '1';
+    const isOnline = selectedOption.getAttribute('data-is-online') === '1';
 
     document.getElementById('proof_field').style.display = requiresProof ? 'block' : 'none';
+
+    // Ang GCash reference number ay makikita lang kapag ONLINE na paraan
+    // (hal. GCash) ang pinili. Kapag F2F/cash, tatago ito.
+    const refField = document.getElementById('ref_field');
+    refField.style.display = isOnline ? 'block' : 'none';
+    document.getElementById('pay_ref').disabled = !isOnline;
 
     document.querySelectorAll('.method-details').forEach(el => el.style.display = 'none');
     const activeDetails = document.getElementById('details_' + select.value);

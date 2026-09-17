@@ -76,8 +76,9 @@ function settingLabel($setting, $overrides) {
     <?= Csrf::field() ?>
 
     <?php foreach ($grouped as $groupName => $settings): ?>
+        <?php if (in_array($groupName, ['booking', 'tracking'])) { continue; } // tinanggal sa UI ayon sa hiling ?>
         <div class="form-section">
-            <div class="form-section-title"><?= isset($groupLabelKeys[$groupName]) ? t($groupLabelKeys[$groupName]) : htmlspecialchars($groupName) ?></div>
+            <div class="form-section-title"><?= isset($groupLabelKeys[$groupName]) ? t($groupLabelKeys[$groupName]) : htmlspecialchars($groupName ?? '') ?></div>
             <div class="card">
                 <?php foreach ($settings as $s): ?>
                     <div class="field">
